@@ -1,0 +1,113 @@
+---
+import "../styles/global.css";
+import { siteConfig } from "../config";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  canonicalPath = "/",
+  ogImage = siteConfig.ogImage,
+  noindex = false,
+} = Astro.props;
+
+const siteUrl = (Astro.site ?? new URL(siteConfig.siteUrl)).toString().replace(/\/$/, "");
+const canonical = new URL(canonicalPath, `${siteUrl}/`).toString();
+const shareImage = new URL(ogImage, `${siteUrl}/`).toString();
+const sameAs = siteConfig.linkedInUrl ? [siteConfig.linkedInUrl] : undefined;
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${siteUrl}/#service`,
+    name: `${siteConfig.name} · Software de operaciones`,
+    description,
+    url: siteUrl,
+    image: shareImage,
+    priceRange: "USD 1,900–50,000",
+    areaServed: [
+      { "@type": "Country", name: "Colombia" },
+      { "@type": "Place", name: "Remoto" },
+    ],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: siteConfig.city,
+      addressCountry: siteConfig.country,
+    },
+    founder: { "@id": `${siteUrl}/#felipe` },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${siteUrl}/#felipe`,
+    name: siteConfig.name,
+    url: siteUrl,
+    jobTitle: "Product manager técnico",
+    knowsAbout: [
+      "Software interno",
+      "Automatización de datos",
+      "Diseño de producto",
+      "Arquitectura de software",
+    ],
+    sameAs,
+  },
+];
+---
+
+<!doctype html>
+<html lang={siteConfig.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F2F4F6" />
+    <meta name="color-scheme" content="light" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={siteConfig.locale} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="De operación manual a sistema en producción, por Felipe Peña" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImage} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/archivo-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ibm-plex-sans-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
+
+    {!noindex && <script is:inline type="application/ld+json" set:html={JSON.stringify(schemas)} />}
+    {siteConfig.plausibleDomain && (
+      <script
+        is:inline
+        defer
+        data-domain={siteConfig.plausibleDomain}
+        src={siteConfig.plausibleSrc}
+      ></script>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <slot />
+  </body>
+</html>

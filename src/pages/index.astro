@@ -1,0 +1,1210 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import HeroGraph from "../components/HeroGraph.astro";
+import ProcessArtifact from "../components/ProcessArtifact.astro";
+import ContactPanel from "../components/ContactPanel.astro";
+import { siteConfig } from "../config";
+
+const symptoms = [
+  "El cierre de mes tarda una semana: alguien consolida seis hojas de cálculo a mano.",
+  "Tu ERP, tu CRM y tu facturación no se hablan; una persona copia datos entre ellos.",
+  "Las decisiones del lunes se toman con los datos del jueves pasado.",
+  "Ya lo intentaste con un freelancer y el proyecto murió cuando desapareció.",
+];
+
+const offers = [
+  {
+    price: "USD 1.900 · 2 semanas",
+    title: "Diagnóstico técnico de operación",
+    description:
+      "Mapa de procesos y sistemas, arquitectura propuesta y plan con precio cerrado. El documento es tuyo aunque construyas con otro.",
+    owner: "100% Felipe · se abona al proyecto",
+  },
+  {
+    price: "Desde USD 15.000 · 8–16 semanas",
+    title: "Sistema en producción",
+    description:
+      "Software funcionando, código y documentación de tu propiedad, handover y cuatro semanas de soporte. Precio cerrado tras diagnóstico.",
+    owner: "Felipe diseña y decide · el núcleo construye",
+    core: true,
+  },
+  {
+    price: "Desde USD 2.500 / mes",
+    title: "Evolución continua",
+    description:
+      "Mejoras, integraciones, soporte prioritario y roadmap trimestral. Solo para sistemas que construimos.",
+    owner: "El equipo ejecuta · Felipe prioriza",
+  },
+];
+
+const proofRows = [
+  {
+    label: "Alcance",
+    copy: "El diagnóstico convierte una operación difusa en una propuesta con límites, responsables y decisiones explícitas.",
+    before: "estimación abierta",
+    after: "precio + plazo cerrado",
+    stack: "MAPA · ARQUITECTURA · PROPUESTA",
+  },
+  {
+    label: "Avance",
+    copy: "No esperas hasta la entrega para descubrir qué se construyó: ves el producto funcionando desde la primera o segunda semana.",
+    before: "status report",
+    after: "software cada viernes",
+    stack: "DEMO · TABLERO · STAGING",
+  },
+  {
+    label: "Propiedad",
+    copy: "La continuidad no depende de una caja negra: repositorios, accesos, documentación y contexto viven contigo desde el inicio.",
+    before: "dependencia",
+    after: "código tuyo, día 1",
+    stack: "REPO · DOCS · HANDOVER",
+  },
+];
+
+const phases = [
+  {
+    number: "01",
+    title: "Diagnóstico",
+    timing: "2 semanas",
+    copy: "Entrevistas, mapa de sistemas y plan con precio cerrado.",
+  },
+  {
+    number: "02",
+    title: "Primer demo",
+    timing: "semana 1–2",
+    copy: "Demo navegable. Desde aquí, software cada viernes; no diapositivas.",
+  },
+  {
+    number: "03",
+    title: "Cada semana",
+    timing: "ritmo visible",
+    copy: "Demo de avance, tablero compartido y staging abierto.",
+  },
+  {
+    number: "04",
+    title: "Entrega",
+    timing: "producción",
+    copy: "Código, docs, handover y cuatro semanas de soporte.",
+  },
+];
+
+const exclusions = [
+  "apps móviles de consumo",
+  "sitios web de marketing",
+  "staff augmentation",
+  "rescates de código ajeno sin diagnóstico",
+  "proyectos sin un dueño del lado del cliente",
+];
+
+const faqs = [
+  {
+    question: "¿Cuánto cuesta?",
+    answer:
+      "El diagnóstico cuesta USD 1.900. Los proyectos suelen estar entre USD 15.000 y 50.000, con precio cerrado después del diagnóstico. Si tu presupuesto está por debajo, te lo diré en la primera llamada.",
+  },
+  {
+    question: "¿Quién hace realmente el trabajo?",
+    answer:
+      "Diseño, decisiones y gestión: yo. El código lo escribimos el equipo y yo según el módulo; todo pasa por mi revisión.",
+  },
+  {
+    question: "¿Cuánto se demora?",
+    answer:
+      "Normalmente 8–16 semanas. El plazo se compromete en la propuesta; no se deja como una estimación abierta.",
+  },
+  {
+    question: "¿Voy a terminar hablando con un junior?",
+    answer:
+      "No. Tu interlocutor soy yo, siempre. No hay account manager ni teléfono roto entre quien entiende y quien decide.",
+  },
+  {
+    question: "¿De quién es el código?",
+    answer:
+      "Tuyo. Repositorios, documentación y accesos están a tu nombre desde el día uno.",
+  },
+  {
+    question: "¿Qué tan grande es el equipo?",
+    answer:
+      "Depende del alcance. En tu propuesta aparecen el nombre, el rol y el momento de entrada de cada persona; nunca una capacidad anónima.",
+  },
+  {
+    question: "¿Qué pasa si alguien desaparece?",
+    answer:
+      "Tablero, documentación y al menos otra persona con contexto reducen esa dependencia. Yo sigo siendo responsable contractual de la entrega.",
+  },
+  {
+    question: "¿Trabajan con cualquier empresa?",
+    answer:
+      "No. Encaja mejor una operación B2B con un proceso crítico, un dueño interno y presupuesto para resolverlo de punta a punta.",
+  },
+];
+
+const hasBooking = Boolean(siteConfig.bookingUrl);
+---
+
+<BaseLayout>
+  <SiteHeader />
+
+  <main id="contenido">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Software interno · automatización de datos</p>
+          <h1 id="hero-title">Software interno al ritmo de tu operación.</h1>
+          <p class="lead">
+            Tu operación creció más rápido que tus sistemas. Diseño, gestiono y construyo — con mi equipo — el software y las automatizaciones que la ponen al día. En producción en 8–16 semanas, con un solo responsable de punta a punta.
+          </p>
+
+          <div class="hero-action">
+            <a class="button" href="#contacto" data-track="cta" data-location="hero">
+              {hasBooking ? "Reservar llamada de encaje" : "Contarme tu proceso"} <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
+            </a>
+            <p class="microcopy">
+              {hasBooking
+                ? "30 minutos gratis, conmigo — no con un comercial. En 48 horas recibes una lectura y un rango."
+                : "Tres campos, sin newsletter. En 48 horas recibes una lectura y un rango, o una respuesta honesta."}
+            </p>
+          </div>
+
+          <dl class="hero-facts" aria-label="Condiciones principales">
+            <div><dt>Plazo</dt><dd>8–16 semanas</dd></div>
+            <div><dt>Modelo</dt><dd>precio cerrado</dd></div>
+            <div><dt>Propiedad</dt><dd>código tuyo</dd></div>
+          </dl>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-visual__status">
+            <span class="label">De fragmentos a sistema</span>
+          </div>
+          <HeroGraph />
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule problem" id="problema" aria-labelledby="problem-title">
+      <div class="container">
+        <div class="reading-column">
+          <p class="eyebrow">Estado: manual</p>
+          <h2 id="problem-title">¿Te suena?</h2>
+          <ul class="symptom-log">
+            {symptoms.map((symptom) => (
+              <li><span aria-hidden="true"></span>{symptom}</li>
+            ))}
+          </ul>
+          <p class="problem-thesis">
+            No es un problema de tecnología. Es la brecha entre cómo creció tu negocio y los sistemas con los que lo operas. Esa brecha se paga todos los meses, en horas y en errores.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule thesis" aria-labelledby="thesis-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Una categoría deliberada</p>
+          <h2 id="thesis-title">La estructura justa, sin teléfono roto.</h2>
+          <p class="lead">Tratas con quien entiende, diseña y decide; respaldado por capacidad real para construir.</p>
+        </div>
+
+        <div class="positioning-axis">
+          <article class="positioning-node positioning-node--edge">
+            <p class="label">Freelancer</p>
+            <h3>Directo, pero frágil</h3>
+            <p>Económico; si se cae esa persona, también se cae tu proyecto.</p>
+          </article>
+          <span class="axis-line" aria-hidden="true"></span>
+          <article class="positioning-node positioning-node--core">
+            <p class="label">Aquí · lo del medio</p>
+            <h3>Responsable + equipo</h3>
+            <p>Yo diseño y decido; un núcleo estable construye. Gestión y producto viven en la misma cabeza.</p>
+          </article>
+          <span class="axis-line" aria-hidden="true"></span>
+          <article class="positioning-node positioning-node--edge">
+            <p class="label">Agencia</p>
+            <h3>Estructura, pero distancia</h3>
+            <p>Hablas con un comercial; construye alguien que no conoció tu problema.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule services" id="servicios" aria-labelledby="services-title">
+      <div class="container">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Oferta · precio visible</p>
+            <h2 id="services-title">De entender la operación a ponerla en producción.</h2>
+          </div>
+          <p class="lead">Tres etapas conectadas. Puedes salir con el diagnóstico o continuar con un alcance y un precio que ya entiendes.</p>
+        </div>
+
+        <div class="offer-pipeline">
+          {offers.map((offer, index) => (
+            <>
+              <article class:list={["offer-card", offer.core && "offer-card--core"]}>
+                {offer.core && <span class="offer-card__core label">Core</span>}
+                <p class="offer-card__price data">{offer.price}</p>
+                <h3>{offer.title}</h3>
+                <p class="offer-card__description">{offer.description}</p>
+                <p class="offer-card__owner label">Quién: {offer.owner}</p>
+              </article>
+              {index < offers.length - 1 && <span class="offer-arrow icon-arrow" aria-hidden="true"></span>}
+            </>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof" id="prueba" aria-labelledby="proof-title" data-proof-section>
+      <div class="container">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Compromisos verificables</p>
+            <h2 id="proof-title">Compromisos que puedes verificar antes de la entrega.</h2>
+          </div>
+          <p class="lead">Sin métricas anónimas ni cifras sin contexto. Estas tres condiciones quedan visibles desde el inicio.</p>
+        </div>
+
+        <div class="proof-artifact">
+          <div class="proof-artifact__head label" aria-hidden="true">
+            <span>Señal</span><span>Cómo se comprueba</span><span>Diff de estado</span>
+          </div>
+          {proofRows.map((row) => (
+            <article class="proof-row">
+              <h3>{row.label}</h3>
+              <p>{row.copy}</p>
+              <div class="proof-diff">
+                <div><span class="proof-before data">{row.before}</span><span class="icon-arrow" aria-hidden="true"></span><span class="proof-after data">{row.after}</span></div>
+                <small class="label">{row.stack}</small>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule process" id="proceso" aria-labelledby="process-title">
+      <div class="container">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Cómo trabajo</p>
+            <h2 id="process-title">Sabrás dónde está tu proyecto cada semana.</h2>
+          </div>
+          <p class="lead">La secuencia no termina en una presentación: llega a producción, propiedad y handover.</p>
+        </div>
+
+        <ol class="phase-list">
+          {phases.map((phase) => (
+            <li>
+              <span class="phase-number data">{phase.number}</span>
+              <div>
+                <p class="label">{phase.timing}</p>
+                <h3>{phase.title}</h3>
+                <p>{phase.copy}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <ProcessArtifact />
+      </div>
+    </section>
+
+    <section class="section section-rule about" id="quien" aria-labelledby="about-title">
+      <div class="container about-grid">
+        <div class="identity-panel">
+          {siteConfig.portraitPath ? (
+            <img
+              src={siteConfig.portraitPath}
+              width="560"
+              height="700"
+              loading="lazy"
+              decoding="async"
+              alt="Felipe Peña, product manager técnico"
+            />
+          ) : (
+            <div class="identity-monogram" aria-hidden="true">
+              <span>FP</span>
+              <div class="identity-nodes"><i></i><i></i><i></i><i></i></div>
+            </div>
+          )}
+          <p class="label">Product manager técnico · Bogotá / remoto</p>
+        </div>
+
+        <div class="about-copy">
+          <p class="eyebrow">Quién responde</p>
+          <h2 id="about-title">Felipe Peña, desde la primera llamada hasta la entrega.</h2>
+          <p class="lead">
+            Diseño la solución, gestiono el proyecto y escribo código. La persona que escucha el problema es la misma que toma decisiones y responde por el resultado.
+          </p>
+          <p>
+            No trabajo solo — y eso es deliberado. El equipo entra como capacidad concreta, no como una caja negra.
+          </p>
+          {siteConfig.linkedInUrl && (
+            <a class="text-link" href={siteConfig.linkedInUrl} rel="me external">Ver perfil en LinkedIn <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>
+          )}
+        </div>
+
+        <aside class="capacity-panel" aria-label="Capacidad del equipo">
+          <p class="label">La capacidad, en concreto</p>
+          <ul>
+            <li><span aria-hidden="true"></span> Núcleo recurrente según el alcance</li>
+            <li><span aria-hidden="true"></span> Red flexible por especialidad</li>
+            <li><span aria-hidden="true"></span> Conocimiento en al menos 2 personas + docs</li>
+            <li><span aria-hidden="true"></span> Nombre y rol en cada propuesta</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section--tight section-rule exclusions" aria-labelledby="exclusions-title">
+      <div class="container exclusions-grid">
+        <div>
+          <p class="eyebrow">Filtro publicado</p>
+          <h2 id="exclusions-title">Qué no hago.</h2>
+        </div>
+        <div>
+          <ul>
+            {exclusions.map((item) => <li><span aria-hidden="true">×</span>{item}</li>)}
+          </ul>
+          <p class="microcopy">Si lo tuyo es esto, te lo digo en los primeros 10 minutos y te ahorro el resto.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule faq" id="preguntas" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Objeciones a la vista</p>
+          <h2 id="faq-title">Preguntas directas.</h2>
+        </div>
+        <dl class="faq-grid">
+          {faqs.map((faq) => (
+            <div>
+              <dt>{faq.question}</dt>
+              <dd>{faq.answer}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <ContactPanel />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span class="footer-mark" aria-hidden="true">FP</span>
+        <p><strong>Felipe Peña</strong><br />Software interno y automatización de datos.</p>
+      </div>
+      <p class="footer-stack data">PYTHON · TYPESCRIPT · SQL · KAFKA · AIRFLOW · PYSPARK · FASTAPI</p>
+      <div class="footer-meta">
+        {siteConfig.linkedInUrl && <a href={siteConfig.linkedInUrl} rel="me external">LinkedIn <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>}
+        <span>Bogotá / remoto</span>
+        <span>© {new Date().getFullYear()}</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../scripts/site.ts"></script>
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: calc(45rem - var(--header-height));
+    display: grid;
+    align-items: center;
+    padding-block: clamp(var(--space-7), 7vh, var(--space-9));
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(23rem, 0.9fr);
+    gap: clamp(var(--space-7), 6vw, var(--space-9));
+    align-items: center;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-copy .eyebrow {
+    margin-bottom: var(--space-5);
+  }
+
+  .hero-copy .lead {
+    margin-top: var(--space-5);
+  }
+
+  .hero-action {
+    display: grid;
+    grid-template-columns: auto minmax(13rem, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+    margin-top: var(--space-6);
+  }
+
+  .hero-action .microcopy {
+    max-width: 29ch;
+  }
+
+  .hero-facts {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+    padding-top: var(--space-4);
+    border-top: var(--border) solid var(--line);
+  }
+
+  .hero-facts dt,
+  .hero-facts dd {
+    font-family: var(--font-data);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero-facts dt {
+    color: var(--graphite);
+    font-size: var(--text-label);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .hero-facts dd {
+    margin-top: var(--space-1);
+    font-size: var(--text-micro);
+    font-weight: 600;
+  }
+
+  .hero-visual {
+    align-self: center;
+  }
+
+  .hero-visual__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .hero-visual__status > .label {
+    color: var(--graphite);
+  }
+
+  .problem h2,
+  .section-heading h2 {
+    margin-top: var(--space-4);
+  }
+
+  .symptom-log {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    margin: var(--space-7) 0 0;
+    border-top: var(--border) solid var(--line);
+    list-style: none;
+  }
+
+  .symptom-log li {
+    display: grid;
+    grid-template-columns: var(--space-3) 1fr;
+    gap: var(--space-4);
+    align-items: start;
+    padding-block: var(--space-4);
+    border-bottom: var(--border) solid var(--line);
+  }
+
+  .symptom-log li > span {
+    width: var(--space-2);
+    height: var(--space-2);
+    margin-top: 0.62em;
+    border-radius: var(--radius-round);
+    background: var(--manual);
+  }
+
+  .problem-thesis {
+    max-width: 58ch;
+    margin-top: var(--space-6);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: var(--text-statement);
+    font-stretch: 108%;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .section-heading {
+    max-width: var(--reading);
+    margin-bottom: var(--space-7);
+  }
+
+  .section-heading .lead {
+    margin-top: var(--space-5);
+  }
+
+  .section-heading--split {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.72fr);
+    gap: var(--space-7);
+    align-items: end;
+  }
+
+  .positioning-axis {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(var(--space-5), 0.22fr) minmax(0, 1.25fr) minmax(var(--space-5), 0.22fr) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .positioning-node {
+    min-height: 13rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .positioning-node .label {
+    margin-bottom: var(--space-4);
+    color: var(--graphite);
+  }
+
+  .positioning-node p:last-child {
+    margin-top: var(--space-3);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+
+  .positioning-node--edge {
+    border: var(--border) dashed var(--line-strong);
+  }
+
+  .positioning-node--core {
+    min-height: 16rem;
+    border: var(--border-strong) solid var(--ink);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .positioning-node--core .label,
+  .positioning-node--core p:last-child {
+    color: var(--ink);
+  }
+
+  .axis-line {
+    height: var(--border);
+    background: var(--ink);
+  }
+
+  .offer-pipeline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: stretch;
+  }
+
+  .offer-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 27rem;
+    padding: var(--space-6);
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .offer-card--core {
+    border: var(--border-strong) solid var(--ink);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .offer-card__core {
+    position: absolute;
+    top: calc(-1 * var(--space-3));
+    right: var(--space-4);
+    border: var(--border) solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .offer-card__price {
+    min-height: var(--space-7);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
+    border-bottom: var(--border) solid var(--line);
+    font-size: var(--text-small);
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .offer-card__description {
+    margin-top: var(--space-4);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  .offer-card__owner {
+    margin-top: auto;
+    padding-top: var(--space-6);
+    color: var(--graphite);
+    line-height: 1.6;
+  }
+
+  .offer-arrow {
+    align-self: center;
+    color: var(--ink);
+    font-family: var(--font-data);
+  }
+
+  .proof {
+    border-block: var(--border-strong) solid var(--ink);
+    background: var(--paper-deep);
+  }
+
+  .proof-artifact {
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background-color: var(--paper-raised);
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--line) 56%, transparent) var(--border), transparent var(--border)),
+      linear-gradient(to bottom, color-mix(in srgb, var(--line) 36%, transparent) var(--border), transparent var(--border));
+    background-size: 4rem 4rem;
+  }
+
+  .proof-artifact__head,
+  .proof-row {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr) minmax(18rem, 0.8fr);
+    gap: var(--space-6);
+    align-items: center;
+    padding-inline: clamp(var(--space-4), 3vw, var(--space-6));
+  }
+
+  .proof-artifact__head {
+    min-height: var(--target);
+    color: var(--graphite);
+    border-bottom: var(--border) solid var(--line);
+  }
+
+  .proof-row {
+    min-height: 11rem;
+    border-bottom: var(--border) solid var(--line);
+  }
+
+  .proof-row:last-child {
+    border-bottom: 0;
+  }
+
+  .proof-row > p {
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  .proof-diff > div {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .proof-before,
+  .proof-after {
+    font-size: var(--text-diff);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .proof-before {
+    color: var(--manual);
+    text-decoration: line-through;
+    text-decoration-thickness: var(--border);
+  }
+
+  .proof-after {
+    color: var(--production);
+  }
+
+  .proof-diff small {
+    display: block;
+    margin-top: var(--space-3);
+    color: var(--graphite);
+  }
+
+  .phase-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 0;
+    margin: 0 0 var(--space-7);
+    border-block: var(--border) solid var(--line);
+    list-style: none;
+  }
+
+  .phase-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-right: var(--border) solid var(--line);
+  }
+
+  .phase-list li:last-child {
+    border-right: 0;
+  }
+
+  .phase-number {
+    color: var(--ink);
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .phase-list .label {
+    color: var(--graphite);
+  }
+
+  .phase-list h3 {
+    margin-top: var(--space-2);
+  }
+
+  .phase-list li p:last-child {
+    margin-top: var(--space-3);
+    color: var(--graphite);
+    font-size: var(--text-micro);
+    line-height: 1.5;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.58fr) minmax(0, 1.15fr) minmax(16rem, 0.72fr);
+    gap: clamp(var(--space-6), 5vw, var(--space-8));
+    align-items: start;
+  }
+
+  .identity-panel {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .identity-panel img,
+  .identity-monogram {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    object-fit: cover;
+  }
+
+  .identity-monogram {
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .identity-monogram > span {
+    font-family: var(--font-display);
+    font-size: var(--text-monogram);
+    font-stretch: 112%;
+    font-weight: 650;
+    letter-spacing: -0.04em;
+  }
+
+  .identity-nodes {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    left: var(--space-4);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+  }
+
+  .identity-nodes::before {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: var(--border-strong);
+    background: var(--ink);
+    content: "";
+  }
+
+  .identity-nodes i {
+    z-index: 1;
+    width: var(--space-3);
+    height: var(--space-3);
+    justify-self: center;
+    border-radius: var(--radius-round);
+    background: var(--graphite);
+  }
+
+  .identity-panel > .label {
+    color: var(--graphite);
+    line-height: 1.5;
+  }
+
+  .about-copy h2 {
+    margin-top: var(--space-4);
+  }
+
+  .about-copy .lead,
+  .about-copy > p:not(.eyebrow) {
+    margin-top: var(--space-5);
+  }
+
+  .about-copy > p:not(.eyebrow, .lead) {
+    max-width: 56ch;
+  }
+
+  .text-link {
+    display: inline-flex;
+    min-height: var(--target);
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    color: var(--production);
+    font-weight: 600;
+  }
+
+  .capacity-panel {
+    padding-left: var(--space-5);
+    border-left: var(--border-strong) solid var(--line);
+  }
+
+  .capacity-panel > .label {
+    color: var(--ink);
+  }
+
+  .capacity-panel ul {
+    display: grid;
+    gap: var(--space-4);
+    padding: 0;
+    margin: var(--space-5) 0 0;
+    list-style: none;
+  }
+
+  .capacity-panel li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    color: var(--graphite);
+    font-family: var(--font-data);
+    font-size: var(--text-label);
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .capacity-panel li span {
+    width: var(--space-2);
+    height: var(--space-2);
+    align-self: center;
+    border-radius: var(--radius-round);
+    background: currentColor;
+    color: var(--ink);
+  }
+
+  .exclusions-grid {
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: var(--space-8);
+  }
+
+  .exclusions h2 {
+    margin-top: var(--space-4);
+  }
+
+  .exclusions ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    padding: 0;
+    margin: 0 0 var(--space-5);
+    list-style: none;
+  }
+
+  .exclusions li {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .exclusions li span {
+    color: var(--ink-muted);
+    font-family: var(--font-data);
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 var(--space-7);
+  }
+
+  .faq-grid div {
+    padding-block: var(--space-5);
+    border-top: var(--border) solid var(--line);
+  }
+
+  .faq-grid dt {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .faq-grid dd {
+    margin-top: var(--space-3);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  .site-footer {
+    padding-block: var(--space-6);
+    border-top: var(--border) solid var(--line-strong);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.4fr auto;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .footer-mark {
+    display: grid;
+    width: var(--target);
+    height: var(--target);
+    flex: none;
+    place-items: center;
+    border: var(--border) solid var(--paper);
+    border-radius: var(--radius);
+    font-family: var(--font-data);
+    font-size: var(--text-label);
+    font-weight: 600;
+  }
+
+  .footer-brand p {
+    font-size: var(--text-micro);
+    line-height: 1.45;
+  }
+
+  .footer-stack {
+    color: var(--line);
+    font-size: var(--text-tiny);
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .footer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    color: var(--line);
+    font-size: var(--text-micro);
+  }
+
+  @media (max-width: 74.9375rem) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+
+    .hero-copy {
+      max-width: var(--reading);
+    }
+
+    .hero-visual {
+      width: min(100%, 46rem);
+    }
+  }
+
+  @media (max-width: 56.25rem) {
+    .section-heading--split,
+    .about-grid,
+    .exclusions-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+
+    .positioning-axis {
+      grid-template-columns: 1fr;
+      justify-items: stretch;
+    }
+
+    .positioning-node {
+      min-height: auto;
+    }
+
+    .positioning-node--core {
+      min-height: auto;
+    }
+
+    .axis-line {
+      width: var(--border);
+      height: var(--space-5);
+      justify-self: center;
+    }
+
+    .offer-pipeline {
+      grid-template-columns: 1fr;
+    }
+
+    .offer-card {
+      min-height: auto;
+    }
+
+    .offer-arrow {
+      transform: rotate(90deg);
+    }
+
+    .proof-artifact__head {
+      display: none;
+    }
+
+    .proof-row {
+      grid-template-columns: minmax(8rem, 0.5fr) 1.5fr;
+      gap: var(--space-4) var(--space-6);
+      padding-block: var(--space-5);
+    }
+
+    .proof-diff {
+      grid-column: 2;
+    }
+
+    .phase-list {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .phase-list li:nth-child(2) {
+      border-right: 0;
+    }
+
+    .phase-list li:nth-child(-n + 2) {
+      border-bottom: var(--border) solid var(--line);
+    }
+
+    .identity-panel {
+      max-width: 18rem;
+    }
+
+    .capacity-panel {
+      padding-top: var(--space-5);
+      padding-left: 0;
+      border-top: var(--border-strong) solid var(--line);
+      border-left: 0;
+    }
+
+    .faq-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      text-align: left;
+    }
+
+    .footer-stack {
+      text-align: left;
+    }
+
+    .footer-meta {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 37.4375rem) {
+    .hero {
+      min-height: auto;
+      padding-top: var(--space-7);
+      padding-bottom: var(--space-8);
+    }
+
+    .hero-grid {
+      gap: var(--space-8);
+    }
+
+    .hero-action {
+      width: 100%;
+      grid-template-columns: 1fr;
+    }
+
+    .hero-action .microcopy {
+      max-width: none;
+    }
+
+    .hero-facts {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .hero-facts div {
+      display: grid;
+      grid-template-columns: 6rem 1fr;
+      gap: var(--space-3);
+    }
+
+    .hero-facts dd {
+      margin-top: 0;
+    }
+
+    .hero-visual__status {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .proof-row {
+      grid-template-columns: 1fr;
+    }
+
+    .proof-diff {
+      grid-column: auto;
+    }
+
+    .proof-before,
+    .proof-after {
+      font-size: var(--text-diff);
+    }
+
+    .phase-list {
+      grid-template-columns: 1fr;
+    }
+
+    .phase-list li {
+      border-right: 0;
+      border-bottom: var(--border) solid var(--line);
+    }
+
+    .phase-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .identity-panel {
+      max-width: none;
+    }
+  }
+</style>

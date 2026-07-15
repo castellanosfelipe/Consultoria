@@ -1,0 +1,117 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+---
+
+<BaseLayout
+  title="Página no encontrada | Felipe Peña"
+  description="La ruta que buscas no existe. Vuelve a la página principal de Felipe Peña."
+  canonicalPath="/404/"
+  noindex
+>
+  <SiteHeader />
+  <main id="contenido" class="error-page">
+    <div class="container error-grid">
+      <div>
+        <p class="eyebrow">Error de ruta</p>
+        <p class="error-code data" aria-hidden="true">404</p>
+        <h1>Este nodo no conecta con nada.</h1>
+        <p class="lead">La dirección puede haber cambiado o el enlace está incompleto.</p>
+        <a class="button" href="/">Volver al sistema <span class="icon-arrow" aria-hidden="true"></span></a>
+      </div>
+      <div class="error-graph" aria-hidden="true">
+        <span></span><span></span><span></span><i>×</i>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .error-page {
+    min-height: calc(100vh - var(--header-height));
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-8);
+  }
+
+  .error-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.65fr);
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  .error-code {
+    margin-top: var(--space-5);
+    color: var(--manual);
+    font-size: var(--text-data-xl);
+    font-weight: 600;
+  }
+
+  h1 {
+    max-width: 10ch;
+    margin-top: var(--space-3);
+  }
+
+  .lead {
+    margin-top: var(--space-5);
+  }
+
+  .button {
+    margin-top: var(--space-6);
+  }
+
+  .error-graph {
+    position: relative;
+    min-height: 18rem;
+    border: var(--border) solid var(--line);
+    background: var(--paper-raised);
+  }
+
+  .error-graph::before,
+  .error-graph::after {
+    position: absolute;
+    top: 50%;
+    height: var(--border-strong);
+    background: var(--ink);
+    content: "";
+  }
+
+  .error-graph::before { left: 12%; width: 31%; }
+  .error-graph::after { right: 12%; width: 28%; }
+
+  .error-graph span {
+    position: absolute;
+    top: calc(50% - var(--space-2));
+    width: var(--space-4);
+    height: var(--space-4);
+    border-radius: var(--radius-round);
+    background: var(--ink);
+  }
+
+  .error-graph span:nth-child(1) { left: 12%; }
+  .error-graph span:nth-child(2) { left: 40%; }
+  .error-graph span:nth-child(3) { right: 12%; }
+
+  .error-graph i {
+    position: absolute;
+    top: 50%;
+    left: 56%;
+    color: var(--manual);
+    font-family: var(--font-data);
+    font-size: var(--space-6);
+    font-style: normal;
+    font-weight: 600;
+    transform: translate(-50%, -50%);
+  }
+
+  @media (max-width: 43.75rem) {
+    .error-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .error-graph {
+      min-height: 12rem;
+    }
+  }
+</style>

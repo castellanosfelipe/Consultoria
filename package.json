@@ -1,0 +1,25 @@
+{
+  "name": "felipe-pena-landing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/check-budget.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "npm run check && npm run build",
+    "lighthouse": "lhci autorun"
+  },
+  "dependencies": {
+    "astro": "7.0.9"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "@lhci/cli": "0.15.1",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

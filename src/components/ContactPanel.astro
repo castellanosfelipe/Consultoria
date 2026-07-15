@@ -1,0 +1,329 @@
+---
+import { siteConfig } from "../config";
+
+const hasBooking = Boolean(siteConfig.bookingUrl);
+---
+
+<section class="section contact-section" id="contacto" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="contact-intro">
+      <p class="eyebrow">Siguiente paso</p>
+      <h2 id="contact-title">¿Cuántas horas costó esta semana la brecha entre tu operación y tus sistemas?</h2>
+      <p class="lead">
+        En 30 minutos revisamos el proceso que más fricción genera. En 48 horas recibes mi lectura por escrito, un rango o un “no soy la opción”.
+      </p>
+    </div>
+
+    <ol class="next-steps" aria-label="Qué pasa después">
+      <li><span>01</span><strong>Eliges ruta</strong><small>{hasBooking ? "Agenda o escribe. Dos minutos." : "Escribe el contexto. Dos minutos."}</small></li>
+      <li><span>02</span><strong>Tres datos</strong><small>Nombre, email y contexto.</small></li>
+      <li><span>03</span><strong>La llamada</strong><small>30 minutos sobre tu operación, conmigo.</small></li>
+      <li><span>04</span><strong>En 48 horas</strong><small>Lectura + rango, o una respuesta honesta.</small></li>
+    </ol>
+
+    <div class:list={["contact-grid", !hasBooking && "contact-grid--single"]}>
+      {hasBooking && (
+        <article class="contact-card booking-card">
+          <div>
+            <p class="label">Ruta A · agenda</p>
+            <h3>Reserva una llamada de encaje</h3>
+            <p class="microcopy">El calendario se carga solo cuando lo pides; no compite con el rendimiento inicial.</p>
+          </div>
+          <button
+            class="button"
+            type="button"
+            data-booking-open
+            data-booking-url={siteConfig.bookingUrl}
+            data-track="cta"
+            data-location="booking"
+          >
+            Cargar agenda <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
+          </button>
+          <div class="booking-frame" data-booking-frame hidden aria-live="polite"></div>
+          <p class="booking-direct">
+            <a href={siteConfig.bookingUrl} target="_blank" rel="external noopener">Abrir agenda directamente</a>
+          </p>
+          <noscript>
+            <a href={siteConfig.bookingUrl} rel="external">Abrir agenda en una pestaña nueva</a>
+          </noscript>
+        </article>
+      )}
+
+      <article class="contact-card contact-card--form">
+        <div>
+          <p class="label">{hasBooking ? "Ruta B · mensaje" : "Cuéntame el contexto"}</p>
+          <h3>Prefiero escribir</h3>
+          <p class="microcopy">Tres campos. Sin newsletter, sin secuencias automáticas.</p>
+        </div>
+
+        <form
+          class="contact-form"
+          name="contacto"
+          method="POST"
+          action="/gracias/"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+          data-contact-form
+        >
+          <input type="hidden" name="form-name" value="contacto" />
+          <input type="hidden" name="bot-field" />
+
+          <label>
+            <span>Nombre</span>
+            <input name="nombre" type="text" autocomplete="name" required maxlength="80" />
+          </label>
+
+          <label>
+            <span>Email de trabajo</span>
+            <input name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" />
+          </label>
+
+          <label class="contact-form__wide">
+            <span>Una línea de contexto</span>
+            <input
+              name="contexto"
+              type="text"
+              required
+              maxlength="280"
+              placeholder="Ej. conciliamos pedidos de cuatro sistemas a mano"
+            />
+          </label>
+
+          <div class="contact-form__actions contact-form__wide">
+            <button class="button" type="submit">Enviar contexto <span class="icon-arrow" aria-hidden="true"></span></button>
+            <p>Solo usaré estos datos para responderte.</p>
+          </div>
+        </form>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    border-top: var(--border-strong) solid var(--ink);
+    background: var(--paper-raised);
+  }
+
+  .contact-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.75fr);
+    gap: var(--space-7);
+    align-items: end;
+  }
+
+  .contact-intro .eyebrow {
+    grid-column: 1 / -1;
+  }
+
+  .contact-intro h2 {
+    max-width: 21ch;
+  }
+
+  .next-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--border);
+    padding: 0;
+    margin: var(--space-8) 0 var(--space-7);
+    border: var(--border) solid var(--line);
+    list-style: none;
+  }
+
+  .next-steps li {
+    min-height: 9rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border-right: var(--border) solid var(--line);
+  }
+
+  .next-steps li:last-child {
+    border-right: 0;
+  }
+
+  .next-steps span,
+  .next-steps strong {
+    font-family: var(--font-data);
+  }
+
+  .next-steps span {
+    color: var(--ink);
+    font-size: var(--text-label);
+    font-weight: 600;
+  }
+
+  .next-steps strong {
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .next-steps small {
+    color: var(--graphite);
+    font-size: var(--text-micro);
+    line-height: 1.45;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 0.82fr 1.18fr;
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .contact-grid--single {
+    grid-template-columns: minmax(0, var(--reading));
+  }
+
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: clamp(var(--space-5), 4vw, var(--space-7));
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .contact-card--form {
+    border: var(--border-strong) solid var(--ink);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .contact-card .label {
+    margin-bottom: var(--space-3);
+    color: var(--graphite);
+  }
+
+  .contact-card h3 {
+    margin-bottom: var(--space-3);
+  }
+
+  .booking-card > .button {
+    align-self: flex-start;
+  }
+
+  .booking-frame {
+    min-height: 42rem;
+    border-top: var(--border) solid var(--line);
+  }
+
+  .booking-frame :global(iframe) {
+    width: 100%;
+    min-height: 42rem;
+    border: 0;
+    background: var(--paper-raised);
+  }
+
+  .booking-direct {
+    color: var(--graphite);
+    font-size: var(--text-micro);
+  }
+
+  .contact-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+  }
+
+  .contact-form label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .contact-form label > span {
+    font-family: var(--font-data);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .contact-form input {
+    width: 100%;
+    min-height: var(--target);
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    color: var(--ink);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .contact-form input::placeholder {
+    color: var(--ink-muted);
+  }
+
+  .contact-form input:hover {
+    border-color: var(--ink);
+  }
+
+  .contact-form__wide {
+    grid-column: 1 / -1;
+  }
+
+  .contact-form__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .contact-form__actions p {
+    color: var(--graphite);
+    font-size: var(--text-micro);
+  }
+
+  @media (max-width: 56.25rem) {
+    .contact-intro,
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-intro {
+      gap: var(--space-5);
+    }
+
+    .next-steps {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .next-steps li:nth-child(2) {
+      border-right: 0;
+    }
+
+    .next-steps li:nth-child(-n + 2) {
+      border-bottom: var(--border) solid var(--line);
+    }
+  }
+
+  @media (max-width: 37.4375rem) {
+    .next-steps,
+    .contact-form {
+      grid-template-columns: 1fr;
+    }
+
+    .next-steps li {
+      min-height: auto;
+      border-right: 0;
+      border-bottom: var(--border) solid var(--line);
+    }
+
+    .next-steps li:last-child {
+      border-bottom: 0;
+    }
+
+    .contact-form__wide {
+      grid-column: auto;
+    }
+
+    .contact-form__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .booking-card > .button {
+      align-self: stretch;
+    }
+  }
+</style>

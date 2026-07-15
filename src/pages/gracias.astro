@@ -1,0 +1,58 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+---
+
+<BaseLayout
+  title="Mensaje recibido | Felipe Peña"
+  description="Gracias por compartir el contexto de tu operación."
+  canonicalPath="/gracias/"
+  noindex
+>
+  <SiteHeader />
+  <main id="contenido" class="thanks-page">
+    <div class="container">
+      <div class="thanks-card">
+        <span class="status-chip"><span class="status-dot"></span> mensaje recibido</span>
+        <p class="eyebrow">Siguiente estado</p>
+        <h1>Ya tengo el contexto.</h1>
+        <p class="lead">Lo revisaré personalmente. Recibirás una respuesta clara sobre encaje y siguiente paso.</p>
+        <a class="button button--secondary" href="/">Volver al inicio <span class="icon-arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .thanks-page {
+    min-height: calc(100vh - var(--header-height));
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-8);
+  }
+
+  .thanks-card {
+    max-width: var(--reading);
+    padding: clamp(var(--space-6), 6vw, var(--space-9));
+    border: var(--border-strong) solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .thanks-card .eyebrow {
+    margin-top: var(--space-7);
+  }
+
+  h1 {
+    margin-top: var(--space-4);
+  }
+
+  .lead {
+    margin-top: var(--space-5);
+  }
+
+  .button {
+    margin-top: var(--space-6);
+  }
+</style>

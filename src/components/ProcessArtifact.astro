@@ -1,0 +1,326 @@
+---
+const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
+---
+
+<div class="process-artifact">
+  <div class="process-artifact__meta">
+    <span class="label">Capacidad por semana</span>
+    <span class="status-chip"><span class="status-dot"></span> demo cada viernes</span>
+  </div>
+
+  <div class="timeline" aria-hidden="true">
+    <span class="timeline__corner"></span>
+    {weeks.map((week) => <span class="timeline__week">S{week}</span>)}
+
+    <span class="timeline__label">TRABAJO</span>
+    <span class="timeline__phase timeline__phase--diagnosis">DIAGNÓSTICO</span>
+    <span class="timeline__phase timeline__phase--build">CONSTRUCCIÓN — ENTREGA</span>
+
+    <span class="timeline__label">FELIPE</span>
+    <span class="timeline__bar timeline__bar--owner"></span>
+
+    <span class="timeline__label">NÚCLEO</span>
+    <span class="timeline__bar timeline__bar--core"></span>
+
+    <span class="timeline__label">RED FLEX.</span>
+    <span class="timeline__bar timeline__bar--flex">SOLO SI SE EXIGE</span>
+
+    <span class="timeline__label timeline__label--production">DEMO</span>
+    <span class="timeline__demo timeline__demo--1"></span>
+    <span class="timeline__demo timeline__demo--2"></span>
+    <span class="timeline__demo timeline__demo--3"></span>
+    <span class="timeline__demo timeline__demo--4"></span>
+    <span class="timeline__demo timeline__demo--5"></span>
+    <span class="timeline__demo timeline__demo--6"></span>
+    <span class="timeline__demo timeline__demo--7"></span>
+    <span class="timeline__demo timeline__demo--8"></span>
+    <span class="timeline__demo timeline__demo--9"></span>
+    <span class="timeline__demo timeline__demo--10"></span>
+  </div>
+
+  <div class="mobile-lanes" aria-hidden="true">
+    <span class="mobile-lanes__corner">ROL / RITMO</span><span>SEM. 1–2</span><span class="mobile-lanes__last">SEM. 3–12+</span>
+    <span class="mobile-lanes__label">FELIPE</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"></i>
+    <span class="mobile-lanes__label">NÚCLEO</span><i class="mobile-lanes__empty">—</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"></i>
+    <span class="mobile-lanes__label">RED FLEX.</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last">SEGÚN ALCANCE</i>
+    <span class="mobile-lanes__label mobile-lanes__label--demo">DEMO</span><i class="mobile-lanes__demo">PRIMERO</i><i class="mobile-lanes__demo mobile-lanes__last">VIERNES</i>
+  </div>
+
+  <dl class="mobile-timeline">
+    <div>
+      <dt>Semanas 1–2</dt>
+      <dd><strong>Diagnóstico.</strong> Felipe participa; el primer demo aparece entre la semana 1 y 2.</dd>
+    </div>
+    <div>
+      <dt>Semanas 3–12+</dt>
+      <dd><strong>Construcción y entrega.</strong> Felipe sigue; entra el núcleo de ingeniería y se demuestra software cada viernes.</dd>
+    </div>
+    <div>
+      <dt>Cuando se exige</dt>
+      <dd><strong>Especialistas.</strong> La red flexible entra solo para una capacidad concreta.</dd>
+    </div>
+  </dl>
+
+  <p class="sr-only">
+    Felipe permanece durante todo el proyecto. El núcleo de ingeniería entra al construir; especialistas adicionales participan solo cuando son necesarios. Desde el primer demo, se muestra software cada viernes.
+  </p>
+</div>
+
+<style>
+  .process-artifact {
+    padding: clamp(var(--space-5), 4vw, var(--space-7));
+    border: var(--border) solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--paper-raised);
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--line) 54%, transparent) var(--border), transparent var(--border)),
+      linear-gradient(to bottom, color-mix(in srgb, var(--line) 38%, transparent) var(--border), transparent var(--border));
+    background-size: 3.5rem 3.5rem;
+  }
+
+  .process-artifact__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .process-artifact__meta > .label {
+    color: var(--graphite);
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: 7.5rem repeat(12, minmax(0, 1fr));
+    align-items: center;
+    gap: var(--space-2) var(--border);
+  }
+
+  .timeline__week,
+  .timeline__label,
+  .timeline__phase,
+  .timeline__bar,
+  .timeline__demo {
+    font-family: var(--font-data);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timeline__week {
+    color: var(--ink-muted);
+    font-size: var(--text-tiny);
+    text-align: center;
+  }
+
+  .timeline__demo::before,
+  .mobile-lanes__demo::before {
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0.48em solid currentColor;
+    border-left: 0.3em solid transparent;
+    content: "";
+  }
+
+  .timeline__label {
+    padding-right: var(--space-3);
+    color: var(--ink);
+    font-size: var(--text-tiny);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .timeline__label--production {
+    color: var(--production);
+  }
+
+  .timeline__phase {
+    min-height: var(--space-6);
+    display: grid;
+    place-items: center;
+    border: var(--border) solid currentColor;
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    font-size: var(--text-tiny);
+    font-weight: 600;
+  }
+
+  .timeline__phase--diagnosis {
+    grid-column: 2 / 4;
+    color: var(--manual);
+  }
+
+  .timeline__phase--build {
+    grid-column: 4 / 14;
+    color: var(--ink);
+  }
+
+  .timeline__bar {
+    min-height: var(--space-3);
+    border-radius: var(--radius);
+  }
+
+  .timeline__bar--owner {
+    grid-column: 2 / 14;
+    background: var(--ink);
+  }
+
+  .timeline__bar--core {
+    grid-column: 4 / 14;
+    background: var(--graphite);
+  }
+
+  .timeline__bar--flex {
+    min-height: var(--space-5);
+    grid-column: 7 / 11;
+    display: grid;
+    place-items: center;
+    border: var(--border) dashed var(--line-strong);
+    color: var(--graphite);
+    font-size: var(--text-nano);
+  }
+
+  .timeline__demo {
+    color: var(--production);
+    font-size: var(--text-micro);
+    text-align: center;
+  }
+
+  .timeline__demo--1 { grid-column: 4; }
+  .timeline__demo--2 { grid-column: 5; }
+  .timeline__demo--3 { grid-column: 6; }
+  .timeline__demo--4 { grid-column: 7; }
+  .timeline__demo--5 { grid-column: 8; }
+  .timeline__demo--6 { grid-column: 9; }
+  .timeline__demo--7 { grid-column: 10; }
+  .timeline__demo--8 { grid-column: 11; }
+  .timeline__demo--9 { grid-column: 12; }
+  .timeline__demo--10 { grid-column: 13; }
+
+  .mobile-lanes,
+  .mobile-timeline {
+    display: none;
+  }
+
+  @media (max-width: 56.25rem) {
+    .timeline {
+      display: none;
+    }
+
+    .mobile-lanes {
+      display: grid;
+      grid-template-columns: minmax(5.25rem, 0.72fr) repeat(2, minmax(0, 1fr));
+      align-items: center;
+      border: var(--border) solid var(--line);
+      font-family: var(--font-data);
+      font-size: var(--text-nano);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mobile-lanes > * {
+      min-width: 0;
+      min-height: var(--space-6);
+      display: grid;
+      place-items: center;
+      padding: var(--space-2);
+      border-right: var(--border) solid var(--line);
+      border-bottom: var(--border) solid var(--line);
+      font-style: normal;
+      text-align: center;
+    }
+
+    .mobile-lanes__last {
+      border-right: 0;
+    }
+
+    .mobile-lanes__corner,
+    .mobile-lanes__label {
+      justify-items: start;
+      color: var(--ink);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .mobile-lanes__bar {
+      width: calc(100% - var(--space-3));
+      min-height: var(--space-3);
+      align-self: center;
+      justify-self: center;
+      padding: 0;
+      border: 0;
+      border-radius: var(--radius);
+    }
+
+    .mobile-lanes__bar--owner {
+      background: var(--ink);
+    }
+
+    .mobile-lanes__bar--core {
+      background: var(--graphite);
+    }
+
+    .mobile-lanes__bar--flex {
+      min-height: var(--space-5);
+      grid-column: 2 / 4;
+      width: calc(100% - var(--space-3));
+      border: var(--border) dashed var(--line-strong);
+      color: var(--graphite);
+    }
+
+    .mobile-lanes__empty {
+      color: var(--line-strong);
+    }
+
+    .mobile-lanes__label--demo,
+    .mobile-lanes__demo {
+      color: var(--production);
+      font-weight: 600;
+    }
+
+    .mobile-timeline {
+      display: grid;
+      margin-top: var(--space-4);
+      gap: 0;
+    }
+
+    .mobile-timeline div {
+      display: grid;
+      grid-template-columns: minmax(7rem, 0.6fr) 1.4fr;
+      gap: var(--space-5);
+      padding-block: var(--space-4);
+      border-top: var(--border) solid var(--line);
+    }
+
+    .mobile-timeline dt {
+      color: var(--ink);
+      font-family: var(--font-data);
+      font-size: var(--text-label);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .mobile-timeline dd {
+      color: var(--graphite);
+      font-size: var(--text-micro);
+      line-height: 1.5;
+    }
+
+    .mobile-timeline strong {
+      color: var(--ink);
+    }
+  }
+
+  @media (max-width: 37.4375rem) {
+    .process-artifact__meta {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .mobile-timeline div {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+</style>
