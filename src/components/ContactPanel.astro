@@ -1,7 +1,9 @@
 ---
-import { siteConfig } from "../config";
+import { siteConfig, withBasePath } from "../config";
 
 const hasBooking = Boolean(siteConfig.bookingUrl);
+const formAction = withBasePath("/gracias/");
+const formSubmitUrl = withBasePath("/");
 ---
 
 <section class="section contact-section" id="contacto" aria-labelledby="contact-title">
@@ -62,7 +64,8 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           class="contact-form"
           name="contacto"
           method="POST"
-          action="/gracias/"
+          action={formAction}
+          data-submit-url={formSubmitUrl}
           data-netlify="true"
           data-netlify-honeypot="bot-field"
           data-contact-form

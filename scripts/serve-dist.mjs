@@ -1,4 +1,4 @@
-import { readFile, stat } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import { brotliCompressSync, constants, gzipSync } from "node:zlib";
 import { createServer } from "node:http";
 import { extname, relative, resolve, sep } from "node:path";
@@ -12,9 +12,12 @@ const compressed = new Map();
 
 const deployHeaders = await readFile(resolve(distDirectory, "_headers"), "utf8");
 const criticalLink = deployHeaders.match(/^\s*Link:\s*(.+)$/im)?.[1]?.trim();
-if (!criticalLink || !/^<\/_astro\/[A-Za-z0-9._-]+\.css>; rel=preload; as=style$/.test(criticalLink)) {
+const criticalAssetPath = criticalLink?.match(/^<(\/(?:.*\/)?_astro\/[A-Za-z0-9._-]+\.css)>; rel=preload; as=style$/)?.[1];
+if (!criticalLink || !criticalAssetPath) {
   throw new Error("dist/_headers no contiene un preload CSS v\u00e1lido. Ejecuta el build completo.");
 }
+const deployedBasePath = criticalAssetPath.slice(0, criticalAssetPath.lastIndexOf("/_astro/"));
+const deployedRoot = deployedBasePath ? `${deployedBasePath}/` : "/";
 
 const netlifyConfig = await readFile(resolve(projectDirectory, "netlify.toml"), "utf8");
 const securityHeaderNames = [
@@ -75,18 +78,34 @@ const representation = (path, source, encoding) => {
 
 const cacheControl = (pathname, file) => {
   if (file.endsWith(".html")) return "no-cache";
-  if (pathname.startsWith("/_astro/")) return "public, max-age=31536000, immutable";
-  if (pathname.startsWith("/fonts/") || pathname.startsWith("/images/")) {
+  if (pathname.includes("/_astro/")) return "public, max-age=31536000, immutable";
+  if (pathname.includes("/fonts/") || pathname.includes("/images/")) {
     return "public, max-age=86400, must-revalidate";
   }
   return "public, max-age=0, must-revalidate";
+};
+
+const compressibleExtensions = new Set([".css", ".html", ".js", ".json", ".svg", ".txt", ".xml"]);
+const warmCompressionCache = async (directory) => {
+  const entries = await readdir(directory, { withFileTypes: true });
+  await Promise.all(entries.map(async (entry) => {
+    const path = resolve(directory, entry.name);
+    if (entry.isDirectory()) return warmCompressionCache(path);
+    if (!compressibleExtensions.has(extname(entry.name).toLowerCase())) return;
+    const source = await readFile(path);
+    representation(path, source, "br");
+    representation(path, source, "gzip");
+  }));
 };
 
 const server = createServer(async (request, response) => {
   try {
     const requestUrl = new URL(request.url || "/", `http://${host}:${port}`);
     let pathname = decodeURIComponent(requestUrl.pathname);
-    let file = resolve(distDirectory, `.${pathname}`);
+    const artifactPathname = deployedBasePath && (pathname === deployedBasePath || pathname.startsWith(deployedRoot))
+      ? pathname.slice(deployedBasePath.length) || "/"
+      : pathname;
+    let file = resolve(distDirectory, `.${artifactPathname}`);
     if (!insideDist(file)) throw new Error("Ruta inválida");
 
     try {
@@ -106,7 +125,8 @@ const server = createServer(async (request, response) => {
     }
 
     const accepted = request.headers["accept-encoding"] || "";
-    const encoding = accepted.includes("br") ? "br" : accepted.includes("gzip") ? "gzip" : "";
+    const canCompress = compressibleExtensions.has(extname(file).toLowerCase());
+    const encoding = canCompress && accepted.includes("br") ? "br" : canCompress && accepted.includes("gzip") ? "gzip" : "";
     const body = representation(file, source, encoding);
     const headers = {
       ...securityHeaders,
@@ -115,7 +135,7 @@ const server = createServer(async (request, response) => {
       "Content-Type": contentTypes.get(extname(file).toLowerCase()) || "application/octet-stream",
       Vary: "Accept-Encoding",
     };
-    if (status === 200 && (pathname === "/" || pathname === "/index.html")) {
+    if (status === 200 && (pathname === deployedRoot || pathname === `${deployedRoot}index.html`)) {
       headers.Link = criticalLink;
     }
     if (encoding) headers["Content-Encoding"] = encoding;
@@ -127,6 +147,8 @@ const server = createServer(async (request, response) => {
     response.end("Bad request");
   }
 });
+
+await warmCompressionCache(distDirectory);
 
 server.listen(port, host, () => {
   console.log(`QA server ready at http://${host}:${port}`);

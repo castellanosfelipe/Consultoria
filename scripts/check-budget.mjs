@@ -14,6 +14,7 @@ const parsedCss = new Set();
 const pendingJavaScript = [];
 const parsedJavaScript = new Set();
 const externalReferences = new Set();
+let publicBasePrefix = "";
 
 function decodeHtml(value) {
   return value
@@ -290,6 +291,15 @@ function localAsset(reference, basePathname, siteOrigin) {
     return null;
   }
 
+  if (publicBasePrefix) {
+    const insideBase = pathname === publicBasePrefix || pathname.startsWith(`${publicBasePrefix}/`);
+    if (!insideBase) {
+      failures.push(`La referencia local queda fuera del base path ${publicBasePrefix}/: ${cleanReference}`);
+      return null;
+    }
+    pathname = pathname.slice(publicBasePrefix.length) || "/";
+  }
+
   const absolutePath = resolve(distDirectory, `.${pathname}`);
   if (!isInsideDist(absolutePath)) {
     failures.push(`La referencia sale de dist/: ${cleanReference}`);
@@ -371,11 +381,14 @@ const canonicalTag = htmlTags(html, ["link"]).find(
 let siteOrigin = "http://local.invalid";
 if (canonicalTag?.attrs.href) {
   try {
-    siteOrigin = new URL(canonicalTag.attrs.href).origin;
+    const canonicalUrl = new URL(canonicalTag.attrs.href);
+    siteOrigin = canonicalUrl.origin;
+    publicBasePrefix = canonicalUrl.pathname === "/" ? "" : canonicalUrl.pathname.replace(/\/$/, "");
   } catch {
     failures.push("El canonical de / no es una URL absoluta válida.");
   }
 }
+const homeDocumentPathname = `${publicBasePrefix}/index.html`;
 
 const htmlReferences = [];
 const downloadRels = new Set(["icon", "manifest", "modulepreload", "preload", "stylesheet"]);
@@ -447,18 +460,18 @@ for (const { name, attrs } of htmlTags(html, ["link", "script", "img", "source",
 }
 
 for (const item of htmlReferences) {
-  await addAsset(item.reference, "/index.html", siteOrigin, item.reason, item.css, item.javascript);
+  await addAsset(item.reference, homeDocumentPathname, siteOrigin, item.reason, item.css, item.javascript);
 }
 
 for (const match of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) {
   for (const item of cssReferences(match[1])) {
-    await addAsset(item.reference, "/index.html", siteOrigin, "CSS inline", item.css);
+    await addAsset(item.reference, homeDocumentPathname, siteOrigin, "CSS inline", item.css);
   }
 }
 
 for (const match of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
   for (const item of cssReferences(decodeHtml(match[1] ?? match[2] ?? ""))) {
-    await addAsset(item.reference, "/index.html", siteOrigin, "atributo style", item.css);
+    await addAsset(item.reference, homeDocumentPathname, siteOrigin, "atributo style", item.css);
   }
 }
 
@@ -477,7 +490,7 @@ for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
   const attrs = attributes(match[1]);
   const type = (attrs.type ?? "").toLowerCase();
   if (!attrs.src && !["application/ld+json", "application/json", "importmap", "speculationrules"].includes(type)) {
-    await addJavaScriptReferences(match[2], "/index.html", "JavaScript inline");
+    await addJavaScriptReferences(match[2], homeDocumentPathname, "JavaScript inline");
   }
 }
 

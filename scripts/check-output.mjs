@@ -6,6 +6,7 @@ const projectDirectory = fileURLToPath(new URL("../", import.meta.url));
 const distDirectory = resolve(projectDirectory, "dist");
 const failures = [];
 let checks = 0;
+let publicBasePath = "/";
 
 function check(condition, message) {
   checks += 1;
@@ -97,6 +98,20 @@ function sameOrigin(url, origin, label) {
   check(Boolean(url) && url.origin === origin, `${label} debe usar el origen ${origin}.`);
 }
 
+function normalizeBasePath(raw) {
+  const trimmed = (raw || "/").trim();
+  if (trimmed === "/") return "/";
+  const normalized = trimmed.endsWith("/") ? trimmed : `${trimmed}/`;
+  check(/^\/(?:[A-Za-z0-9._~-]+\/)+$/.test(normalized), "PUBLIC_BASE_PATH debe ser una ruta absoluta simple.");
+  check(!normalized.split("/").some((segment) => segment === "." || segment === ".."), "PUBLIC_BASE_PATH no puede contener . ni ...");
+  return normalized;
+}
+
+function withPublicBasePath(pathname) {
+  const relativePath = pathname.replace(/^\/+/, "");
+  return relativePath ? `${publicBasePath}${relativePath}` : publicBasePath;
+}
+
 function flattenSchema(value) {
   if (Array.isArray(value)) return value.flatMap(flattenSchema);
   if (value && typeof value === "object" && Array.isArray(value["@graph"])) return flattenSchema(value["@graph"]);
@@ -134,6 +149,13 @@ function outputPathFromUrl(url) {
   } catch {
     check(false, `Ruta URL con codificación inválida: ${url.pathname}`);
     return null;
+  }
+  const basePrefix = publicBasePath === "/" ? "" : publicBasePath.slice(0, -1);
+  if (basePrefix) {
+    const insideBase = pathname === basePrefix || pathname.startsWith(`${basePrefix}/`);
+    check(insideBase, `La URL ${url.href} no está bajo ${publicBasePath}.`);
+    if (!insideBase) return null;
+    pathname = pathname.slice(basePrefix.length) || "/";
   }
   const path = resolve(distDirectory, `.${pathname}`);
   check(isInsideDist(path), `La URL ${url.href} sale de dist/.`);
@@ -182,6 +204,8 @@ async function publicEnvironment() {
 }
 
 const env = await publicEnvironment();
+publicBasePath = normalizeBasePath(env.PUBLIC_BASE_PATH);
+const publicBasePrefix = publicBasePath === "/" ? "" : publicBasePath.slice(0, -1);
 const homePath = resolve(distDirectory, "index.html");
 const thanksPath = resolve(distDirectory, "gracias", "index.html");
 const notFoundPath = resolve(distDirectory, "404.html");
@@ -205,14 +229,16 @@ const homeCanonicalTags = tags(home, "link").filter(({ attrs }) => relIncludes(a
 check(homeCanonicalTags.length === 1, "La home debe contener exactamente un canonical.");
 const homeCanonical = absoluteHttpUrl(homeCanonicalTags[0]?.attrs.href, "El canonical de la home");
 const origin = homeCanonical?.origin ?? null;
-check(homeCanonical?.pathname === "/", "El canonical de la home debe apuntar a /.");
+check(homeCanonical?.pathname === publicBasePath, `El canonical de la home debe apuntar a ${publicBasePath}.`);
 
 const stylesheets = tags(home, "link").filter(({ attrs }) => relIncludes(attrs, "stylesheet"));
 check(stylesheets.length === 1, "La home debe cargar exactamente una hoja CSS versionada.");
 const stylesheetPath = stylesheets[0]?.attrs.href ?? "";
-check(/^\/_astro\/[A-Za-z0-9._-]+\.css$/.test(stylesheetPath), "La hoja CSS principal debe ser un asset local versionado.");
+const expectedStylesheetPattern = new RegExp(`^${publicBasePrefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\/_astro\\/[A-Za-z0-9._-]+\\.css$`);
+check(expectedStylesheetPattern.test(stylesheetPath), "La hoja CSS principal debe ser un asset local versionado bajo el base path.");
+const deployHeaderScope = publicBasePrefix ? `${publicBasePrefix}/*` : "/";
 check(
-  deployHeaders === `/\n  Link: <${stylesheetPath}>; rel=preload; as=style\n`,
+  deployHeaders === `${deployHeaderScope}\n  Link: <${stylesheetPath}>; rel=preload; as=style\n`,
   "dist/_headers debe adelantar exactamente la hoja CSS que usa la home.",
 );
 
@@ -265,8 +291,8 @@ for (const [label, value] of [
 check(service?.founder?.["@id"] === person?.["@id"], "ProfessionalService.founder debe enlazar con Person.@id.");
 
 for (const [label, html, expectedPath] of [
-  ["/gracias/", thanks, "/gracias/"],
-  ["/404/", notFound, "/404/"],
+  ["/gracias/", thanks, withPublicBasePath("/gracias/")],
+  ["/404/", notFound, withPublicBasePath("/404/")],
 ]) {
   check(h1Count(html) === 1, `${label} debe contener exactamente un h1 no vacío.`);
   const robotsMeta = (metaContent(html, "name", "robots") ?? "").toLowerCase();
@@ -326,7 +352,8 @@ if (contactForm) {
   check(contactForm.attrs["data-netlify"]?.toLowerCase() === "true", "El formulario debe conservar data-netlify=true.");
   const action = resolvedHttpUrl(contactForm.attrs.action, homeCanonical ?? "http://local.invalid/", "Action del formulario");
   if (origin) sameOrigin(action, origin, "Action del formulario");
-  check(action?.pathname === "/gracias/", "El formulario debe terminar en /gracias/.");
+  check(action?.pathname === withPublicBasePath("/gracias/"), `El formulario debe terminar en ${withPublicBasePath("/gracias/")}.`);
+  check(contactForm.attrs["data-submit-url"] === publicBasePath, "El formulario debe enviar al base path configurado.");
 
   const inputs = tags(contactForm.body, "input").map(({ attrs }) => attrs);
   const visibleInputs = inputs.filter((attrs) => (attrs.type ?? "text").toLowerCase() !== "hidden");
@@ -382,7 +409,8 @@ const plausibleSrcEnv = (env.PUBLIC_PLAUSIBLE_SRC ?? "").trim();
 const plausibleDomainMeta = metaTags.filter(({ attrs }) => attrs.name === "plausible-domain");
 const plausibleSrcMeta = metaTags.filter(({ attrs }) => attrs.name === "plausible-src");
 if (plausibleDomain) {
-  const plausibleSrc = plausibleSrcEnv || "https://plausible.io/js/script.js";
+  const configuredPlausibleSrc = plausibleSrcEnv || "https://plausible.io/js/script.js";
+  const plausibleSrc = configuredPlausibleSrc.startsWith("/") ? withPublicBasePath(configuredPlausibleSrc) : configuredPlausibleSrc;
   check(plausibleDomainMeta.length === 1, "PUBLIC_PLAUSIBLE_DOMAIN exige una única configuración diferida.");
   check(plausibleSrcMeta.length === 1, "PUBLIC_PLAUSIBLE_DOMAIN exige un único origen de script diferido.");
   check(plausibleDomainMeta[0]?.attrs.content === plausibleDomain, "La configuración diferida no coincide con PUBLIC_PLAUSIBLE_DOMAIN.");
@@ -395,14 +423,15 @@ if (plausibleDomain) {
 
 const portraitPath = (env.PUBLIC_PORTRAIT_PATH ?? "").trim();
 if (portraitPath) {
-  const portraits = tags(home, "img").filter(({ attrs }) => attrs.src === portraitPath);
+  const deployedPortraitPath = withPublicBasePath(portraitPath);
+  const portraits = tags(home, "img").filter(({ attrs }) => attrs.src === deployedPortraitPath);
   check(portraits.length === 1, "PUBLIC_PORTRAIT_PATH debe renderizar exactamente una imagen.");
   const portrait = portraits[0]?.attrs;
   check(Number.parseInt(portrait?.width, 10) > 0 && Number.parseInt(portrait?.height, 10) > 0, "El retrato debe declarar width y height.");
   check(portrait?.loading?.toLowerCase() === "lazy", "El retrato fuera del viewport debe usar loading=lazy.");
   check(Boolean(portrait?.alt?.trim()), "El retrato debe tener alt real.");
   if (homeCanonical) {
-    const portraitUrl = new URL(portraitPath, homeCanonical);
+    const portraitUrl = new URL(deployedPortraitPath, homeCanonical);
     if (origin) sameOrigin(portraitUrl, origin, "PUBLIC_PORTRAIT_PATH");
     const portraitFile = outputPathFromUrl(portraitUrl);
     if (portraitFile) await readRequired(portraitFile, "el retrato configurado");

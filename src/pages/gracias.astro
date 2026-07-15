@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
+import { withBasePath } from "../config";
 ---
 
 <BaseLayout
@@ -17,7 +18,7 @@ import SiteHeader from "../components/SiteHeader.astro";
         <p class="eyebrow">Siguiente estado</p>
         <h1 data-confirmation-title>Sigamos la conversación.</h1>
         <p class="lead" data-confirmation-copy>Si todavía no compartiste tu contexto, vuelve al formulario: son solo tres campos.</p>
-        <a class="button button--secondary" href="/">Volver al inicio <span class="icon-arrow" aria-hidden="true"></span></a>
+        <a class="button button--secondary" href={withBasePath("/")}>Volver al inicio <span class="icon-arrow" aria-hidden="true"></span></a>
       </div>
     </div>
   </main>

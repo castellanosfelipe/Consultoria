@@ -17,11 +17,15 @@ const stylesheetPaths = stylesheetTags.map((tag) => {
   return match?.[1] ?? match?.[2] ?? "";
 });
 
-if (stylesheetPaths.length !== 1 || !/^\/_astro\/[A-Za-z0-9._-]+\.css$/.test(stylesheetPaths[0])) {
+const stylesheetPath = stylesheetPaths[0] ?? "";
+const stylesheetMatch = stylesheetPath.match(/^(\/.*)?\/_astro\/[A-Za-z0-9._-]+\.css$/);
+if (stylesheetPaths.length !== 1 || !stylesheetMatch) {
   throw new Error(`Se esperaba exactamente una hoja CSS local versionada; se encontraron: ${stylesheetPaths.join(", ") || "ninguna"}.`);
 }
 
-const linkValue = `<${stylesheetPaths[0]}>; rel=preload; as=style`;
-await writeFile(headersFile, `/\n  Link: ${linkValue}\n`, "utf8");
+const basePath = stylesheetPath.slice(0, stylesheetPath.lastIndexOf("/_astro/"));
+const headerScope = basePath ? `${basePath}/*` : "/";
+const linkValue = `<${stylesheetPath}>; rel=preload; as=style`;
+await writeFile(headersFile, `${headerScope}\n  Link: ${linkValue}\n`, "utf8");
 
-console.log(`Cabecera de preload generada para ${stylesheetPaths[0]}.`);
+console.log(`Cabecera de preload generada para ${stylesheetPath}.`);

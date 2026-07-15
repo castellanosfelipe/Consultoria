@@ -7,6 +7,21 @@ const env = loadEnv(process.env.NODE_ENV || "production", process.cwd(), "");
 const value = (name) => (env[name] || "").trim();
 const site = value("PUBLIC_SITE_URL") || value("URL") || "http://localhost:4321";
 
+const normalizeBasePath = (raw) => {
+  if (raw === "/") return "/";
+  if (!raw.startsWith("/") || raw.startsWith("//") || raw.includes("\\") || /[?#]/.test(raw)) {
+    throw new Error("PUBLIC_BASE_PATH debe ser una ruta absoluta simple, por ejemplo /Consultoria.");
+  }
+  const normalized = raw.endsWith("/") ? raw.slice(0, -1) : raw;
+  const segments = normalized.slice(1).split("/");
+  if (!segments.length || segments.some((segment) => !segment || segment === "." || segment === ".." || !/^[A-Za-z0-9._~-]+$/.test(segment))) {
+    throw new Error("PUBLIC_BASE_PATH contiene un segmento no válido.");
+  }
+  return normalized;
+};
+
+const basePath = normalizeBasePath(value("PUBLIC_BASE_PATH") || "/");
+
 const exactOrSubdomain = (hostname, domain) => hostname === domain || hostname.endsWith(`.${domain}`);
 const validDnsHostname = (hostname) => {
   if (hostname.length > 253) return false;
@@ -130,6 +145,7 @@ if (portraitPath) {
 
 export default defineConfig({
   site,
+  base: basePath,
   output: "static",
   trailingSlash: "always",
   compressHTML: true,

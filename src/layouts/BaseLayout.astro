@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { siteConfig } from "../config";
+import { siteConfig, withBasePath } from "../config";
 
 interface Props {
   title?: string;
@@ -18,19 +18,20 @@ const {
   noindex = false,
 } = Astro.props;
 
-const siteUrl = (Astro.site ?? new URL(siteConfig.siteUrl)).toString().replace(/\/$/, "");
-const canonical = new URL(canonicalPath, `${siteUrl}/`).toString();
-const shareImage = new URL(ogImage, `${siteUrl}/`).toString();
+const siteOrigin = (Astro.site ?? new URL(siteConfig.siteUrl)).origin;
+const homeUrl = new URL(siteConfig.basePath, `${siteOrigin}/`).toString();
+const canonical = new URL(withBasePath(canonicalPath), `${siteOrigin}/`).toString();
+const shareImage = new URL(ogImage, `${siteOrigin}/`).toString();
 const sameAs = siteConfig.linkedInUrl ? [siteConfig.linkedInUrl] : undefined;
 
 const schemas = [
   {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "@id": `${siteUrl}/#service`,
+    "@id": `${homeUrl}#service`,
     name: `${siteConfig.name} · Software de operaciones`,
     description,
-    url: siteUrl,
+    url: homeUrl,
     image: shareImage,
     priceRange: "USD 1,900–50,000",
     areaServed: [
@@ -42,14 +43,14 @@ const schemas = [
       addressLocality: siteConfig.city,
       addressCountry: siteConfig.country,
     },
-    founder: { "@id": `${siteUrl}/#felipe` },
+    founder: { "@id": `${homeUrl}#felipe` },
   },
   {
     "@context": "https://schema.org",
     "@type": "Person",
-    "@id": `${siteUrl}/#felipe`,
+    "@id": `${homeUrl}#felipe`,
     name: siteConfig.name,
-    url: siteUrl,
+    url: homeUrl,
     jobTitle: "Product manager técnico",
     knowsAbout: [
       "Software interno",
@@ -63,7 +64,7 @@ const schemas = [
 ---
 
 <!doctype html>
-<html lang={siteConfig.language}>
+<html lang={siteConfig.language} data-base-path={siteConfig.basePath}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -93,7 +94,7 @@ const schemas = [
     <meta name="twitter:image" content={shareImage} />
     <meta name="twitter:image:alt" content="De operación manual a sistema en producción, por Felipe Peña" />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={withBasePath("/favicon.svg")} type="image/svg+xml" />
     {!noindex && <script is:inline type="application/ld+json" set:html={JSON.stringify(schemas)} />}
     {siteConfig.plausibleDomain && (
       <>

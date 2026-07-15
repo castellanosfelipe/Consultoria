@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
+import { withBasePath } from "../config";
 ---
 
 <BaseLayout
@@ -17,7 +18,7 @@ import SiteHeader from "../components/SiteHeader.astro";
         <p class="error-code data" aria-hidden="true">404</p>
         <h1>Este nodo no conecta con nada.</h1>
         <p class="lead">La dirección puede haber cambiado o el enlace está incompleto.</p>
-        <a class="button" href="/">Volver al sistema <span class="icon-arrow" aria-hidden="true"></span></a>
+        <a class="button" href={withBasePath("/")}>Volver al sistema <span class="icon-arrow" aria-hidden="true"></span></a>
       </div>
       <div class="error-graph" aria-hidden="true">
         <span></span><span></span><span></span><i>×</i>

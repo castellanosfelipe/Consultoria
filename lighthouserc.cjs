@@ -1,9 +1,14 @@
+const configuredBasePath = (process.env.PUBLIC_BASE_PATH || "/").trim();
+const lighthousePath = configuredBasePath === "/"
+  ? "/"
+  : `${configuredBasePath.replace(/\/$/, "")}/`;
+
 module.exports = {
   ci: {
     collect: {
       startServerCommand: "node scripts/serve-dist.mjs",
       startServerReadyPattern: "QA server ready",
-      url: ["http://127.0.0.1:4174/"],
+      url: [`http://127.0.0.1:4174${lighthousePath}`],
       numberOfRuns: 3,
       settings: {
         chromeFlags: "--headless --no-sandbox --disable-dev-shm-usage",

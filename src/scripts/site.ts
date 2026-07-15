@@ -14,6 +14,11 @@ const fallbackPlausible = ((event: string, options?: { props?: Record<string, st
 
 window.plausible ||= fallbackPlausible;
 
+const basePath = document.documentElement.dataset.basePath || "/";
+const homePath = new URL(basePath, window.location.origin).pathname;
+const isHomePath = (pathname: string) =>
+  pathname === homePath || (homePath !== "/" && pathname === homePath.replace(/\/$/, ""));
+
 const plausibleDomain = document.querySelector<HTMLMetaElement>("meta[name='plausible-domain']")?.content;
 const plausibleSrc = document.querySelector<HTMLMetaElement>("meta[name='plausible-src']")?.content;
 
@@ -92,13 +97,13 @@ const sectionLinks = Array.from(
 const setActiveSection = (hash: string) => {
   for (const link of sectionLinks) {
     const linkUrl = new URL(link.href, window.location.href);
-    const isCurrent = window.location.pathname === "/" && linkUrl.hash === hash;
+    const isCurrent = isHomePath(window.location.pathname) && linkUrl.pathname === homePath && linkUrl.hash === hash;
     if (isCurrent) link.setAttribute("aria-current", "location");
     else link.removeAttribute("aria-current");
   }
 };
 
-if (window.location.pathname === "/") {
+if (isHomePath(window.location.pathname)) {
   if (window.location.hash) setActiveSection(window.location.hash);
 
   const observedSections = [...new Set(sectionLinks.map((link) => new URL(link.href).hash.slice(1)))]
@@ -232,7 +237,7 @@ if (form) {
         if (typeof value === "string") body.append(key, value);
       }
 
-      const response = await fetch("/", {
+      const response = await fetch(form.dataset.submitUrl || homePath, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: body.toString(),

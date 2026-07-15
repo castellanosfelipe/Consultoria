@@ -1,7 +1,16 @@
 const trimTrailingSlash = (value: string) => value.replace(/\/$/, "");
 const env = (value: string | undefined) => value?.trim() || "";
+const ensureTrailingSlash = (value: string) => (value.endsWith("/") ? value : `${value}/`);
 
 const siteUrl = trimTrailingSlash(env(import.meta.env.PUBLIC_SITE_URL) || "http://localhost:4321");
+export const basePath = ensureTrailingSlash(import.meta.env.BASE_URL || "/");
+export const withBasePath = (path = "/") => {
+  const relativePath = path.replace(/^\/+/, "");
+  return relativePath ? `${basePath}${relativePath}` : basePath;
+};
+
+const portraitPath = env(import.meta.env.PUBLIC_PORTRAIT_PATH);
+const plausibleSrc = env(import.meta.env.PUBLIC_PLAUSIBLE_SRC) || "https://plausible.io/js/script.js";
 
 export const siteConfig = {
   name: "Felipe Peña",
@@ -15,12 +24,11 @@ export const siteConfig = {
   city: "Bogotá",
   country: "CO",
   email: "",
+  basePath,
   bookingUrl: env(import.meta.env.PUBLIC_CAL_URL),
   linkedInUrl: env(import.meta.env.PUBLIC_LINKEDIN_URL),
-  portraitPath: env(import.meta.env.PUBLIC_PORTRAIT_PATH),
+  portraitPath: portraitPath ? withBasePath(portraitPath) : "",
   plausibleDomain: env(import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN),
-  plausibleSrc:
-    env(import.meta.env.PUBLIC_PLAUSIBLE_SRC) ||
-    "https://plausible.io/js/script.js",
-  ogImage: "/images/og-felipe-pena.png",
+  plausibleSrc: plausibleSrc.startsWith("/") ? withBasePath(plausibleSrc) : plausibleSrc,
+  ogImage: withBasePath("/images/og-felipe-pena.png"),
 } as const;

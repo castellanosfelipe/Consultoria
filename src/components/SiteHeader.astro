@@ -1,10 +1,13 @@
 ---
-import { siteConfig } from "../config";
+import { siteConfig, withBasePath } from "../config";
+
+const homeHref = withBasePath("/");
+const sectionHref = (id: string) => `${homeHref}#${id}`;
 ---
 
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" href="/">
+    <a class="brand" href={homeHref}>
       <span class="brand-mark">FP</span>
       <span class="brand-copy">
         <strong>{siteConfig.name}</strong>
@@ -15,10 +18,10 @@ import { siteConfig } from "../config";
 
     <nav class="site-nav" aria-label="Navegación principal">
       <div class="site-nav__desktop" data-nav-links>
-        <a href="/#servicios">Servicios</a>
-        <a href="/#prueba">Compromisos</a>
-        <a href="/#proceso">Proceso</a>
-        <a href="/#contacto" class="nav-cta" data-track="cta" data-location="header">Hablemos <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span></a>
+        <a href={sectionHref("servicios")}>Servicios</a>
+        <a href={sectionHref("prueba")}>Compromisos</a>
+        <a href={sectionHref("proceso")}>Proceso</a>
+        <a href={sectionHref("contacto")} class="nav-cta" data-track="cta" data-location="header">Hablemos <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span></a>
       </div>
 
       <div class="site-nav__mobile-controls">
@@ -32,13 +35,13 @@ import { siteConfig } from "../config";
           <span data-menu-label>Menú</span>
           <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
         </button>
-        <a href="/#contacto" class="nav-cta" data-track="cta" data-location="header-mobile">Hablemos</a>
+        <a href={sectionHref("contacto")} class="nav-cta" data-track="cta" data-location="header-mobile">Hablemos</a>
       </div>
 
       <div class="site-nav__mobile" id="navegacion-movil" data-mobile-menu data-nav-links hidden>
-        <a href="/#servicios">Servicios</a>
-        <a href="/#prueba">Compromisos</a>
-        <a href="/#proceso">Proceso</a>
+        <a href={sectionHref("servicios")}>Servicios</a>
+        <a href={sectionHref("prueba")}>Compromisos</a>
+        <a href={sectionHref("proceso")}>Proceso</a>
       </div>
     </nav>
   </div>
