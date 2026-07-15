@@ -409,7 +409,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     </div>
   </footer>
 
-  <script src="../scripts/site.ts"></script>
 </BaseLayout>
 
 <style>
@@ -431,14 +430,20 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    font-family: var(--font-body-fallback);
   }
 
   .hero-copy .eyebrow {
     margin-bottom: var(--space-5);
+    font-family: var(--font-body-fallback);
   }
 
   .hero-copy .lead {
     margin-top: var(--space-5);
+  }
+
+  .hero-copy h1 {
+    font-family: var(--font-display-fallback);
   }
 
   .hero-action {
@@ -465,7 +470,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
   .hero-facts dt,
   .hero-facts dd {
-    font-family: var(--font-data);
+    font-family: var(--font-body-fallback);
     font-variant-numeric: tabular-nums;
   }
 
@@ -1026,6 +1031,12 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     gap: var(--space-3);
     color: var(--line);
     font-size: var(--text-micro);
+  }
+
+  .footer-meta a {
+    min-height: var(--target);
+    display: inline-flex;
+    align-items: center;
   }
 
   @media (max-width: 74.9375rem) {

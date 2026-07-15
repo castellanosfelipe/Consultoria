@@ -54,6 +54,9 @@
   /* Fase 2 · tipografía */
   --font-display: "Archivo", "Arial Narrow", Arial, sans-serif;
   --font-body: "IBM Plex Sans", Arial, sans-serif;
+  --font-display-fallback: "Arial Narrow", Arial, sans-serif;
+  --font-body-fallback: Arial, sans-serif;
+  --font-mark: "Courier New", monospace;
   --font-data: "IBM Plex Mono", "Courier New", monospace;
   --text-h1: clamp(2.5rem, 7.2vw, 5.25rem);
   --text-h2: clamp(1.875rem, 4.1vw, 2.875rem);
@@ -221,6 +224,11 @@ svg {
 .section {
   padding-block: var(--section-space);
   scroll-margin-top: var(--space-5);
+}
+
+.section:not(.hero) {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto calc(var(--space-10) * 6);
 }
 
 .section--tight {

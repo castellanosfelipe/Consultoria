@@ -1,8 +1,7 @@
 name: Calidad
 
 on:
-  push:
-    branches: [main]
+  push: {}
   pull_request:
 
 permissions:
@@ -13,20 +12,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run audit:prod
       - run: npm run check
       - run: npm run build
         env:
-          PUBLIC_SITE_URL: https://example.com
+          REQUIRE_PRODUCTION_CONFIG: "true"
+          PUBLIC_SITE_URL: https://consultoria-felipe-qa.netlify.app
+          PUBLIC_CAL_URL: https://cal.com/castellanosfelipe/consulta
+          PUBLIC_LINKEDIN_URL: https://www.linkedin.com/in/castellanosfelipe/
+          PUBLIC_PLAUSIBLE_DOMAIN: consultoria-felipe-qa.netlify.app
       - run: npm run lighthouse
       - name: Guardar reportes Lighthouse
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: lighthouse-${{ github.sha }}
           path: .lighthouseci/reports/

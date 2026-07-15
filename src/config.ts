@@ -1,6 +1,7 @@
 const trimTrailingSlash = (value: string) => value.replace(/\/$/, "");
+const env = (value: string | undefined) => value?.trim() || "";
 
-const siteUrl = trimTrailingSlash(import.meta.env.PUBLIC_SITE_URL || "http://localhost:4321");
+const siteUrl = trimTrailingSlash(env(import.meta.env.PUBLIC_SITE_URL) || "http://localhost:4321");
 
 export const siteConfig = {
   name: "Felipe Peña",
@@ -14,12 +15,12 @@ export const siteConfig = {
   city: "Bogotá",
   country: "CO",
   email: "",
-  bookingUrl: import.meta.env.PUBLIC_CAL_URL || "",
-  linkedInUrl: import.meta.env.PUBLIC_LINKEDIN_URL || "",
-  portraitPath: import.meta.env.PUBLIC_PORTRAIT_PATH || "",
-  plausibleDomain: import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN || "",
+  bookingUrl: env(import.meta.env.PUBLIC_CAL_URL),
+  linkedInUrl: env(import.meta.env.PUBLIC_LINKEDIN_URL),
+  portraitPath: env(import.meta.env.PUBLIC_PORTRAIT_PATH),
+  plausibleDomain: env(import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN),
   plausibleSrc:
-    import.meta.env.PUBLIC_PLAUSIBLE_SRC ||
+    env(import.meta.env.PUBLIC_PLAUSIBLE_SRC) ||
     "https://plausible.io/js/script.js",
   ogImage: "/images/og-felipe-pena.png",
 } as const;

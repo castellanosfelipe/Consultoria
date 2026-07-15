@@ -36,15 +36,17 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
             data-booking-url={siteConfig.bookingUrl}
             data-track="cta"
             data-location="booking"
+            aria-describedby="booking-status"
           >
             Cargar agenda <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
           </button>
-          <div class="booking-frame" data-booking-frame hidden aria-live="polite"></div>
+          <p class="booking-status" id="booking-status" data-booking-status role="status" aria-live="polite"></p>
+          <div class="booking-frame" data-booking-frame hidden></div>
           <p class="booking-direct">
-            <a href={siteConfig.bookingUrl} target="_blank" rel="external noopener">Abrir agenda directamente</a>
+            <a href={siteConfig.bookingUrl} target="_blank" rel="external noopener" data-track="cta" data-location="booking-direct">Abrir agenda directamente</a>
           </p>
           <noscript>
-            <a href={siteConfig.bookingUrl} rel="external">Abrir agenda en una pestaña nueva</a>
+            <a href={siteConfig.bookingUrl} target="_blank" rel="external noopener">Abrir agenda en una pestaña nueva</a>
           </noscript>
         </article>
       )}
@@ -68,30 +70,39 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           <input type="hidden" name="form-name" value="contacto" />
           <input type="hidden" name="bot-field" />
 
-          <label>
-            <span>Nombre</span>
-            <input name="nombre" type="text" autocomplete="name" required maxlength="80" />
+          <label for="nombre">
+            <span class="field-label">Nombre</span>
+            <input id="nombre" name="nombre" type="text" autocomplete="name" required minlength="2" maxlength="80" aria-describedby="nombre-error" />
+            <span class="field-error" id="nombre-error" data-error-for="nombre" aria-live="polite"></span>
           </label>
 
-          <label>
-            <span>Email de trabajo</span>
-            <input name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" />
+          <label for="email">
+            <span class="field-label">Email de trabajo</span>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" aria-describedby="email-error" />
+            <span class="field-error" id="email-error" data-error-for="email" aria-live="polite"></span>
           </label>
 
-          <label class="contact-form__wide">
-            <span>Una línea de contexto</span>
+          <label class="contact-form__wide" for="contexto">
+            <span class="field-label">Una línea de contexto</span>
             <input
+              id="contexto"
               name="contexto"
               type="text"
               required
+              minlength="12"
               maxlength="280"
+              aria-describedby="contexto-error"
               placeholder="Ej. conciliamos pedidos de cuatro sistemas a mano"
             />
+            <span class="field-error" id="contexto-error" data-error-for="contexto" aria-live="polite"></span>
           </label>
 
           <div class="contact-form__actions contact-form__wide">
-            <button class="button" type="submit">Enviar contexto <span class="icon-arrow" aria-hidden="true"></span></button>
-            <p>Solo usaré estos datos para responderte.</p>
+            <button class="button" type="submit" data-form-submit>Enviar contexto <span class="icon-arrow" aria-hidden="true"></span></button>
+            <div>
+              <p>Solo usaré estos datos para responderte.</p>
+              <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+            </div>
           </div>
         </form>
       </article>
@@ -221,6 +232,22 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     font-size: var(--text-micro);
   }
 
+  .booking-direct a {
+    min-height: var(--target);
+    display: inline-flex;
+    align-items: center;
+    color: var(--ink);
+  }
+
+  .booking-status,
+  .form-status,
+  .field-error {
+    min-height: var(--space-5);
+    color: var(--manual);
+    font-size: var(--text-micro);
+    line-height: 1.45;
+  }
+
   .contact-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -233,7 +260,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     gap: var(--space-2);
   }
 
-  .contact-form label > span {
+  .contact-form .field-label {
     font-family: var(--font-data);
     font-size: var(--text-label);
     font-weight: 500;
@@ -257,6 +284,16 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
   .contact-form input:hover {
     border-color: var(--ink);
+  }
+
+  .contact-form input[aria-invalid="true"] {
+    border-color: var(--manual);
+    box-shadow: 0 0 0 var(--border) var(--manual);
+  }
+
+  .contact-form button[disabled] {
+    cursor: wait;
+    opacity: 0.72;
   }
 
   .contact-form__wide {

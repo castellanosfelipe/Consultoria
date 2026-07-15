@@ -4,19 +4,19 @@ import SiteHeader from "../components/SiteHeader.astro";
 ---
 
 <BaseLayout
-  title="Mensaje recibido | Felipe Peña"
-  description="Gracias por compartir el contexto de tu operación."
+  title="Siguiente paso | Felipe Peña"
+  description="Continúa la conversación sobre software de operaciones con Felipe Peña."
   canonicalPath="/gracias/"
   noindex
 >
   <SiteHeader />
   <main id="contenido" class="thanks-page">
     <div class="container">
-      <div class="thanks-card">
-        <span class="status-chip"><span class="status-dot"></span> mensaje recibido</span>
+      <div class="thanks-card" data-submission-confirmation>
+        <span class="status-chip"><span class="status-dot"></span> <span data-confirmation-status>siguiente paso</span></span>
         <p class="eyebrow">Siguiente estado</p>
-        <h1>Ya tengo el contexto.</h1>
-        <p class="lead">Lo revisaré personalmente. Recibirás una respuesta clara sobre encaje y siguiente paso.</p>
+        <h1 data-confirmation-title>Sigamos la conversación.</h1>
+        <p class="lead" data-confirmation-copy>Si todavía no compartiste tu contexto, vuelve al formulario: son solo tres campos.</p>
         <a class="button button--secondary" href="/">Volver al inicio <span class="icon-arrow" aria-hidden="true"></span></a>
       </div>
     </div>

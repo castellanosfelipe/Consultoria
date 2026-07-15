@@ -91,23 +91,20 @@ const schemas = [
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={shareImage} />
+    <meta name="twitter:image:alt" content="De operación manual a sistema en producción, por Felipe Peña" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preload" href="/fonts/archivo-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/ibm-plex-sans-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
-
     {!noindex && <script is:inline type="application/ld+json" set:html={JSON.stringify(schemas)} />}
     {siteConfig.plausibleDomain && (
-      <script
-        is:inline
-        defer
-        data-domain={siteConfig.plausibleDomain}
-        src={siteConfig.plausibleSrc}
-      ></script>
+      <>
+        <meta name="plausible-domain" content={siteConfig.plausibleDomain} />
+        <meta name="plausible-src" content={siteConfig.plausibleSrc} />
+      </>
     )}
   </head>
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <slot />
+    <script src="../scripts/site.ts"></script>
   </body>
 </html>
