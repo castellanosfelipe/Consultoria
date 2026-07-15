@@ -1,174 +1,244 @@
-# Felipe Peña · landing de software de operaciones
+**Esta landing convierte una operación B2B fragmentada en una conversación clara sobre software interno, automatización y entrega en producción.**
 
-Landing estática en español para presentar servicios de software interno y automatización de datos. Implementa la dirección **“columna narrativa + artefactos de sistema”** definida en Fase 2: documento técnico, color usado como estado y una sola animación importante.
+<div align="center">
+  <img src="./public/images/og-felipe-pena.png" alt="Felipe Peña, software de operaciones: de una operación manual a un sistema en producción" width="800"/>
 
-## Stack y decisión
+  <h1>Felipe Peña · Software de operaciones</h1>
+  <p><strong>Una landing para explicar el problema, mostrar una oferta verificable y llevar al prospecto al siguiente paso sin fricción.</strong></p>
 
-**Astro 7 + CSS moderno + JavaScript mínimo.**
+  <p>
+    <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="Versión 1.0.0"/>
+    <img src="https://img.shields.io/badge/status-beta-green" alt="Estado beta"/>
+    <img src="https://img.shields.io/badge/license-no_especificada-orange" alt="Licencia de software no especificada"/>
+    <a href="https://github.com/castellanosfelipe/Consultoria/actions/workflows/ci.yml"><img src="https://github.com/castellanosfelipe/Consultoria/actions/workflows/ci.yml/badge.svg" alt="Estado del workflow de calidad"/></a>
+  </p>
+</div>
 
-- Astro genera HTML estático y no envía runtime de framework.
-- La página reúne diez secciones, SEO, 404, formulario, sitemap y componentes visuales; layouts y componentes reducen duplicación sin introducir React.
-- HTML/CSS/JS puro habría sido viable, pero menos mantenible para esta cantidad de contenido y variantes.
-- Next.js añadiría ejecución y dependencias sin aportar valor a una landing sin datos dinámicos.
-- No se usa Tailwind, librería de iconos, SDK de agenda ni librería de animación.
+## 📋 Tabla de Contenidos
 
-La última auditoría móvil, incluyendo las cabeceras de seguridad emuladas, transfirió **84.173 B**. El guardrail independiente del build recorre el grafo local inicial de `/` —HTML, CSS, JavaScript, fuentes e imágenes— y mide **148,3 KiB / 300 KiB sin compresión** en ocho archivos. Los recursos externos diferidos no se cuentan como archivos locales.
+- [¿Qué es este proyecto?](#-qué-es-este-proyecto)
+- [Demo en vivo](#-demo-en-vivo)
+- [Características principales](#-características-principales)
+- [Capturas de pantalla](#-capturas-de-pantalla)
+- [Instalación rápida](#-instalación-rápida)
+- [Cómo usar](#-cómo-usar)
+- [Arquitectura](#️-arquitectura)
+- [Roadmap](#️-roadmap)
+- [Contribuir](#-contribuir)
+- [Licencia](#-licencia)
 
-## Estado de calidad
+## 🎯 ¿Qué es este proyecto?
 
-Última ejecución local: tres runs consecutivos de Lighthouse CI sobre el build estático, servido con Brotli/gzip y emulación móvil. Se usaron valores sintéticos para recorrer también las ramas opcionales de agenda, LinkedIn y Plausible; esto **no** acredita que esas integraciones estén activas en producción.
+Es la landing comercial de Felipe Peña para empresas cuya operación creció más rápido que sus sistemas. Presenta una oferta de software interno y automatización de datos con alcance, precios de entrada, forma de trabajo y compromisos visibles antes de pedir una conversación.
 
-| Categoría o métrica | Resultado | Presupuesto |
-|---|---:|---:|
-| Performance | 100 / 100 / 100 | ≥ 95 |
-| Accessibility | 100 / 100 / 100 | ≥ 95 |
-| Best Practices | 100 / 100 / 100 | ≥ 95 |
-| SEO | 100 / 100 / 100 | ≥ 95 |
-| LCP | 1.359,1–1.360,2 ms | < 1.500 ms |
-| CLS | 0 | < 0,1 |
-| Total Blocking Time | 0 ms | < 200 ms |
-| Transferencia total | 84.173 B | < 307.200 B |
+### El problema que resuelve
 
-La configuración usa agregación pesimista y añade una aserción explícita para la coincidencia entre etiqueta visible y nombre accesible. Lighthouse no produce INP como métrica de laboratorio; debe confirmarse con CrUX o RUM después de publicar. TBT es solo el proxy sintético disponible.
+Muchas operaciones B2B dependen de hojas de cálculo, correos y copias manuales entre sistemas. El prospecto sabe que pierde tiempo y confiabilidad, pero no siempre puede convertir ese dolor en un proyecto entendible y comprable.
 
-[`reports/LIGHTHOUSE.md`](./reports/LIGHTHOUSE.md) y el [reporte HTML](./reports/lighthouse.html) son snapshots versionados de referencia. El workflow genera resultados nuevos por commit y los conserva como artifact durante 14 días.
+### La solución
 
-QA adicional ejecutado:
+La página transforma ese problema en un recorrido concreto: identifica síntomas, explica la alternativa, muestra servicios y condiciones, responde objeciones y ofrece un contacto de tres campos. El contenido evita casos o métricas no autorizados y usa compromisos que el cliente sí puede verificar.
 
-- viewports de 320, 375, 428, 768, 1024, 1280, 1440 y 2560 px, más zoom al 200 %;
-- un solo `h1`, landmarks e IDs válidos, navegación completa por teclado y foco visible;
-- cero overflow horizontal, errores de consola o violaciones detectadas por axe en la matriz automatizada;
-- menú móvil, estado de sección activa, anclas, volver/recargar con hash y `prefers-reduced-motion`;
-- formulario con labels, errores en línea, foco en el primer error y estados de envío;
-- imágenes con dimensiones explícitas y layout de una columna en móvil.
+### ¿Para quién es?
 
-Capturas de referencia: [desktop 1440 px](./reports/visual/desktop-1440.png) y [móvil 393 px](./reports/visual/mobile-393.png). La validación manual con lector de pantalla y móvil físico sigue pendiente.
+| Audiencia                          | Beneficio clave                                                                                          |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Líderes de operaciones B2B         | Reconocen rápidamente si sus procesos manuales encajan con la oferta.                                    |
+| Responsables de tecnología y datos | Entienden propiedad, arquitectura, ritmo de demos y entrega sin pasar primero por una llamada comercial. |
+| Stakeholders de negocio            | Ven rango de inversión, plazo y límites antes de dedicar tiempo a una conversación.                      |
 
-## Desarrollo local
+## 🎬 Demo en vivo
 
-Requisitos: Node.js 22.12 o superior; Node 24 es la versión de CI. El proyecto declara npm 11.13.0.
+[![Abrir demo en GitHub Pages](https://img.shields.io/badge/ABRIR_DEMO-GitHub_Pages-0b6b4f?style=for-the-badge)](https://castellanosfelipe.github.io/Consultoria/)
+
+La demo pública sirve el build estático de Astro desde GitHub Pages. El 15 de julio de 2026 se verificaron la home por HTTPS, los recursos versionados, `robots.txt`, sitemap y la página 404 propia.
+
+| Evidencia                                                                                                |                        Resultado |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------: |
+| [Publicación en GitHub Pages](https://github.com/castellanosfelipe/Consultoria/actions/runs/29444452911) |                       ✅ Success |
+| [Workflow de calidad](https://github.com/castellanosfelipe/Consultoria/actions/runs/29444452931)         |                       ✅ Success |
+| Lighthouse CI en GitHub Actions · Performance                                                            |                   97 / 100 / 100 |
+| Lighthouse CI en GitHub Actions · Accessibility / Best Practices / SEO                                   | 100 / 100 / 100 en los tres runs |
+| LCP sintético en CI                                                                                      |               1.356,1–1.494,4 ms |
+| CLS sintético en CI                                                                                      |                                0 |
+| Transferencia inicial medida en CI                                                                       |                         84.175 B |
+
+> GitHub Pages es hosting estático: la interfaz del formulario está publicada, pero el repositorio todavía no tiene un receptor real configurado para almacenar o entregar mensajes. La agenda y la analítica también permanecen ocultas hasta definir valores reales en las variables del repositorio.
+
+<!-- TODO: agregar demo.gif del flujo principal -->
+
+## ✨ Características principales
+
+| Feature                                   | Descripción                                                                                        |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 🎯 **Narrativa orientada al problema**    | Lleva al visitante desde síntomas reconocibles hasta una oferta y un siguiente paso concretos.     |
+| 💵 **Oferta y límites visibles**          | Publica etapas, precios de entrada, plazos, propiedad del código y aquello que no se ofrece.       |
+| ✅ **Prueba sin cifras inventadas**       | Sustituye testimonios ausentes por compromisos verificables de alcance, avance y propiedad.        |
+| ⚡ **Conversión progresiva**              | Incluye un formulario mínimo y una agenda opcional que solo se crea cuando el usuario la solicita. |
+| ♿ **Experiencia responsive y accesible** | Conserva navegación por teclado, foco visible, labels, reduced motion y layouts desde 320 px.      |
+| 🔎 **SEO y calidad automatizados**        | Entrega canonical, Open Graph, JSON-LD, sitemap, 404 y compuertas de build, peso y Lighthouse.     |
+
+## 📸 Capturas de pantalla
+
+### Vista completa de escritorio
+
+<div align="center">
+  <img src="./reports/visual/desktop-1440.png" alt="Landing completa de Felipe Peña en escritorio, con oferta, compromisos, proceso y contacto" width="750"/>
+  <p><em>La vista de 1440 px muestra el recorrido completo desde el problema operativo hasta la conversión.</em></p>
+</div>
+
+### Vista completa móvil
+
+<div align="center">
+  <img src="./reports/visual/mobile-393.png" alt="Landing completa de Felipe Peña adaptada a un teléfono de 393 píxeles" width="393"/>
+  <p><em>La versión móvil conserva jerarquía, lectura, navegación y formulario en una sola columna.</em></p>
+</div>
+
+## 🚀 Instalación rápida
+
+### Prerrequisitos
+
+- Node.js >= 22.12.0; el CI utiliza Node.js 24.
+- npm 11.13.0, declarado como package manager del proyecto.
+- Git para clonar el repositorio.
+
+### Pasos
 
 ```bash
+# 1. Clonar el repositorio
+git clone https://github.com/castellanosfelipe/Consultoria.git
+cd Consultoria
+
+# 2. Instalar dependencias exactas del lockfile
 npm ci
+
+# 3. Configurar variables de entorno
+cp .env.example .env
+# Editar .env solo con valores reales; las integraciones son opcionales en local.
+
+# 4. Ejecutar el servidor de desarrollo
 npm run dev
 ```
 
-Comandos:
+✅ Si todo está correcto, Astro mostrará la URL local `http://localhost:4321/`.
+
+## 💡 Cómo usar
+
+### Caso de uso básico
+
+Inicia la landing, recorre la oferta y prueba navegación, menú móvil y validación del formulario:
 
 ```bash
-npm run check       # tipos y diagnóstico Astro
-npm run build       # build + preload CSS + validación del artefacto + presupuesto
-npm run test        # check + build completo
-npm run preview     # sirve dist/ con Astro Preview
-npm run lighthouse  # tres auditorías móviles y asserts de calidad/rendimiento
-npm run audit:prod  # vulnerabilidades de dependencias que llegan al sitio
+npm run dev
 ```
 
-`check-output.mjs` valida el HTML generado, canonical/OG/JSON-LD, robots y sitemap, formulario, páginas `noindex`, integraciones condicionales y coherencia del origen. `check-budget.mjs` falla si el grafo local inicial supera 300 KiB o contiene una referencia local no resoluble.
+Como visitante, el flujo principal es: reconocer el problema → comparar la oferta → revisar compromisos y proceso → abrir la sección de contacto.
 
-Lighthouse CI permanece como dependencia de desarrollo. Sus dependencias transitivas vulnerables conocidas están fijadas temporalmente mediante overrides exactos (`inquirer@8.2.7`, `tmp@0.2.7` y `uuid@11.1.1`) hasta que exista una release corregida de `@lhci/cli`.
+### Casos de uso avanzados
 
-## Configuración de producción
+#### Configurar integraciones reales
 
-Copia `.env.example` a `.env` para desarrollo. En Netlify, define los valores reales en **Site configuration → Environment variables**.
+```dotenv
+PUBLIC_SITE_URL=https://tu-dominio.com
+PUBLIC_BASE_PATH=/
+PUBLIC_CAL_URL=https://cal.com/tu-cuenta/consulta
+PUBLIC_LINKEDIN_URL=https://www.linkedin.com/in/tu-perfil/
+PUBLIC_PLAUSIBLE_DOMAIN=tu-dominio.com
+PUBLIC_PORTRAIT_PATH=/images/retrato.webp
+```
 
-| Variable | Requerida | Validación y uso |
-|---|---|---|
-| `PUBLIC_SITE_URL` | Sí fuera de Netlify | Origen de canonical, OG, sitemap y Schema.org; solo origen `http(s)`, sin ruta, query ni credenciales. Netlify también expone `URL` |
-| `PUBLIC_CAL_URL` | Para agenda | HTTPS de `cal.com` o `calendly.com`, incluidos subdominios |
-| `PUBLIC_LINKEDIN_URL` | Recomendable | HTTPS de LinkedIn; enlace `rel=me` y `Person.sameAs` |
-| `PUBLIC_PLAUSIBLE_DOMAIN` | Para analítica | Uno o más hostnames válidos separados por coma |
-| `PUBLIC_PLAUSIBLE_SRC` | Opcional | Ruta raíz del mismo sitio para proxy, o HTTPS de `plausible.io`; requiere dominio y por defecto usa el script oficial |
-| `PUBLIC_PORTRAIT_PATH` | Recomendable | Ruta existente bajo `public/`, sin traversal y con extensión WebP o AVIF |
+Solo `PUBLIC_SITE_URL` define el origen canónico. Agenda, LinkedIn, Plausible y retrato se renderizan únicamente cuando existe una configuración válida; el retrato debe existir en `public/` y ser WebP o AVIF.
 
-El fallback de desarrollo es `http://localhost:4321`. En un contexto de producción de Netlify, la configuración exige un origen HTTPS no provisional; en otro proveedor puede activarse la misma comprobación con `REQUIRE_PRODUCTION_CONFIG=true`. Conviene fijar `PUBLIC_SITE_URL` al dominio canónico para que los previews no sustituyan ese origen.
+#### Validar un candidato de producción
 
-Si no hay URL de agenda, solo se muestra el formulario. Si se configura, el `iframe` se crea después del clic, valida el proveedor, informa el estado y ofrece un enlace directo si no carga. Para el retrato, guarda por ejemplo `public/images/felipe-pena.webp`, usa proporción 4:5 y configura `/images/felipe-pena.webp`.
+```bash
+npm run test
+npm run audit:prod
+npm run lighthouse
+```
 
-## Conversión y analítica
+`npm run build` también valida HTML generado, SEO, formulario, rutas, recursos locales y el presupuesto inicial de 300 KiB.
 
-- CTA principal, header y enlaces de agenda instrumentados por ubicación.
-- Agenda Cal.com/Calendly creada bajo demanda, con timeout de 12 segundos, foco gestionado y enlace directo de respaldo.
-- Formulario Netlify Forms con nombre, email y contexto, honeypot, validación accesible en línea y bloqueo de doble envío.
-- Con JavaScript, el formulario hace un POST URL-encoded por `fetch`, informa errores de red/timeout y navega a `/gracias/` solo tras una respuesta correcta. Sin JavaScript conserva `method`, `action` y el envío HTML nativo.
-- La confirmación usa `sessionStorage` para no afirmar un envío cuando `/gracias/` se abre directamente.
-- Sin popup, chat ni SDK de agenda en la carga inicial.
+#### Reproducir el build de GitHub Pages
 
-Plausible se inyecta solo cuando hay dominio configurado, 1,2 segundos después de `load`. Eventos implementados:
+```bash
+PUBLIC_SITE_URL=https://castellanosfelipe.github.io \
+PUBLIC_BASE_PATH=/Consultoria \
+REQUIRE_PRODUCTION_CONFIG=true \
+npm run build
+```
 
-- `CTA Click`, con `location`;
-- `Form Submit Attempt`, `Form Submit` y `Form Submit Failed`, con formulario o motivo;
-- `Proof Viewed`, al entrar en la sección de compromisos;
-- `Booking Loaded` y `Booking Load Failed`, con proveedor.
+## 🏗️ Arquitectura
 
-Los eventos deben crearse y comprobarse en la cuenta real de Plausible. Netlify detecta el formulario en el primer deploy, pero hace falta verificar una entrega real antes del lanzamiento. Los valores usados en CI son únicamente fixtures de compilación y prueba.
+Se eligió Astro porque la landing es principalmente contenido: genera HTML estático, no envía un runtime de framework y permite reservar JavaScript para navegación, formulario, agenda y analítica. HTML/CSS/JS puro habría reducido el build, pero habría duplicado estructura entre páginas; Next.js no aporta valor suficiente para este alcance estático.
 
-## SEO
+### Stack tecnológico
 
-- `title` y description escritos a mano.
-- Un `h1` con “software interno” y jerarquía semántica.
-- canonical, Open Graph y Twitter Card con PNG propio de 1200×630 y texto alternativo.
-- JSON-LD `ProfessionalService` + `Person`.
-- `robots.txt` y sitemap generados con el origen configurado; las páginas `noindex` quedan fuera del sitemap.
-- 404 propia y `/gracias/` con `noindex`.
-- Sitio monolingüe; `hreflang` no aplica.
-
-## Despliegue recomendado: Netlify
-
-Netlify aporta previews por PR y procesa el formulario estático sin backend adicional. `netlify.toml` ya define `npm run build`, `dist` y Node 24.
-
-Cabeceras preparadas para Netlify:
-
-- HSTS, `nosniff`, `SAMEORIGIN`, Referrer Policy y Permissions Policy;
-- CSP limitada al propio sitio, Plausible y los iframes admitidos de Cal.com/Calendly;
-- caché inmutable para assets versionados de `/_astro/` y revalidación diaria para fuentes e imágenes con nombre estable;
-- preload de la hoja CSS versionada, generado durante cada build en `dist/_headers`.
-
-Pasos pendientes de publicación:
-
-1. Importar este repositorio en Netlify.
-2. Añadir las variables reales y desplegar.
-3. Conectar el dominio, forzar HTTPS y elegir raíz o `www` como versión canónica.
-4. Añadir la redirección 301 de la variante secundaria cuando se conozca el dominio.
-5. Probar en el sitio público agenda, formulario, 404, cabeceras, OG/LinkedIn y eventos de Plausible.
-
-El workflow `.github/workflows/ci.yml` usa acciones fijadas por SHA y ejecuta en Node 24: `npm ci`, auditoría de dependencias de producción, check, build con fixtures de integración y tres runs de Lighthouse. Corre en cada push y pull request, y conserva los reportes durante 14 días. **El workflow valida el artefacto local; no despliega ni demuestra que Netlify Forms, agenda o analítica funcionen en un dominio público.**
-
-## Decisiones por datos ausentes
-
-Fase 2 marcaba casos, métricas y capacidad del equipo como información no publicable. Para no inventar credenciales:
-
-- “Compromisos” muestra condiciones verificables, no casos atribuidos sin autorización;
-- el retrato ausente usa un monograma técnico y se reemplaza al configurar una imagen real;
-- el tamaño del equipo se expresa según alcance, sin publicar un número no confirmado;
-- LinkedIn, agenda y analítica se ocultan o degradan hasta configurar valores reales.
-
-No se ha realizado ni verificado un despliegue público. Antes del lanzamiento todavía faltan:
-
-- dominio y preferencia raíz/`www`;
-- URL real de Cal.com/Calendly;
-- LinkedIn y retrato;
-- dominio/cuenta de analítica;
-- casos y métricas autorizados, si van a reemplazar la prueba operativa;
-- prueba real de Netlify Forms, agenda, analítica y cabeceras;
-- validación manual con lector de pantalla y móvil físico.
-
-## Estructura
+| Capa                      | Tecnología                                    | Propósito                                                                           |
+| ------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Sitio estático            | Astro 7                                       | Compone layouts, componentes y páginas; genera `dist/` sin runtime de framework.    |
+| Presentación              | CSS moderno                                   | Aplica tokens de Fase 2, Grid, `clamp()`, responsive y reduced motion.              |
+| Interacción               | TypeScript del navegador                      | Gestiona menú, sección activa, formulario, agenda diferida y eventos.               |
+| Calidad                   | Astro Check, validadores Node y Lighthouse CI | Bloquea errores de tipos, output inválido, exceso de peso y regresiones de calidad. |
+| Entrega                   | GitHub Actions + GitHub Pages                 | Construye el artefacto Astro y lo publica bajo `/Consultoria/` sin Jekyll.          |
+| Alternativa de conversión | Netlify, ya configurado                       | Puede aplicar cabeceras y procesar Netlify Forms cuando se conecte un sitio real.   |
 
 ```text
-src/
-  components/       # header, grafo, proceso y conversión
-  layouts/          # SEO y documento base
-  pages/            # landing, 404, gracias, robots y sitemap
-  scripts/          # menú, navegación, formulario, agenda y eventos
-  styles/           # tokens y estilos globales
-public/
-  fonts/             # WOFF2 self-hosted
-  images/            # OG y retrato opcional
-reports/             # snapshots Lighthouse y capturas de referencia
-scripts/             # servidor QA, validadores, preload y presupuesto
+src/pages + src/components + src/styles
+                  │
+                  ▼
+             Astro build
+                  │
+        validadores de artefacto
+                  │
+                  ▼
+                dist/
+                  │
+                  ▼
+          GitHub Pages + HTTPS
 ```
 
-## Fuentes y licencia
+## 🗺️ Roadmap
 
-Archivo, IBM Plex Sans e IBM Plex Mono se sirven localmente en WOFF2 y usan `font-display: swap`. Consulta [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) y `LICENSES/OFL-1.1.txt`.
+### ✅ Completado
+
+- [x] Landing responsive con diez secciones, oferta, compromisos, proceso, FAQ y contacto.
+- [x] SEO técnico, Open Graph propio, Schema.org, sitemap, robots y 404.
+- [x] Formulario de tres campos con validación accesible y estados de error.
+- [x] Presupuesto inicial menor de 300 KiB y CI con build, auditoría y Lighthouse.
+- [x] Publicación de Astro en GitHub Pages mediante workflow, sin el build heredado de Jekyll.
+
+### 🔄 En progreso
+
+- [ ] Validación manual con lector de pantalla y en un móvil físico.
+- [ ] Definición del receptor real del formulario para la demo pública.
+
+### 🔮 Próximamente
+
+- [ ] Configurar URL real de agenda, LinkedIn, retrato y analítica respetuosa de la privacidad.
+- [ ] Conectar dominio propio y decidir la variante canónica raíz o `www`.
+- [ ] Verificar eventos y formularios de extremo a extremo en el proveedor definitivo.
+- [ ] Incorporar casos y métricas solo cuando exista autorización para publicarlos.
+
+## 🤝 Contribuir
+
+No existe todavía un `CONTRIBUTING.md`. Para proponer un cambio:
+
+1. Abre un issue con el problema, impacto y criterio de aceptación.
+2. Crea una rama corta desde `main` y conserva los tokens visuales existentes.
+3. Ejecuta `npm run test`, `npm run audit:prod` y, para cambios visuales o de rendimiento, `npm run lighthouse`.
+4. Abre un pull request con capturas y evidencia de validación.
+
+No incluyas datos de clientes, métricas no autorizadas, credenciales ni URLs provisionales como configuración de producción.
+
+## 📄 Licencia
+
+El código del proyecto no tiene una licencia de software raíz especificada; por tanto, no debe asumirse permiso de reutilización o redistribución. Solicita autorización al propietario antes de usarlo fuera de este repositorio.
+
+Las fuentes Archivo e IBM Plex se distribuyen bajo SIL Open Font License 1.1. Consulta [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) y [`LICENSES/OFL-1.1.txt`](./LICENSES/OFL-1.1.txt).
+
+---
+
+<div align="center">
+  <p>Hecho con ❤️ por <a href="https://github.com/castellanosfelipe">castellanosfelipe</a></p>
+</div>
