@@ -152,7 +152,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
         <div class="hero-copy" data-hero-sequence>
           <p class="eyebrow" data-hero-item style="--hero-delay: 0ms">Software interno · automatización de datos</p>
           <h1 id="hero-title" data-hero-item style="--hero-delay: 70ms">Software interno al ritmo de tu operación.</h1>
-          <p class="lead" data-hero-item style="--hero-delay: 140ms">
+          <p class="lead">
             Tu operación creció más rápido que tus sistemas. Diseño, gestiono y construyo — con mi equipo — el software y las automatizaciones que la ponen al día. En producción en 8–16 semanas, con un solo responsable de punta a punta.
           </p>
 
@@ -481,7 +481,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     font-family: var(--font-display-fallback);
   }
 
-  /* Entrada inmediata: el H1 empieza con CSS y nunca espera al bundle o al observer. */
+  /* El lead queda estático porque Chrome lo identifica como LCP; los demás elementos conservan el stagger de 70 ms. */
   @media (prefers-reduced-motion: no-preference) {
     [data-hero-item] {
       animation: hero-enter var(--motion-duration) var(--motion-ease) both;

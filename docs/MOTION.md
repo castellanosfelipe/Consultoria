@@ -48,6 +48,8 @@ Sin JavaScript no se aplica el estado oculto: el contenido SSR permanece visible
 
 `will-change` solo existe mientras un elemento espera su reveal. Las geometrías se reservan antes de animar y la motion usa `transform` y `opacity`; las dos excepciones pedidas son el panel FAQ (`grid-template-rows`) y la capa ya desenfocada del header, cuya entrada anima únicamente `opacity`.
 
+El párrafo principal del hero permanece visible desde el primer paint porque Chrome lo identifica como el elemento LCP. Los demás elementos conservan sus slots y el stagger relativo de 70 ms; así la motion no retrasa el presupuesto de carga.
+
 ## Degradación con `prefers-reduced-motion`
 
 - Hero, dolores, comparativas, ofertas y contacto aparecen inmediatamente en su posición final.
