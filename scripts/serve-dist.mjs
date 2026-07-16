@@ -10,14 +10,21 @@ const host = "127.0.0.1";
 const port = Number.parseInt(process.env.PORT || "4174", 10);
 const compressed = new Map();
 
-const deployHeaders = await readFile(resolve(distDirectory, "_headers"), "utf8");
-const criticalLink = deployHeaders.match(/^\s*Link:\s*(.+)$/im)?.[1]?.trim();
-const criticalAssetPath = criticalLink?.match(/^<(\/(?:.*\/)?_astro\/[A-Za-z0-9._-]+\.css)>; rel=preload; as=style$/)?.[1];
-if (!criticalLink || !criticalAssetPath) {
-  throw new Error("dist/_headers no contiene un preload CSS v\u00e1lido. Ejecuta el build completo.");
+const homeHtml = await readFile(resolve(distDirectory, "index.html"), "utf8");
+const deployedRoot = homeHtml
+  .match(/<html\b[^>]*\bdata-base-path=(?:"([^"]+)"|'([^']+)')/i)
+  ?.slice(1)
+  .find(Boolean);
+if (
+  !deployedRoot ||
+  !deployedRoot.startsWith("/") ||
+  !deployedRoot.endsWith("/") ||
+  deployedRoot.includes("..") ||
+  deployedRoot.includes("\\")
+) {
+  throw new Error("dist/index.html no declara un base path desplegable válido.");
 }
-const deployedBasePath = criticalAssetPath.slice(0, criticalAssetPath.lastIndexOf("/_astro/"));
-const deployedRoot = deployedBasePath ? `${deployedBasePath}/` : "/";
+const deployedBasePath = deployedRoot === "/" ? "" : deployedRoot.slice(0, -1);
 
 const netlifyConfig = await readFile(resolve(projectDirectory, "netlify.toml"), "utf8");
 const securityHeaderNames = [
@@ -135,9 +142,6 @@ const server = createServer(async (request, response) => {
       "Content-Type": contentTypes.get(extname(file).toLowerCase()) || "application/octet-stream",
       Vary: "Accept-Encoding",
     };
-    if (status === 200 && (pathname === deployedRoot || pathname === `${deployedRoot}index.html`)) {
-      headers.Link = criticalLink;
-    }
     if (encoding) headers["Content-Encoding"] = encoding;
     response.writeHead(status, headers);
     if (request.method === "HEAD") response.end();

@@ -151,6 +151,9 @@ export default defineConfig({
   compressHTML: true,
   build: {
     format: "directory",
+    // La landing usa una sola hoja: integrarla evita un RTT render blocking en
+    // Lighthouse y en visitas frías sin añadir bytes a la carga inicial.
+    inlineStylesheets: "always",
   },
   vite: {
     build: {

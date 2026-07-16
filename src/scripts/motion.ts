@@ -126,6 +126,10 @@ export const initMotion = ({ onReveal }: MotionOptions = {}) => {
     return;
   }
 
+  // Activa los estados iniciales antes del primer paint. Hacerlo dos frames
+  // después repintaba el lead del hero y podía sumar 150 ms artificiales al LCP.
+  document.documentElement.classList.add("motion-ready");
+
   const observeOnce = (targets: HTMLElement[]) => {
     if (targets.length === 0) return;
 
@@ -210,7 +214,6 @@ export const initMotion = ({ onReveal }: MotionOptions = {}) => {
       mobileItems
         .filter(isInInitialViewport)
         .forEach((item) => item.classList.add("is-item-visible"));
-      document.documentElement.classList.add("motion-ready");
       observeOnce(
         deferredElements.filter(
           (element) => !element.classList.contains("is-visible"),

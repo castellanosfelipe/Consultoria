@@ -164,9 +164,14 @@ const scheduleScrolledHeader = () => {
   if (headerFrame) return;
   headerFrame = window.requestAnimationFrame(updateScrolledHeader);
 };
+// En la carga inicial la página está arriba y el progreso ya es cero. Evitar
+// leer scrollHeight aquí ahorra un layout completo antes del primer paint.
+scrollHeader?.style.setProperty("--page-scroll-progress", "0");
 window.addEventListener("scroll", scheduleScrolledHeader, { passive: true });
-window.addEventListener("pageshow", scheduleScrolledHeader);
-updateScrolledHeader();
+window.addEventListener("pageshow", (event) => {
+  // bfcache y enlaces con ancla pueden restaurar una posición distinta de cero.
+  if (event.persisted || window.scrollY > 12) scheduleScrolledHeader();
+});
 
 let menuCloseTimer = 0;
 const closeMenu = (restoreFocus = false) => {
@@ -290,15 +295,18 @@ if (isHomePath(window.location.pathname)) {
     setActiveSection(window.location.hash);
     scheduleActiveSection();
   });
-  window.addEventListener("pageshow", () => {
+  window.addEventListener("pageshow", (event) => {
     if (window.location.hash) {
       hashNavigationDeadline = performance.now() + 500;
       setActiveSection(window.location.hash);
+      scheduleActiveSection();
+    } else if (event.persisted) {
+      // Solo una página restaurada necesita medir secciones antes de otro scroll.
+      scheduleActiveSection();
     }
-    scheduleActiveSection();
   });
   if (window.location.hash) scheduleActiveSection();
-  else updateActiveSection();
+  else setActiveSection("");
 }
 
 const faq = document.querySelector<HTMLElement>("[data-faq]");

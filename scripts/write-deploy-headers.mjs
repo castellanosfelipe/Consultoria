@@ -17,15 +17,14 @@ const stylesheetPaths = stylesheetTags.map((tag) => {
   return match?.[1] ?? match?.[2] ?? "";
 });
 
-const stylesheetPath = stylesheetPaths[0] ?? "";
-const stylesheetMatch = stylesheetPath.match(/^(\/.*)?\/_astro\/[A-Za-z0-9._-]+\.css$/);
-if (stylesheetPaths.length !== 1 || !stylesheetMatch) {
-  throw new Error(`Se esperaba exactamente una hoja CSS local versionada; se encontraron: ${stylesheetPaths.join(", ") || "ninguna"}.`);
+const hasInlineStyles = /<style\b[^>]*>[\s\S]*?<\/style>/i.test(html);
+if (stylesheetPaths.length !== 0 || !hasInlineStyles) {
+  throw new Error(
+    `Se esperaba CSS integrado y ninguna hoja externa; se encontraron: ${stylesheetPaths.join(", ") || "ninguna externa"}.`,
+  );
 }
 
-const basePath = stylesheetPath.slice(0, stylesheetPath.lastIndexOf("/_astro/"));
-const headerScope = basePath ? `${basePath}/*` : "/";
-const linkValue = `<${stylesheetPath}>; rel=preload; as=style`;
-await writeFile(headersFile, `${headerScope}\n  Link: ${linkValue}\n`, "utf8");
+const headersComment = "# CSS crítico integrado en HTML; no requiere preload.\n";
+await writeFile(headersFile, headersComment, "utf8");
 
-console.log(`Cabecera de preload generada para ${stylesheetPath}.`);
+console.log("CSS crítico integrado: no se genera un preload redundante.");

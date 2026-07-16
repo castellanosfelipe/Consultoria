@@ -213,7 +213,6 @@ async function publicEnvironment() {
 
 const env = await publicEnvironment();
 publicBasePath = normalizeBasePath(env.PUBLIC_BASE_PATH);
-const publicBasePrefix = publicBasePath === "/" ? "" : publicBasePath.slice(0, -1);
 const homePath = resolve(distDirectory, "index.html");
 const englishHomePath = resolve(distDirectory, "en", "index.html");
 const thanksPath = resolve(distDirectory, "gracias", "index.html");
@@ -289,14 +288,14 @@ for (const [label, html, expectedCurrent] of [
 }
 
 const stylesheets = tags(home, "link").filter(({ attrs }) => relIncludes(attrs, "stylesheet"));
-check(stylesheets.length === 1, "La home debe cargar exactamente una hoja CSS versionada.");
-const stylesheetPath = stylesheets[0]?.attrs.href ?? "";
-const expectedStylesheetPattern = new RegExp(`^${publicBasePrefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\/_astro\\/[A-Za-z0-9._-]+\\.css$`);
-check(expectedStylesheetPattern.test(stylesheetPath), "La hoja CSS principal debe ser un asset local versionado bajo el base path.");
-const deployHeaderScope = publicBasePrefix ? `${publicBasePrefix}/*` : "/";
+check(stylesheets.length === 0, "La home no debe bloquear el render con una hoja CSS externa.");
+check(/<style\b[^>]*>[\s\S]*?<\/style>/i.test(home), "La home debe integrar su CSS crítico.");
+const englishStylesheets = tags(englishHome, "link").filter(({ attrs }) => relIncludes(attrs, "stylesheet"));
+check(englishStylesheets.length === 0, "La home en inglés no debe bloquear el render con una hoja CSS externa.");
+check(/<style\b[^>]*>[\s\S]*?<\/style>/i.test(englishHome), "La home en inglés debe integrar su CSS crítico.");
 check(
-  deployHeaders === `${deployHeaderScope}\n  Link: <${stylesheetPath}>; rel=preload; as=style\n`,
-  "dist/_headers debe adelantar exactamente la hoja CSS que usa la home.",
+  deployHeaders === "# CSS crítico integrado en HTML; no requiere preload.\n",
+  "dist/_headers no debe declarar un preload redundante para CSS integrado.",
 );
 
 const configuredSite = (env.PUBLIC_SITE_URL || env.URL || "").trim();
