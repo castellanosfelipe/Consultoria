@@ -96,9 +96,10 @@
   --shadow-offset: 0.1875rem;
   --header-height: 5rem;
   --transition: 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  --graph-motion: 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-
-  /* 500 ms mantiene una lectura editorial; 70 ms hace visible el orden sin teatralidad. */
+  /*
+   * 300/500/600 ms separan microestado, contenido y estructura. El easing
+   * desacelera con precisión: la sorpresa viene de la secuencia, nunca del rebote.
+   */
   --motion-fast: 300ms;
   --motion-duration: 500ms;
   --motion-slow: 600ms;
@@ -244,6 +245,10 @@ svg {
 
 .section-rule {
   border-top: var(--border) solid var(--line);
+}
+
+[data-scroll-section] {
+  position: relative;
 }
 
 .eyebrow,
@@ -430,10 +435,49 @@ svg {
  * Sin JS no se aplica ningún estado oculto y todo el contenido sigue disponible.
  */
 @media (prefers-reduced-motion: no-preference) {
-  .motion-ready [data-animate="fade-up"]:not([data-stagger]),
-  .motion-ready [data-animate="fade"]:not([data-stagger]),
-  .motion-ready [data-animate="fade-up"][data-stagger] [data-animate-item],
-  .motion-ready [data-animate="fade"][data-stagger] [data-animate-item] {
+  /* Cada bloque confirma su entrada con un rail corto: progreso, no decoración. */
+  .motion-ready [data-scroll-section]::after {
+    position: absolute;
+    z-index: 2;
+    top: calc(-1 * var(--border));
+    left: 0;
+    width: min(8rem, 22vw);
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition:
+      opacity 420ms var(--motion-ease),
+      transform 850ms var(--motion-ease);
+  }
+
+  .motion-ready [data-scroll-section].is-visible::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .motion-ready
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    ):not([data-stagger]),
+  .motion-ready
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    )[data-stagger]
+    [data-animate-item] {
     transition:
       opacity var(--motion-duration) var(--motion-ease),
       transform var(--motion-duration) var(--motion-ease);
@@ -442,35 +486,78 @@ svg {
     );
   }
 
-  .motion-ready [data-animate="fade-up"]:not([data-stagger]):not(.is-visible),
-  .motion-ready [data-animate="fade"]:not([data-stagger]):not(.is-visible),
   .motion-ready
-    [data-animate="fade-up"][data-stagger]:not(.is-visible)
-    [data-animate-item],
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    ):not([data-stagger]):not(.is-visible),
   .motion-ready
-    [data-animate="fade"][data-stagger]:not(.is-visible)
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    )[data-stagger]:not(.is-visible)
     [data-animate-item] {
     opacity: 0;
-    will-change: opacity, transform;
   }
 
-  .motion-ready [data-animate="fade-up"]:not([data-stagger]):not(.is-visible),
   .motion-ready
-    [data-animate="fade-up"][data-stagger]:not(.is-visible)
+    :where([data-animate="fade-up"], [data-animate="heading"]):not([data-stagger]):not(.is-visible),
+  .motion-ready
+    :where([data-animate="fade-up"], [data-animate="heading"])[data-stagger]:not(.is-visible)
     [data-animate-item] {
     transform: translateY(var(--motion-distance));
   }
 
-  .motion-ready [data-animate="fade-up"].is-visible:not([data-stagger]),
-  .motion-ready [data-animate="fade"].is-visible:not([data-stagger]),
+  .motion-ready [data-animate="fade-left"]:not([data-stagger]):not(.is-visible),
   .motion-ready
-    [data-animate="fade-up"][data-stagger].is-visible
-    [data-animate-item],
+    [data-animate="fade-left"][data-stagger]:not(.is-visible)
+    [data-animate-item] {
+    transform: translateX(calc(-1 * var(--motion-distance)));
+  }
+
+  .motion-ready [data-animate="fade-right"]:not([data-stagger]):not(.is-visible),
   .motion-ready
-    [data-animate="fade"][data-stagger].is-visible
+    [data-animate="fade-right"][data-stagger]:not(.is-visible)
+    [data-animate-item] {
+    transform: translateX(var(--motion-distance));
+  }
+
+  .motion-ready [data-animate="scale-in"]:not([data-stagger]):not(.is-visible),
+  .motion-ready
+    [data-animate="scale-in"][data-stagger]:not(.is-visible)
+    [data-animate-item] {
+    transform: scale(0.96);
+  }
+
+  .motion-ready
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    ).is-visible:not([data-stagger]),
+  .motion-ready
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    )[data-stagger].is-visible
     [data-animate-item] {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 
   .motion-ready [data-animate="scale-x"] [data-animate-item] {
@@ -486,7 +573,6 @@ svg {
   .motion-ready [data-animate="scale-x"]:not(.is-visible) [data-animate-item] {
     opacity: 0.4;
     transform: scaleX(0);
-    will-change: opacity, transform;
   }
 
   .motion-ready [data-animate="scale-x"].is-visible [data-animate-item] {
@@ -497,12 +583,39 @@ svg {
 
 @media (max-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
   /* En pantallas táctiles la jerarquía se conserva con fades, sin drift ni parallax. */
-  .motion-ready [data-animate="fade-up"]:not(.is-visible),
   .motion-ready
-    [data-animate="fade-up"][data-stagger]:not(.is-visible)
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    ):not([data-stagger]):not(.is-visible),
+  .motion-ready
+    :where(
+      [data-animate="fade-up"],
+      [data-animate="fade-left"],
+      [data-animate="fade-right"],
+      [data-animate="scale-in"],
+      [data-animate="heading"]
+    )[data-stagger]:not(.is-visible)
     [data-animate-item],
   .motion-ready [data-animate="scale-x"]:not(.is-visible) [data-animate-item] {
     transform: none;
+  }
+
+  /* Los stacks largos se revelan item por item al entrar, no todos desde el padre. */
+  .motion-ready [data-mobile-reveal="items"] [data-animate-item] {
+    opacity: 0 !important;
+    transform: none !important;
+    transition: opacity 420ms var(--motion-ease) !important;
+    transition-delay: 0ms !important;
+  }
+
+  .motion-ready
+    [data-mobile-reveal="items"]
+    [data-animate-item].is-item-visible {
+    opacity: 1 !important;
   }
 }
 

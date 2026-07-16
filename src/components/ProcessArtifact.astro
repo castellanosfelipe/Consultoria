@@ -2,29 +2,29 @@
 const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
 ---
 
-<div class="process-artifact">
+<div class="process-artifact" data-animate="capacity">
   <div class="process-artifact__meta">
     <span class="label">Capacidad por semana</span>
-    <span class="status-chip"><span class="status-dot"></span> demo cada viernes</span>
+    <span class="status-chip capacity-status"><span class="status-dot"></span> estado: demo cada viernes</span>
   </div>
 
-  <div class="timeline" aria-hidden="true" data-animate="scale-x" data-stagger="90">
+  <div class="timeline" aria-hidden="true">
     <span class="timeline__corner"></span>
-    {weeks.map((week) => <span class="timeline__week">S{week}</span>)}
+    {weeks.map((week, index) => <span class="timeline__week" style={`--week-delay: ${120 + index * 24}ms`}>S{week}</span>)}
 
     <span class="timeline__label">TRABAJO</span>
-    <span class="timeline__phase timeline__phase--diagnosis">DIAGNÓSTICO</span>
-    <span class="timeline__phase timeline__phase--build">CONSTRUCCIÓN — ENTREGA</span>
+    <span class="timeline__phase timeline__phase--diagnosis"><span>DIAGNÓSTICO</span></span>
+    <span class="timeline__phase timeline__phase--build"><span>CONSTRUCCIÓN — ENTREGA</span></span>
 
-    <span class="timeline__label">FELIPE</span>
-    <span class="timeline__bar timeline__bar--owner"><i class="timeline__bar-fill" data-animate-item data-motion-index="0"></i></span>
+    <span class="timeline__label timeline__label--owner">FELIPE</span>
+    <span class="timeline__bar timeline__bar--owner"><i class="timeline__bar-fill"></i></span>
 
-    <span class="timeline__label">NÚCLEO</span>
-    <span class="timeline__bar timeline__bar--core"><i class="timeline__bar-fill" data-animate-item data-motion-index="1"></i></span>
+    <span class="timeline__label timeline__label--core">NÚCLEO</span>
+    <span class="timeline__bar timeline__bar--core"><i class="timeline__bar-fill"></i></span>
 
-    <span class="timeline__label">RED FLEX.</span>
+    <span class="timeline__label timeline__label--flex">RED FLEX.</span>
     <span class="timeline__bar timeline__bar--flex">
-      <i class="timeline__bar-fill" data-animate-item data-motion-index="2"></i>
+      <i class="timeline__bar-fill"></i>
       <span class="timeline__bar-copy">SOLO SI SE EXIGE</span>
     </span>
 
@@ -41,24 +41,24 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     <span class="timeline__demo timeline__demo--10"></span>
   </div>
 
-  <div class="mobile-lanes" aria-hidden="true" data-animate="scale-x" data-stagger="90">
+  <div class="mobile-lanes" aria-hidden="true">
     <span class="mobile-lanes__corner">ROL / RITMO</span><span>SEM. 1–2</span><span class="mobile-lanes__last">SEM. 3–12+</span>
-    <span class="mobile-lanes__label">FELIPE</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"><span class="mobile-lanes__fill" data-animate-item data-motion-index="0"></span></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"><span class="mobile-lanes__fill" data-animate-item data-motion-index="0"></span></i>
-    <span class="mobile-lanes__label">NÚCLEO</span><i class="mobile-lanes__empty">—</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"><span class="mobile-lanes__fill" data-animate-item data-motion-index="1"></span></i>
-    <span class="mobile-lanes__label">RED FLEX.</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last"><span class="mobile-lanes__fill" data-animate-item data-motion-index="2"></span><span class="mobile-lanes__bar-copy">SEGÚN ALCANCE</span></i>
+    <span class="mobile-lanes__label">FELIPE</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"><span class="mobile-lanes__fill"></span></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
+    <span class="mobile-lanes__label">NÚCLEO</span><i class="mobile-lanes__empty">—</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
+    <span class="mobile-lanes__label">RED FLEX.</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last"><span class="mobile-lanes__fill"></span><span class="mobile-lanes__bar-copy">SEGÚN ALCANCE</span></i>
     <span class="mobile-lanes__label mobile-lanes__label--demo">DEMO</span><i class="mobile-lanes__demo">PRIMERO</i><i class="mobile-lanes__demo mobile-lanes__last">VIERNES</i>
   </div>
 
   <dl class="mobile-timeline">
-    <div>
+    <div style="--mobile-delay: 260ms">
       <dt>Semanas 1–2</dt>
       <dd><strong>Diagnóstico.</strong> Felipe participa; el primer demo aparece entre la semana 1 y 2.</dd>
     </div>
-    <div>
+    <div style="--mobile-delay: 330ms">
       <dt>Semanas 3–12+</dt>
       <dd><strong>Construcción y entrega.</strong> Felipe sigue; entra el núcleo de ingeniería y se demuestra software cada viernes.</dd>
     </div>
-    <div>
+    <div style="--mobile-delay: 400ms">
       <dt>Cuando se exige</dt>
       <dd><strong>Especialistas.</strong> La red flexible entra solo para una capacidad concreta.</dd>
     </div>
@@ -91,6 +91,11 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
 
   .process-artifact__meta > .label {
     color: var(--graphite);
+  }
+
+  .capacity-status {
+    position: relative;
+    overflow: hidden;
   }
 
   .timeline {
@@ -139,14 +144,28 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
   }
 
   .timeline__phase {
+    position: relative;
     min-height: var(--space-6);
     display: grid;
     place-items: center;
-    border: var(--border) solid currentColor;
     border-radius: var(--radius);
     background: var(--paper-raised);
     font-size: var(--text-tiny);
     font-weight: 600;
+  }
+
+  .timeline__phase::before {
+    position: absolute;
+    inset: 0;
+    border: var(--border) solid currentColor;
+    border-radius: inherit;
+    content: "";
+    transform-origin: left center;
+  }
+
+  .timeline__phase > span {
+    position: relative;
+    z-index: 1;
   }
 
   .timeline__phase--diagnosis {
@@ -164,6 +183,20 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     min-height: var(--space-3);
     overflow: hidden;
     border-radius: var(--radius);
+    background: color-mix(in srgb, var(--line) 48%, transparent);
+    color: var(--ink);
+  }
+
+  .timeline__bar::after {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: var(--space-2);
+    height: var(--space-2);
+    border-radius: var(--radius-round);
+    background: currentColor;
+    content: "";
+    transform: translateY(-50%);
   }
 
   .timeline__bar-fill,
@@ -185,6 +218,7 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
 
   .timeline__bar--core {
     grid-column: 4 / 14;
+    color: var(--graphite);
   }
 
   .timeline__bar--core .timeline__bar-fill,
@@ -198,6 +232,7 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     display: grid;
     place-items: center;
     border: var(--border) dashed var(--line-strong);
+    background: transparent;
     color: var(--graphite);
     font-size: var(--text-nano);
   }
@@ -219,16 +254,171 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     text-align: center;
   }
 
-  .timeline__demo--1 { grid-column: 4; }
-  .timeline__demo--2 { grid-column: 5; }
-  .timeline__demo--3 { grid-column: 6; }
-  .timeline__demo--4 { grid-column: 7; }
-  .timeline__demo--5 { grid-column: 8; }
-  .timeline__demo--6 { grid-column: 9; }
-  .timeline__demo--7 { grid-column: 10; }
-  .timeline__demo--8 { grid-column: 11; }
-  .timeline__demo--9 { grid-column: 12; }
-  .timeline__demo--10 { grid-column: 13; }
+  .timeline__demo--1 { --demo-delay: 1180ms; grid-column: 4; }
+  .timeline__demo--2 { --demo-delay: 1235ms; grid-column: 5; }
+  .timeline__demo--3 { --demo-delay: 1290ms; grid-column: 6; }
+  .timeline__demo--4 { --demo-delay: 1345ms; grid-column: 7; }
+  .timeline__demo--5 { --demo-delay: 1400ms; grid-column: 8; }
+  .timeline__demo--6 { --demo-delay: 1455ms; grid-column: 9; }
+  .timeline__demo--7 { --demo-delay: 1510ms; grid-column: 10; }
+  .timeline__demo--8 { --demo-delay: 1565ms; grid-column: 11; }
+  .timeline__demo--9 { --demo-delay: 1620ms; grid-column: 12; }
+  .timeline__demo--10 { --demo-delay: 1675ms; grid-column: 13; }
+
+  /*
+   * Una sola entrada narra plan -> capacidad -> demos -> estado estable.
+   * La curva desacelera con precisión; los solapes mantienen continuidad sin rebote.
+   */
+  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .process-artifact .process-artifact__meta > .label,
+    :global(.motion-ready) .process-artifact .capacity-status,
+    :global(.motion-ready) .process-artifact .timeline__week,
+    :global(.motion-ready) .process-artifact .timeline__label,
+    :global(.motion-ready) .process-artifact .timeline__phase > span,
+    :global(.motion-ready) .process-artifact .timeline__bar-copy,
+    :global(.motion-ready) .process-artifact .timeline__demo {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) .process-artifact .process-artifact__meta > .label {
+      transition-delay: 0ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__week {
+      transition-delay: var(--week-delay);
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__phase::before {
+      transform-origin: left center;
+      transition: transform var(--motion-slow) var(--motion-ease);
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__phase > span {
+      transition-delay: 520ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__phase--diagnosis::before {
+      transition-delay: 260ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__phase--build::before {
+      transition-delay: 390ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__label--owner {
+      transition-delay: 590ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__label--core {
+      transition-delay: 760ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__label--flex {
+      transition-delay: 930ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__label--production {
+      transition-delay: 1.08s;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar-fill {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-slow) var(--motion-ease);
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar::after {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar--owner .timeline__bar-fill {
+      transition-delay: 620ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar--owner::after {
+      transition-delay: 1.18s;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar--core .timeline__bar-fill {
+      transition-delay: 790ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar--core::after {
+      transition-delay: 1.35s;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar--flex .timeline__bar-fill {
+      transition-delay: 960ms;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar--flex::after {
+      transition-delay: 1.52s;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__bar-copy {
+      transition-delay: 1.22s;
+    }
+
+    :global(.motion-ready) .process-artifact .timeline__demo {
+      transition-duration: var(--motion-fast);
+      transition-delay: var(--demo-delay);
+    }
+
+    :global(.motion-ready) .process-artifact .capacity-status {
+      transition-delay: 1.82s;
+    }
+
+    :global(.motion-ready) .process-artifact .capacity-status .status-dot {
+      transform-origin: center;
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform 420ms var(--motion-ease);
+      transition-delay: 1.94s;
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .process-artifact__meta > .label,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .capacity-status,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__week,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__label,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__phase > span,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__bar-copy {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .capacity-status {
+      transform: translateX(var(--space-3));
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__phase::before,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__bar-fill {
+      transform: scaleX(0);
+      will-change: transform;
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__bar-fill {
+      opacity: 0.36;
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__bar::after,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .capacity-status .status-dot {
+      opacity: 0;
+      transform: translateY(-50%) scale(0.4);
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .capacity-status .status-dot {
+      transform: scale(0.4);
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .timeline__demo {
+      opacity: 0;
+      transform: translateY(var(--space-2)) scale(0.72);
+    }
+  }
 
   .mobile-lanes,
   .mobile-timeline {
@@ -342,6 +532,40 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     }
   }
 
+  @media (max-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
+    /* En móvil la misma historia se conserva como una secuencia de fades, sin desplazamiento espacial. */
+    :global(.motion-ready) .process-artifact .process-artifact__meta > .label,
+    :global(.motion-ready) .process-artifact .capacity-status,
+    :global(.motion-ready) .process-artifact .mobile-lanes,
+    :global(.motion-ready) .process-artifact .mobile-timeline > div {
+      transition: opacity var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) .process-artifact .process-artifact__meta > .label {
+      transition-delay: 0ms;
+    }
+
+    :global(.motion-ready) .process-artifact .mobile-lanes {
+      transition-delay: 100ms;
+    }
+
+    :global(.motion-ready) .process-artifact .mobile-timeline > div {
+      transition-delay: var(--mobile-delay);
+    }
+
+    :global(.motion-ready) .process-artifact .capacity-status {
+      transition-delay: 520ms;
+    }
+
+    :global(.motion-ready) .process-artifact:not(.is-visible) .process-artifact__meta > .label,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .capacity-status,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .mobile-lanes,
+    :global(.motion-ready) .process-artifact:not(.is-visible) .mobile-timeline > div {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
   @media (max-width: 37.4375rem) {
     .process-artifact__meta {
       align-items: flex-start;
@@ -351,6 +575,32 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     .mobile-timeline div {
       grid-template-columns: 1fr;
       gap: var(--space-2);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .process-artifact__meta > .label,
+    .capacity-status,
+    .capacity-status .status-dot,
+    .timeline__week,
+    .timeline__label,
+    .timeline__phase::before,
+    .timeline__phase > span,
+    .timeline__bar-fill,
+    .timeline__bar::after,
+    .timeline__bar-copy,
+    .timeline__demo,
+    .mobile-lanes,
+    .mobile-timeline > div {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
+
+    .timeline__bar::after {
+      transform: translateY(-50%) !important;
     }
   }
 </style>

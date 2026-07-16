@@ -151,7 +151,10 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       <div class="container hero-grid">
         <div class="hero-copy" data-hero-sequence>
           <p class="eyebrow" data-hero-item style="--hero-delay: 0ms">Software interno · automatización de datos</p>
-          <h1 id="hero-title" data-hero-item style="--hero-delay: 70ms">Software interno al ritmo de tu operación.</h1>
+          <h1 id="hero-title" aria-label="Software interno al ritmo de tu operación.">
+            <span class="hero-title__clip" aria-hidden="true"><span class="hero-title__line" style="--hero-line-delay: 70ms">Software interno</span></span>
+            <span class="hero-title__clip" aria-hidden="true"><span class="hero-title__line" style="--hero-line-delay: 130ms">al ritmo de tu operación.</span></span>
+          </h1>
           <p class="lead">
             Tu operación creció más rápido que tus sistemas. Diseño, gestiono y construyo — con mi equipo — el software y las automatizaciones que la ponen al día. En producción en 8–16 semanas, con un solo responsable de punta a punta.
           </p>
@@ -167,7 +170,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
             </p>
           </div>
 
-          <dl class="hero-facts" aria-label="Condiciones principales" data-hero-item style="--hero-delay: 350ms">
+          <dl class="hero-facts" aria-label="Condiciones principales" data-hero-facts>
             <div><dt>Plazo</dt><dd>8–16 semanas</dd></div>
             <div><dt>Modelo</dt><dd>precio cerrado</dd></div>
             <div><dt>Propiedad</dt><dd>código tuyo</dd></div>
@@ -175,7 +178,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
         </div>
 
         <div class="hero-visual">
-          <div class="hero-visual__status">
+          <div class="hero-visual__status" data-hero-item style="--hero-delay: 320ms">
             <span class="label">De fragmentos a sistema</span>
           </div>
           <HeroGraph />
@@ -183,39 +186,41 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section section-rule problem" id="problema" aria-labelledby="problem-title">
+    <section class="section section-rule problem" id="problema" aria-labelledby="problem-title" data-scroll-section>
       <div class="container">
         <div class="reading-column">
-          <p class="eyebrow">Estado: manual</p>
-          <h2 id="problem-title">¿Te suena?</h2>
-          <ul class="symptom-log" data-animate="fade-up" data-stagger="70">
+          <div data-animate="heading" data-stagger="60">
+            <p class="eyebrow" data-animate-item>Estado: manual</p>
+            <h2 id="problem-title" data-animate-item>¿Te suena?</h2>
+          </div>
+          <ul class="symptom-log" data-animate="problem" data-stagger="70" data-mobile-reveal="items">
             {symptoms.map((symptom) => (
               <li data-animate-item><span aria-hidden="true"></span>{symptom}</li>
             ))}
           </ul>
-          <p class="problem-thesis">
+          <p class="problem-thesis" data-animate="fade-up" data-delay="120">
             No es un problema de tecnología. Es la brecha entre cómo creció tu negocio y los sistemas con los que lo operas. Esa brecha se paga todos los meses, en horas y en errores.
           </p>
         </div>
       </div>
     </section>
 
-    <section class="section section-rule thesis" aria-labelledby="thesis-title">
+    <section class="section section-rule thesis" aria-labelledby="thesis-title" data-scroll-section>
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Una categoría deliberada</p>
-          <h2 id="thesis-title">La estructura justa, sin teléfono roto.</h2>
-          <p class="lead">Tratas con quien entiende, diseña y decide; respaldado por capacidad real para construir.</p>
+        <div class="section-heading" data-animate="heading" data-stagger="60">
+          <p class="eyebrow" data-animate-item>Una categoría deliberada</p>
+          <h2 id="thesis-title" data-animate-item>La estructura justa, sin teléfono roto.</h2>
+          <p class="lead" data-animate-item>Tratas con quien entiende, diseña y decide; respaldado por capacidad real para construir.</p>
         </div>
 
-        <div class="positioning-axis" data-animate="fade-up" data-stagger="70">
+        <div class="positioning-axis" data-animate="comparison" data-stagger="70" data-mobile-reveal="items">
           <article class="positioning-node positioning-node--edge" data-animate-item>
             <p class="label">Freelancer</p>
             <h3>Directo, pero frágil</h3>
             <p>Económico; si se cae esa persona, también se cae tu proyecto.</p>
           </article>
           <span class="axis-line" aria-hidden="true"></span>
-          <article class="positioning-node positioning-node--core" data-animate-item data-emphasis="core" data-delay="200">
+          <article class="positioning-node positioning-node--core" data-animate-item data-emphasis="core">
             <p class="label">Aquí · lo del medio</p>
             <h3>Responsable + equipo</h3>
             <p>Yo diseño y decido; un núcleo estable construye. Gestión y producto viven en la misma cabeza.</p>
@@ -230,17 +235,17 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section section-rule services" id="servicios" aria-labelledby="services-title">
+    <section class="section section-rule services" id="servicios" aria-labelledby="services-title" data-scroll-section>
       <div class="container">
-        <div class="section-heading section-heading--split">
-          <div>
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <div data-animate-item>
             <p class="eyebrow">Oferta · precio visible</p>
             <h2 id="services-title">De entender la operación a ponerla en producción.</h2>
           </div>
-          <p class="lead">Tres etapas conectadas. Puedes salir con el diagnóstico o continuar con un alcance y un precio que ya entiendes.</p>
+          <p class="lead" data-animate-item>Tres etapas conectadas. Puedes salir con el diagnóstico o continuar con un alcance y un precio que ya entiendes.</p>
         </div>
 
-        <div class="offer-pipeline" data-animate="fade-up" data-stagger="70">
+        <div class="offer-pipeline" data-animate="offer-flow" data-stagger="110" data-mobile-reveal="items">
           {offers.map((offer, index) => (
             <>
               <article class:list={["offer-card", offer.core && "offer-card--core"]} data-animate-item data-emphasis={offer.core ? "core-offer" : undefined}>
@@ -250,7 +255,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
                 <p class="offer-card__description">{offer.description}</p>
                 <p class="offer-card__owner label">Quién: {offer.owner}</p>
               </article>
-              {index < offers.length - 1 && <span class="offer-arrow icon-arrow" aria-hidden="true"></span>}
+              {index < offers.length - 1 && <span class="offer-arrow icon-arrow" data-offer-arrow aria-hidden="true"></span>}
             </>
           ))}
         </div>
@@ -264,17 +269,18 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       data-proof-section
       data-track-view="Proof Viewed"
       data-track-section="compromisos-verificables"
+      data-scroll-section
     >
       <div class="container">
-        <div class="section-heading section-heading--split">
-          <div>
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <div data-animate-item>
             <p class="eyebrow">Compromisos verificables</p>
             <h2 id="proof-title">Compromisos que puedes verificar antes de la entrega.</h2>
           </div>
-          <p class="lead">Sin métricas anónimas ni cifras sin contexto. Estas tres condiciones quedan visibles desde el inicio.</p>
+          <p class="lead" data-animate-item>Sin métricas anónimas ni cifras sin contexto. Estas tres condiciones quedan visibles desde el inicio.</p>
         </div>
 
-        <div class="proof-artifact" data-animate="diff" data-stagger="70">
+        <div class="proof-artifact" data-animate="diff" data-stagger="70" data-mobile-reveal="items">
           <div class="proof-artifact__head label" aria-hidden="true">
             <span>Señal</span><span>Cómo se comprueba</span><span>Diff de estado</span>
           </div>
@@ -301,17 +307,17 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section section-rule process" id="proceso" aria-labelledby="process-title">
+    <section class="section section-rule process" id="proceso" aria-labelledby="process-title" data-scroll-section>
       <div class="container">
-        <div class="section-heading section-heading--split">
-          <div>
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <div data-animate-item>
             <p class="eyebrow">Cómo trabajo</p>
             <h2 id="process-title">Sabrás dónde está tu proyecto cada semana.</h2>
           </div>
-          <p class="lead">La secuencia no termina en una presentación: llega a producción, propiedad y handover.</p>
+          <p class="lead" data-animate-item>La secuencia no termina en una presentación: llega a producción, propiedad y handover.</p>
         </div>
 
-        <ol class="phase-list" data-animate="process" data-stagger="90">
+        <ol class="phase-list" data-animate="process" data-stagger="90" data-mobile-reveal="items">
           {phases.map((phase) => (
             <li data-animate-item>
               <span class="phase-number data" data-process-badge>{phase.number}</span>
@@ -328,9 +334,9 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section section-rule about" id="quien" aria-labelledby="about-title">
-      <div class="container about-grid">
-        <div class="identity-panel">
+    <section class="section section-rule about" id="quien" aria-labelledby="about-title" data-scroll-section>
+      <div class="container about-grid" data-animate="assembly" data-stagger="100" data-mobile-reveal="items">
+        <div class="identity-panel" data-animate-item>
           {siteConfig.portraitPath ? (
             <img
               src={siteConfig.portraitPath}
@@ -349,7 +355,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           <p class="label">Product manager técnico · Bogotá / remoto</p>
         </div>
 
-        <div class="about-copy">
+        <div class="about-copy" data-animate-item>
           <p class="eyebrow">Quién responde</p>
           <h2 id="about-title">Felipe Peña, desde la primera llamada hasta la entrega.</h2>
           <p class="lead">
@@ -363,7 +369,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           )}
         </div>
 
-        <aside class="capacity-panel" aria-label="Capacidad del equipo">
+        <aside class="capacity-panel" aria-label="Capacidad del equipo" data-animate-item>
           <p class="label">La capacidad, en concreto</p>
           <ul>
             <li><span aria-hidden="true"></span> Núcleo recurrente según el alcance</li>
@@ -375,13 +381,13 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section section--tight section-rule exclusions" aria-labelledby="exclusions-title">
-      <div class="container exclusions-grid">
-        <div>
+    <section class="section section--tight section-rule exclusions" aria-labelledby="exclusions-title" data-scroll-section>
+      <div class="container exclusions-grid" data-animate="filter" data-stagger="100" data-mobile-reveal="items">
+        <div data-animate-item>
           <p class="eyebrow">Filtro publicado</p>
           <h2 id="exclusions-title">Qué no hago.</h2>
         </div>
-        <div>
+        <div data-animate-item>
           <ul>
             {exclusions.map((item) => <li><span aria-hidden="true">×</span>{item}</li>)}
           </ul>
@@ -390,15 +396,15 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section section-rule faq" id="preguntas" aria-labelledby="faq-title">
+    <section class="section section-rule faq" id="preguntas" aria-labelledby="faq-title" data-scroll-section>
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Objeciones a la vista</p>
-          <h2 id="faq-title">Preguntas directas.</h2>
+        <div class="section-heading" data-animate="heading" data-stagger="60">
+          <p class="eyebrow" data-animate-item>Objeciones a la vista</p>
+          <h2 id="faq-title" data-animate-item>Preguntas directas.</h2>
         </div>
-        <dl class="faq-grid" data-faq>
+        <dl class="faq-grid" data-faq data-animate="faq-list" data-stagger="55" data-mobile-reveal="items">
           {faqs.map((faq, index) => (
-            <div class="faq-item is-open" data-faq-item>
+            <div class="faq-item is-open" data-faq-item data-animate-item>
               <dt>
                 <button
                   type="button"
@@ -408,7 +414,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
                   data-faq-toggle
                 >
                   <span>{faq.question}</span>
-                  <span class="faq-icon" aria-hidden="true">+</span>
+                  <span class="faq-icon" aria-hidden="true"><span class="faq-icon__plus">+</span><span class="faq-icon__minus">−</span></span>
                 </button>
               </dt>
               <dd
@@ -429,14 +435,14 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     <ContactPanel />
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-brand">
+  <footer class="site-footer" data-scroll-section>
+    <div class="container footer-grid" data-animate="footer" data-stagger="60">
+      <div class="footer-brand" data-animate-item>
         <span class="footer-mark" aria-hidden="true">FP</span>
         <p><strong>Felipe Peña</strong><br />Software interno y automatización de datos.</p>
       </div>
-      <p class="footer-stack data">PYTHON · TYPESCRIPT · SQL · KAFKA · AIRFLOW · PYSPARK · FASTAPI</p>
-      <div class="footer-meta">
+      <p class="footer-stack data" data-animate-item>PYTHON · TYPESCRIPT · SQL · KAFKA · AIRFLOW · PYSPARK · FASTAPI</p>
+      <div class="footer-meta" data-animate-item>
         {siteConfig.linkedInUrl && <a href={siteConfig.linkedInUrl} rel="me external">LinkedIn <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>}
         <span>Bogotá / remoto</span>
         <span>© {new Date().getFullYear()}</span>
@@ -481,11 +487,52 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     font-family: var(--font-display-fallback);
   }
 
+  .hero-copy h1::after {
+    width: clamp(var(--space-8), 9vw, var(--space-10));
+    height: var(--border-strong);
+    display: block;
+    margin-top: var(--space-4);
+    background: var(--production);
+    content: "";
+    transform-origin: left center;
+  }
+
+  .hero-title__clip {
+    display: block;
+  }
+
+  .hero-title__line {
+    display: block;
+  }
+
   /* El lead queda estático porque Chrome lo identifica como LCP; los demás elementos conservan el stagger de 70 ms. */
   @media (prefers-reduced-motion: no-preference) {
     [data-hero-item] {
       animation: hero-enter var(--motion-duration) var(--motion-ease) both;
       animation-delay: var(--hero-delay);
+    }
+
+    [data-hero-facts]::before {
+      animation: hero-rule var(--motion-slow) var(--motion-ease) 330ms both;
+    }
+
+    [data-hero-facts] > div {
+      animation: hero-fact var(--motion-duration) var(--motion-ease) both;
+    }
+
+    [data-hero-facts] > div:nth-child(1) { animation-delay: 390ms; }
+    [data-hero-facts] > div:nth-child(2) { animation-delay: 445ms; }
+    [data-hero-facts] > div:nth-child(3) { animation-delay: 500ms; }
+  }
+
+  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    .hero-title__line {
+      animation: hero-title-line var(--motion-slow) var(--motion-ease) both;
+      animation-delay: var(--hero-line-delay);
+    }
+
+    .hero-copy h1::after {
+      animation: hero-rule var(--motion-slow) var(--motion-ease) 220ms both;
     }
   }
 
@@ -505,6 +552,21 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     to { opacity: 1; }
   }
 
+  @keyframes hero-title-line {
+    from { transform: translateY(var(--motion-distance)); }
+    to { transform: translateY(0); }
+  }
+
+  @keyframes hero-rule {
+    from { opacity: 0.2; transform: scaleX(0); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+
+  @keyframes hero-fact {
+    from { opacity: 0.01; transform: translateY(var(--space-2)); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .hero-action {
     display: grid;
     grid-template-columns: auto minmax(13rem, 1fr);
@@ -518,13 +580,24 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .hero-facts {
+    position: relative;
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-4);
     margin-top: var(--space-7);
     padding-top: var(--space-4);
-    border-top: var(--border) solid var(--line);
+  }
+
+  .hero-facts::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: var(--border);
+    background: var(--line);
+    content: "";
+    transform-origin: left center;
   }
 
   .hero-facts dt,
@@ -562,6 +635,17 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     color: var(--graphite);
   }
 
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .hero-action .button .icon-arrow {
+      transition: transform var(--motion-fast) var(--motion-ease);
+    }
+
+    .hero-action .button:hover .icon-arrow,
+    .hero-action .button:focus-visible .icon-arrow {
+      transform: translate(2px, 2px) rotate(var(--arrow-rotation));
+    }
+  }
+
   .problem h2,
   .section-heading h2 {
     margin-top: var(--space-4);
@@ -577,12 +661,23 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .symptom-log li {
+    position: relative;
     display: grid;
     grid-template-columns: var(--space-3) 1fr;
     gap: var(--space-4);
     align-items: start;
     padding-block: var(--space-4);
-    border-bottom: var(--border) solid var(--line);
+  }
+
+  .symptom-log li::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--border);
+    background: var(--line);
+    content: "";
+    transform-origin: left center;
   }
 
   .symptom-log li > span {
@@ -692,6 +787,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   .axis-line {
     height: var(--border);
     background: var(--ink);
+    transform-origin: left center;
   }
 
   .offer-pipeline {
@@ -736,19 +832,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     }
   }
 
-  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
-    :global(.motion-ready) [data-animate="fade-up"][data-stagger].is-visible
-      [data-animate-item][data-emphasis="core-offer"] {
-      animation: core-offer-lift var(--motion-fast) var(--motion-ease) forwards;
-      animation-delay: calc(var(--motion-duration) + var(--motion-sequence-delay, 0ms) + 200ms);
-    }
-  }
-
-  @keyframes core-offer-lift {
-    from { transform: translateY(0); }
-    to { transform: translateY(calc(-1 * var(--space-1))); }
-  }
-
   .offer-card__core {
     position: absolute;
     top: calc(-1 * var(--space-3));
@@ -788,6 +871,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     align-self: center;
     color: var(--ink);
     font-family: var(--font-data);
+    transform-origin: left center;
   }
 
   .proof {
@@ -836,8 +920,22 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .proof-diff {
+    position: relative;
     display: grid;
     gap: var(--space-2);
+  }
+
+  .proof-diff::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(-1 * var(--space-2));
+    left: 0;
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    opacity: 0.72;
+    transform: scaleX(1);
+    transform-origin: left center;
   }
 
   .diff-line {
@@ -901,7 +999,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row {
       opacity: 0;
       transform: translateY(var(--motion-distance));
-      will-change: opacity, transform;
     }
 
     :global(.motion-ready) [data-animate="diff"].is-visible .proof-row {
@@ -951,6 +1048,19 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     left: calc(var(--space-5) + var(--space-4));
     height: var(--border-strong);
     background: var(--line-strong);
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .phase-list::after {
+    position: absolute;
+    z-index: -1;
+    top: calc(var(--space-5) + var(--space-4));
+    right: calc(25% - var(--space-5) - var(--space-4));
+    left: calc(var(--space-5) + var(--space-4));
+    height: var(--border-strong);
+    background: var(--production);
     content: "";
     transform: scaleX(1);
     transform-origin: left center;
@@ -1187,8 +1297,22 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .faq-grid > .faq-item {
+    position: relative;
     padding-block: var(--space-5);
     border-top: var(--border) solid var(--line);
+  }
+
+  .faq-grid > .faq-item::after {
+    position: absolute;
+    top: calc(-1 * var(--border));
+    right: 0;
+    left: 0;
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+    transition: transform var(--motion-duration) var(--motion-ease);
   }
 
   .faq-grid dt,
@@ -1229,6 +1353,11 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   .faq-grid dd > div {
     min-height: 0;
     overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--motion-fast) var(--motion-ease),
+      transform var(--motion-fast) var(--motion-ease);
   }
 
   .faq-grid dd p {
@@ -1236,24 +1365,59 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .faq-icon {
+    position: relative;
     width: var(--space-5);
+    height: var(--space-5);
     flex: 0 0 var(--space-5);
     color: var(--production);
     font-family: var(--font-data);
     font-size: var(--text-h3);
     font-weight: 500;
     text-align: center;
-    transform: rotate(45deg);
-    transition: transform var(--motion-fast) var(--motion-ease);
   }
 
-  :global(.motion-ready) .faq-item:not(.is-open) dd {
+  .faq-icon > span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transition:
+      opacity var(--motion-fast) var(--motion-ease),
+      transform var(--motion-fast) var(--motion-ease);
+  }
+
+  .faq-icon__plus {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.82);
+  }
+
+  .faq-icon__minus {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open) dd {
     grid-template-rows: 0fr;
     opacity: 0;
   }
 
-  :global(.motion-ready) .faq-item:not(.is-open) .faq-icon {
-    transform: rotate(0deg);
+  :global(.faq-ready) .faq-item:not(.is-open) dd > div {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-2)));
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open)::after {
+    transform: scaleX(0);
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open) .faq-icon__plus {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open) .faq-icon__minus {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.82);
   }
 
   .site-footer {
@@ -1317,6 +1481,413 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     align-items: center;
   }
 
+  /*
+   * Coreografía editorial: cada artefacto representa una operación concreta
+   * (registrar, comparar, ensamblar o desplegar). 500 ms permite leer el cambio;
+   * 55–110 ms de stagger hace perceptible el orden sin convertirlo en espectáculo.
+   */
+  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="heading"] .eyebrow::before,
+    :global(.motion-ready) [data-animate="problem"] .eyebrow::before {
+      transition: transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+      transform-origin: left center;
+    }
+
+    :global(.motion-ready) [data-animate="heading"]:not(.is-visible) .eyebrow::before,
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .eyebrow::before {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="problem"] [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) [data-animate-item] {
+      opacity: 0;
+      transform: translateY(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .symptom-log li {
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="problem"].is-visible [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="problem"] .symptom-log li > span {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 90ms);
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .symptom-log li > span {
+      opacity: 0;
+      transform: scale(0.35);
+    }
+
+    :global(.motion-ready) [data-animate="problem"] .symptom-log li::after {
+      transition: transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 150ms);
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .symptom-log li::after {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) [data-animate-item] {
+      opacity: 0;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .positioning-node:first-child {
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .positioning-node--core {
+      transform: translateY(var(--motion-distance)) scale(0.97);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .positioning-node:last-child {
+      transform: translateX(var(--motion-distance));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--core {
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] .axis-line {
+      opacity: 1;
+      transform: scaleX(1);
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] .axis-line:nth-child(2) {
+      transition-delay: 150ms;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] .axis-line:nth-child(4) {
+      transition-delay: 290ms;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .axis-line {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--core::after {
+      transition-delay: 760ms;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-animate-item] {
+      opacity: 0;
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-emphasis="core-offer"] {
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-offer-arrow] {
+      opacity: 1;
+      transform: scaleX(1);
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-offer-arrow]:nth-child(2) {
+      transition-delay: 135ms;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-offer-arrow]:nth-child(4) {
+      transition-delay: 355ms;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-offer-arrow] {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] .offer-card__core {
+      transition-delay: 720ms;
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-artifact__head,
+    :global(.motion-ready) [data-animate="diff"] .proof-row {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-artifact__head {
+      transition-delay: var(--motion-delay, 0ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-row {
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-artifact__head {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row {
+      opacity: 0;
+      transform: translateY(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--old {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 170ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"].is-visible .diff-line--old {
+      opacity: 0.55;
+      transform: translateX(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-before::after {
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 270ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--new {
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 410ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new {
+      transform: translateX(var(--motion-distance));
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--new .diff-marker {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 500ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new .diff-marker {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-diff small,
+    :global(.motion-ready) [data-animate="diff"] .proof-diff::after {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 560ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-diff small {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-diff::after {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="process"]::before {
+      transition-delay: var(--motion-delay, 0ms);
+    }
+
+    :global(.motion-ready) [data-animate="process"]::after {
+      transition: transform var(--motion-slow) var(--motion-ease);
+      transition-delay: 300ms;
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::after {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="process"] [data-process-badge] {
+      transition-delay: calc(130ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) [data-process-badge] {
+      opacity: 0;
+      transform: scale(0.55);
+    }
+
+    :global(.motion-ready) [data-animate="process"] li > div {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(190ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) li > div {
+      opacity: 0;
+      transform: translateX(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"] > [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
+      opacity: 0;
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :first-child,
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > :first-child {
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :nth-child(2) {
+      transform: translateY(var(--motion-distance)) scale(0.98);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :nth-child(3),
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > :nth-child(2) {
+      transform: translateX(var(--motion-distance));
+    }
+
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > :nth-child(odd) {
+      transform: translateX(calc(-1 * var(--space-3)));
+    }
+
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > :nth-child(even) {
+      transform: translateX(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
+      transform: translateY(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"].is-visible > [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes::before {
+      transition: transform var(--motion-slow) var(--motion-ease) 360ms;
+      transform-origin: left center;
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .identity-nodes::before {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i,
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li,
+    :global(.motion-ready) [data-animate="filter"] li {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(1) { transition-delay: 420ms; }
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(2) { transition-delay: 475ms; }
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(3) { transition-delay: 530ms; }
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(4) { transition-delay: 585ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(1) { transition-delay: 420ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(2) { transition-delay: 480ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(3) { transition-delay: 540ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(4) { transition-delay: 600ms; }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .identity-nodes i {
+      opacity: 0;
+      transform: scale(0.35);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .capacity-panel li {
+      opacity: 0;
+      transform: translateX(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(1) { transition-delay: 260ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(2) { transition-delay: 315ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(3) { transition-delay: 370ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(4) { transition-delay: 425ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(5) { transition-delay: 480ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(6) { transition-delay: 535ms; }
+
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) li {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+
+    :global(.motion-ready) [data-animate="filter"] li > span {
+      display: inline-block;
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: inherit;
+    }
+
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) li > span {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+  }
+
+  @media (min-width: 56.3125rem) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--edge:hover {
+      transform: translateY(calc(-1 * var(--space-1)));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--core:hover {
+      transform: translateY(calc(-1 * var(--space-3)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible .offer-card:hover {
+      transform: translateY(calc(-1 * var(--space-1)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-emphasis="core-offer"]:hover {
+      transform: translateY(calc(-1 * var(--space-3)));
+    }
+  }
+
   @media (max-width: 74.9375rem) {
     .hero-grid {
       grid-template-columns: 1fr;
@@ -1334,6 +1905,11 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
   @media (max-width: 56.25rem) {
     [data-hero-item] {
+      animation-name: hero-fade;
+    }
+
+    [data-hero-facts]::before,
+    [data-hero-facts] > div {
       animation-name: hero-fade;
     }
 
@@ -1427,6 +2003,17 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       transform-origin: center top;
     }
 
+    .phase-list::after {
+      top: calc(var(--space-5) + var(--space-4));
+      right: auto;
+      bottom: calc(var(--space-5) + var(--space-4));
+      left: calc(var(--space-5) + var(--space-4));
+      width: var(--border-strong);
+      height: auto;
+      transform: scaleY(1);
+      transform-origin: center top;
+    }
+
     .phase-list li {
       border-right: 0;
       border-bottom: var(--border) solid var(--line);
@@ -1437,7 +2024,9 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     }
 
     :global(.motion-ready) [data-animate="process"]::before,
-    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::before {
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::before,
+    :global(.motion-ready) [data-animate="process"]::after,
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::after {
       transform: none;
     }
 
@@ -1460,6 +2049,27 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       grid-template-columns: 1fr;
     }
 
+    .faq-icon > span,
+    :global(.faq-ready) .faq-item:not(.is-open) .faq-icon__plus,
+    :global(.faq-ready) .faq-item:not(.is-open) .faq-icon__minus {
+      transform: none;
+    }
+
+    .faq-grid dd > div,
+    :global(.faq-ready) .faq-item:not(.is-open) dd > div {
+      transform: none;
+    }
+
+    .faq-grid > .faq-item::after,
+    :global(.faq-ready) .faq-item:not(.is-open)::after {
+      transform: none;
+      transition-property: opacity;
+    }
+
+    :global(.faq-ready) .faq-item:not(.is-open)::after {
+      opacity: 0;
+    }
+
     .footer-grid {
       grid-template-columns: 1fr;
       text-align: left;
@@ -1471,6 +2081,55 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
     .footer-meta {
       justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="problem"] [data-animate-item],
+    :global(.motion-ready) [data-animate="comparison"] [data-animate-item],
+    :global(.motion-ready) [data-animate="offer-flow"] [data-animate-item],
+    :global(.motion-ready) [data-animate="diff"] .proof-artifact__head,
+    :global(.motion-ready) [data-animate="diff"] .proof-row,
+    :global(.motion-ready) [data-animate="process"] li > div,
+    :global(.motion-ready) [data-animate="assembly"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"] > [data-animate-item] {
+      transition: opacity var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) [data-animate-item],
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) [data-animate-item],
+    :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-animate-item],
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
+      opacity: 0;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="problem"].is-visible [data-animate-item],
+    :global(.motion-ready) [data-animate="comparison"].is-visible [data-animate-item],
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-animate-item],
+    :global(.motion-ready) [data-animate="assembly"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"].is-visible > [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-artifact__head,
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row {
+      opacity: 0;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) li > div {
+      opacity: 0;
+      transform: none;
     }
   }
 

@@ -8,7 +8,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
 <header class="site-header" data-scroll-header>
   <div class="container header-inner">
     <a class="brand" href={homeHref}>
-      <span class="brand-mark">FP</span>
+      <span class="brand-mark">FP<span class="brand-status" aria-hidden="true"></span></span>
       <span class="brand-copy">
         <strong>{siteConfig.name}</strong>
         <span>software de operaciones</span>
@@ -38,7 +38,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
         <a href={sectionHref("contacto")} class="nav-cta" data-track="cta" data-location="header-mobile">Hablemos</a>
       </div>
 
-      <div class="site-nav__mobile" id="navegacion-movil" data-mobile-menu data-nav-links hidden>
+      <div class="site-nav__mobile" id="navegacion-movil" data-mobile-menu data-nav-links hidden inert aria-hidden="true">
         <a href={sectionHref("servicios")}>Servicios</a>
         <a href={sectionHref("prueba")}>Compromisos</a>
         <a href={sectionHref("proceso")}>Proceso</a>
@@ -87,12 +87,36 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     transition: opacity var(--motion-fast) var(--motion-ease);
   }
 
-  :global(.motion-ready) .site-header:not(.is-scrolled)::before {
+  /* El rail confirma que la navegación pasó de estado inicial a sticky. */
+  .site-header::after {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: calc(-1 * var(--border));
+    left: 0;
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition:
+      opacity 320ms var(--motion-ease),
+      transform 480ms var(--motion-ease);
+  }
+
+  .site-header:not(.is-scrolled)::before {
     opacity: 0;
   }
 
   .site-header.is-scrolled::before {
     opacity: 1;
+  }
+
+  .site-header.is-scrolled::after {
+    opacity: 1;
+    transform: scaleX(var(--page-scroll-progress, 0));
   }
 
   .header-inner {
@@ -114,6 +138,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
   }
 
   .brand-mark {
+    position: relative;
     display: inline-grid;
     width: var(--target);
     height: var(--target);
@@ -124,6 +149,17 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     font-size: var(--text-label);
     font-weight: 600;
     letter-spacing: 0.04em;
+  }
+
+  .brand-status {
+    position: absolute;
+    right: calc(-1 * var(--space-1));
+    bottom: calc(-1 * var(--space-1));
+    width: var(--space-2);
+    height: var(--space-2);
+    border: var(--border) solid var(--paper);
+    border-radius: var(--radius-round);
+    background: var(--production);
   }
 
   .brand-copy {
@@ -178,7 +214,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     content: "";
     transform: scaleX(0);
     transform-origin: right center;
-    transition: transform var(--motion-fast) var(--motion-ease);
+    transition: transform 320ms var(--motion-ease);
   }
 
   .site-nav a:hover::after,
@@ -208,6 +244,18 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     font-weight: 600;
   }
 
+  .nav-cta .icon-arrow,
+  .menu-toggle .icon-arrow {
+    transition:
+      opacity 300ms var(--motion-ease),
+      transform 300ms var(--motion-ease);
+  }
+
+  .nav-cta:hover .icon-arrow,
+  .nav-cta:focus-visible .icon-arrow {
+    transform: translate(2px, 2px) rotate(var(--arrow-rotation));
+  }
+
   .site-nav__mobile-controls,
   .site-nav__mobile,
   .site-nav__noscript {
@@ -225,6 +273,66 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
 
   .menu-toggle[aria-expanded="true"] .icon-arrow {
     transform: rotate(225deg);
+  }
+
+  /* Boot corto: primero identidad, después enlaces. No espera al script. */
+  @media (prefers-reduced-motion: no-preference) {
+    .brand-mark,
+    .brand-copy,
+    .site-nav__desktop > a {
+      animation: nav-boot 420ms var(--motion-ease) both;
+    }
+
+    .brand-copy {
+      animation-delay: 55ms;
+    }
+
+    .site-nav__desktop > a:nth-child(1) {
+      animation-delay: 110ms;
+    }
+
+    .site-nav__desktop > a:nth-child(2) {
+      animation-delay: 160ms;
+    }
+
+    .site-nav__desktop > a:nth-child(3) {
+      animation-delay: 210ms;
+    }
+
+    .site-nav__desktop > a:nth-child(4) {
+      animation-delay: 260ms;
+    }
+
+    .brand-status {
+      animation: nav-status-online 320ms var(--motion-ease) 360ms both;
+    }
+  }
+
+  @keyframes nav-boot {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-2))) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes nav-status-online {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes nav-boot-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   @media (max-width: 43.75rem) {
@@ -256,8 +364,20 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
       box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
     }
 
+    /* JS retrasa `hidden` 300 ms: la salida usa solo opacity y conserva semántica. */
+    .site-nav__mobile {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms var(--motion-ease);
+    }
+
     .site-nav__mobile:not([hidden]) {
       display: grid;
+    }
+
+    .site-nav__mobile.is-open {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .site-nav__noscript {
@@ -268,6 +388,38 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     .site-nav__noscript a {
       padding-inline: var(--space-3);
     }
+
+    .menu-toggle[aria-expanded="true"] .icon-arrow {
+      opacity: 0.42;
+      transform: rotate(var(--arrow-rotation));
+    }
+
+    .site-header::after {
+      opacity: 0;
+      transform: none;
+      transition: opacity 300ms var(--motion-ease);
+    }
+
+    .site-header.is-scrolled::after {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .brand-mark,
+      .brand-status,
+      .site-nav__mobile-controls {
+        animation: nav-boot-fade 320ms var(--motion-ease) both;
+      }
+
+      .brand-status {
+        animation-delay: 180ms;
+      }
+
+      .site-nav__mobile-controls {
+        animation-delay: 70ms;
+      }
+    }
   }
 
   @media (max-width: 23.4375rem) {
@@ -277,6 +429,26 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
 
     .menu-toggle {
       padding-inline: var(--space-2);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-mark,
+    .brand-copy,
+    .brand-status,
+    .site-nav__desktop > a,
+    .site-nav__mobile-controls {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+
+    .site-header::after,
+    .site-nav a::after,
+    .nav-cta .icon-arrow,
+    .menu-toggle .icon-arrow,
+    .site-nav__mobile {
+      transition: none;
     }
   }
 </style>

@@ -82,11 +82,18 @@ const menuToggle =
   document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
 const mobileMenu = document.querySelector<HTMLElement>("[data-mobile-menu]");
 const menuLabel = menuToggle?.querySelector<HTMLElement>("[data-menu-label]");
+const menuReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 let headerFrame = 0;
 const updateScrolledHeader = () => {
   headerFrame = 0;
   scrollHeader?.classList.toggle("is-scrolled", window.scrollY > 12);
+  const scrollRange = Math.max(
+    document.documentElement.scrollHeight - window.innerHeight,
+    1,
+  );
+  const progress = Math.min(Math.max(window.scrollY / scrollRange, 0), 1);
+  scrollHeader?.style.setProperty("--page-scroll-progress", String(progress));
 };
 const scheduleScrolledHeader = () => {
   if (headerFrame) return;
@@ -96,20 +103,43 @@ window.addEventListener("scroll", scheduleScrolledHeader, { passive: true });
 window.addEventListener("pageshow", scheduleScrolledHeader);
 updateScrolledHeader();
 
+let menuCloseTimer = 0;
 const closeMenu = (restoreFocus = false) => {
   if (!menuToggle || !mobileMenu) return;
-  mobileMenu.hidden = true;
+  window.clearTimeout(menuCloseTimer);
+  const wasHidden = mobileMenu.hidden;
+  mobileMenu.classList.remove("is-open");
+  mobileMenu.setAttribute("aria-hidden", "true");
+  mobileMenu.inert = true;
   menuToggle.setAttribute("aria-expanded", "false");
   if (menuLabel) menuLabel.textContent = "Menú";
   if (restoreFocus) menuToggle.focus();
+
+  const finish = () => {
+    mobileMenu.hidden = true;
+    menuCloseTimer = 0;
+  };
+  if (wasHidden || menuReduceMotion.matches) finish();
+  else menuCloseTimer = window.setTimeout(finish, 300);
 };
 
 menuToggle?.addEventListener("click", () => {
   if (!mobileMenu) return;
-  const willOpen = mobileMenu.hidden;
-  mobileMenu.hidden = !willOpen;
-  menuToggle.setAttribute("aria-expanded", String(willOpen));
-  if (menuLabel) menuLabel.textContent = willOpen ? "Cerrar" : "Menú";
+  const willOpen = menuToggle.getAttribute("aria-expanded") !== "true";
+  if (!willOpen) {
+    closeMenu();
+    return;
+  }
+
+  window.clearTimeout(menuCloseTimer);
+  mobileMenu.hidden = false;
+  mobileMenu.inert = false;
+  mobileMenu.setAttribute("aria-hidden", "false");
+  menuToggle.setAttribute("aria-expanded", "true");
+  if (menuLabel) menuLabel.textContent = "Cerrar";
+  // Un único layout read garantiza que opacity tenga un frame inicial visible.
+  void mobileMenu.offsetWidth;
+  mobileMenu.classList.add("is-open");
 });
 
 mobileMenu?.addEventListener("click", (event) => {
@@ -159,17 +189,19 @@ if (isHomePath(window.location.pathname)) {
     .map((id) => document.getElementById(id))
     .filter((section): section is HTMLElement => Boolean(section));
 
-  let activeTimer = 0;
+  let activeFrame = 0;
+  let hashTimer = 0;
   let hashNavigationDeadline = window.location.hash
     ? performance.now() + 500
     : 0;
   const updateActiveSection = () => {
-    activeTimer = 0;
+    activeFrame = 0;
     const hashNavigationRemaining = hashNavigationDeadline - performance.now();
     if (window.location.hash && hashNavigationRemaining > 0) {
       setActiveSection(window.location.hash);
-      activeTimer = window.setTimeout(
-        updateActiveSection,
+      window.clearTimeout(hashTimer);
+      hashTimer = window.setTimeout(
+        scheduleActiveSection,
         hashNavigationRemaining + 20,
       );
       return;
@@ -182,8 +214,8 @@ if (isHomePath(window.location.pathname)) {
     setActiveSection(current ? `#${current.id}` : "");
   };
   const scheduleActiveSection = () => {
-    window.clearTimeout(activeTimer);
-    activeTimer = window.setTimeout(updateActiveSection, 120);
+    if (activeFrame) return;
+    activeFrame = window.requestAnimationFrame(updateActiveSection);
   };
 
   window.addEventListener("scroll", scheduleActiveSection, { passive: true });
@@ -218,6 +250,9 @@ const setFaqItem = (item: HTMLElement, open: boolean) => {
 };
 
 if (faq && faqItems.length > 0) {
+  // El acordeón obtiene su estado interactivo antes del primer paint y no
+  // depende de la activación diferida de los reveals de scroll.
+  document.documentElement.classList.add("faq-ready");
   faqItems.forEach((item) => setFaqItem(item, false));
   faq.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
@@ -349,7 +384,7 @@ if (form) {
       if (formStatus)
         formStatus.textContent = "Contexto recibido. Abriendo la confirmación…";
       // La pausa permite que el estado y el anuncio live se perciban; no es movimiento.
-      await new Promise((resolve) => window.setTimeout(resolve, 400));
+      await new Promise((resolve) => window.setTimeout(resolve, 650));
       window.location.assign(form.action);
     } catch (error) {
       resetSubmitState();

@@ -1,6 +1,6 @@
 # Motion language
 
-La motion cuenta un cambio de estado: fragmentos manuales que se ordenan hasta convertirse en un sistema en producción. No usa rebotes, springs, parallax ni fondos animados.
+La motion cuenta un cambio de estado: fragmentos manuales que se ordenan hasta convertirse en un sistema en producción. No usa rebotes, springs, parallax ni fondos animados. La actualización toma como referencia la claridad cinética, las líneas autodibujadas y la narrativa progresiva de los [ejemplos de landing animadas de SVGator](https://www.svgator.com/blog/animated-landing-pages-examples/), reinterpretados como lenguaje de ingeniería y no como decoración.
 
 ## Decisión técnica
 
@@ -15,7 +15,7 @@ No se incorporó GSAP. El diagrama requiere una secuencia que se ejecuta una sol
   <!-- reveal individual -->
 </section>
 
-<ul data-animate="fade-up" data-stagger="70">
+<ul data-animate="fade-left" data-stagger="70">
   <li data-animate-item>Primero</li>
   <li data-animate-item>Después</li>
 </ul>
@@ -28,38 +28,59 @@ No se incorporó GSAP. El diagrama requiere una secuencia que se ejecuta una sol
 
 | Atributo o clase    | Responsabilidad                                                                          |
 | ------------------- | ---------------------------------------------------------------------------------------- |
-| `data-animate`      | Patrón del contenedor: `fade-up`, `fade`, `scale-x`, `diff`, `process` o `system-graph`. |
+| `data-animate`      | Patrón genérico o coreografía semántica del contenedor.                                 |
 | `data-animate-item` | Hijo que recibe el stagger del grupo.                                                    |
 | `data-stagger="70"` | Separación entre hijos, en milisegundos.                                                 |
 | `data-delay="200"`  | Espera adicional del contenedor o del hijo, en milisegundos.                             |
 | `data-motion-index` | Índice explícito cuando dos segmentos representan una misma fila.                        |
-| `.motion-ready`     | Se añade al documento solo cuando JS está disponible.                                    |
+| `data-scroll-section` | Activa una marca de progreso breve cuando una sección entra al viewport.                |
+| `data-mobile-reveal="items"` | Observa cada ítem móvil por separado para no revelar contenido aún fuera de pantalla. |
+| `.motion-ready`     | Scope global que JS activa después del primer paint.                                     |
+| `.graph-motion-ready` | Scope local del diagrama; evita flashes y desacopla su reloj del resto de la página.    |
+| `.faq-ready`        | Activa el estado del acordeón antes del primer paint, separado de los reveals de scroll. |
 | `.is-visible`       | Estado final one-shot; el observer deja de observar inmediatamente.                      |
 
 Sin JavaScript no se aplica el estado oculto: el contenido SSR permanece visible.
+
+Los presets reutilizables son `fade`, `fade-up`, `fade-left`, `fade-right`, `scale-in`, `scale-x` y `heading`. Las coreografías de dominio son `problem`, `comparison`, `offer-flow`, `diff`, `process`, `capacity`, `assembly`, `filter`, `faq-list`, `contact`, `footer` y `system-graph`.
+
+Cada `data-animate-item` pertenece a su contenedor `data-animate` más cercano. Esto permite componer artefactos sin que un grupo exterior duplique los índices o delays de una secuencia interior.
+
+## Verbos visuales por sección
+
+- **Hero — declarar:** el H1 entra por dos máscaras verticales sin animar su opacidad; el párrafo LCP nunca espera al JavaScript.
+- **Diagrama — ordenar y desplegar:** cuatro actos one-shot — fuentes, operación manual, build/normalización y deploy — en unos 5 segundos. Ningún fragmento sale del marco y el estado final queda centrado y sostenido, sin loop.
+- **Dolores — registrar:** señales laterales, puntos de estado y separadores que completan cada fila.
+- **Comparativa — converger:** extremos laterales y columna central que se confirma con borde y lift.
+- **Oferta — encadenar:** card, conector, core, conector y salida se revelan como un pipeline.
+- **Compromisos — aplicar diff:** estado anterior, tachado, inserción nueva y confirmación de commit.
+- **Proceso y capacidad — activar:** conectores, responsables, demos semanales y estado final aparecen en orden operativo.
+- **Contacto — enrutar:** introducción, pasos, cards y campos forman una única secuencia hasta el envío.
+
+El scroll también mantiene un progreso continuo en el borde inferior del nav, actualiza el enlace de sección activa en `requestAnimationFrame` y confirma cada nueva sección con una línea corta de producción. En móvil, los grupos largos se revelan ítem por ítem al entrar realmente al viewport; no se usa parallax ni se vincula la posición de elementos al scroll.
 
 ## Timings
 
 - `--motion-fast: 300ms`: estados cortos, badges e iconos.
 - `--motion-duration: 500ms`: reveal editorial base.
 - `--motion-slow: 600ms`: convergencia y líneas.
-- `--motion-stagger: 70ms`: orden perceptible sin teatralidad.
+- `--motion-stagger: 70ms`: base; las secuencias densas usan 55 ms y los cambios de estado complejos hasta 110 ms.
 - `--motion-ease: cubic-bezier(0.22, 1, 0.36, 1)`: llegada precisa, sin overshoot.
 
 `will-change` solo existe mientras un elemento espera su reveal. Las geometrías se reservan antes de animar y la motion usa `transform` y `opacity`; las dos excepciones pedidas son el panel FAQ (`grid-template-rows`) y la capa ya desenfocada del header, cuya entrada anima únicamente `opacity`.
 
-El párrafo principal del hero permanece visible desde el primer paint porque Chrome lo identifica como el elemento LCP. Los demás elementos conservan sus slots y el stagger relativo de 70 ms; así la motion no retrasa el presupuesto de carga.
+El párrafo principal del hero permanece visible desde el primer paint porque Chrome lo identifica como el elemento LCP. Los demás elementos conservan sus slots y el stagger relativo de 70 ms. La preparación masiva de reveals se difiere dos `requestAnimationFrame`; el gráfico usa un scope local inmediato para fijar su estado inicial, pero decide el reveal después de que el navegador resuelve un posible hash. Así el recálculo del resto de la página no compite con el LCP ni se ejecutan animaciones fuera de pantalla al entrar por un enlace profundo.
 
 ## Degradación con `prefers-reduced-motion`
 
-- Hero, dolores, comparativas, ofertas y contacto aparecen inmediatamente en su posición final.
+- Hero, dolores, comparativas, ofertas, identidad, FAQ, footer y contacto aparecen inmediatamente en su posición final.
 - No se ejecutan stagger, drift, convergencia, lift ni dibujo de líneas.
 - El diagrama oculta el estado manual y muestra la composición estática `DESPUÉS · SISTEMA` con `EN PRODUCCIÓN`.
 - El diff muestra el estado anterior ya tachado y el nuevo visible.
-- El conector del proceso y las barras de capacidad aparecen completos.
+- El conector del proceso, las barras de capacidad y los hitos semanales aparecen completos.
 - El nav cambia de estado sin tween; los underlines responden de forma inmediata.
 - El FAQ conserva teclado y semántica, pero abre y cierra sin transición.
 - Loading, error y success del formulario conservan texto y `aria-live`, sin animación.
 - La agenda usa desplazamiento instantáneo al cargarse.
 
-En pantallas de hasta `56.25rem` se eliminan drift, convergencia y lifts. Los reveals se reducen a fades simples y el diagrama usa su composición before/after estática.
+En pantallas de hasta `56.25rem` se eliminan drift, convergencia, escalado y lifts. Los reveals se reducen a fades o crossfades simples y el diagrama usa una composición before/after sin desplazamiento espacial.
