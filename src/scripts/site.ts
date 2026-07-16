@@ -1,6 +1,11 @@
+import { initMotion } from "./motion";
+
 declare global {
   interface Window {
-    plausible?: ((event: string, options?: { props?: Record<string, string> }) => void) & {
+    plausible?: ((
+      event: string,
+      options?: { props?: Record<string, string> },
+    ) => void) & {
       q?: unknown[];
     };
   }
@@ -8,7 +13,10 @@ declare global {
 
 type Plausible = NonNullable<Window["plausible"]>;
 
-const fallbackPlausible = ((event: string, options?: { props?: Record<string, string> }) => {
+const fallbackPlausible = ((
+  event: string,
+  options?: { props?: Record<string, string> },
+) => {
   (fallbackPlausible.q ||= []).push([event, options]);
 }) as Plausible;
 
@@ -17,10 +25,15 @@ window.plausible ||= fallbackPlausible;
 const basePath = document.documentElement.dataset.basePath || "/";
 const homePath = new URL(basePath, window.location.origin).pathname;
 const isHomePath = (pathname: string) =>
-  pathname === homePath || (homePath !== "/" && pathname === homePath.replace(/\/$/, ""));
+  pathname === homePath ||
+  (homePath !== "/" && pathname === homePath.replace(/\/$/, ""));
 
-const plausibleDomain = document.querySelector<HTMLMetaElement>("meta[name='plausible-domain']")?.content;
-const plausibleSrc = document.querySelector<HTMLMetaElement>("meta[name='plausible-src']")?.content;
+const plausibleDomain = document.querySelector<HTMLMetaElement>(
+  "meta[name='plausible-domain']",
+)?.content;
+const plausibleSrc = document.querySelector<HTMLMetaElement>(
+  "meta[name='plausible-src']",
+)?.content;
 
 if (plausibleDomain && plausibleSrc) {
   const loadAnalytics = () => {
@@ -41,6 +54,16 @@ const track = (event: string, props?: Record<string, string>) => {
   window.plausible?.(event, props ? { props } : undefined);
 };
 
+initMotion({
+  onReveal: (element) => {
+    const event = element.dataset.trackView;
+    if (!event) return;
+    track(event, {
+      section: element.dataset.trackSection || element.id || "unknown",
+    });
+  },
+});
+
 document.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
@@ -52,9 +75,26 @@ document.addEventListener("click", (event) => {
 });
 
 const navigation = document.querySelector<HTMLElement>(".site-nav");
-const menuToggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+const scrollHeader = document.querySelector<HTMLElement>(
+  "[data-scroll-header]",
+);
+const menuToggle =
+  document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
 const mobileMenu = document.querySelector<HTMLElement>("[data-mobile-menu]");
 const menuLabel = menuToggle?.querySelector<HTMLElement>("[data-menu-label]");
+
+let headerFrame = 0;
+const updateScrolledHeader = () => {
+  headerFrame = 0;
+  scrollHeader?.classList.toggle("is-scrolled", window.scrollY > 12);
+};
+const scheduleScrolledHeader = () => {
+  if (headerFrame) return;
+  headerFrame = window.requestAnimationFrame(updateScrolledHeader);
+};
+window.addEventListener("scroll", scheduleScrolledHeader, { passive: true });
+window.addEventListener("pageshow", scheduleScrolledHeader);
+updateScrolledHeader();
 
 const closeMenu = (restoreFocus = false) => {
   if (!menuToggle || !mobileMenu) return;
@@ -77,12 +117,16 @@ mobileMenu?.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (!(event.target instanceof Node) || navigation?.contains(event.target)) return;
+  if (!(event.target instanceof Node) || navigation?.contains(event.target))
+    return;
   closeMenu();
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && menuToggle?.getAttribute("aria-expanded") === "true") {
+  if (
+    event.key === "Escape" &&
+    menuToggle?.getAttribute("aria-expanded") === "true"
+  ) {
     closeMenu(true);
   }
 });
@@ -97,7 +141,10 @@ const sectionLinks = Array.from(
 const setActiveSection = (hash: string) => {
   for (const link of sectionLinks) {
     const linkUrl = new URL(link.href, window.location.href);
-    const isCurrent = isHomePath(window.location.pathname) && linkUrl.pathname === homePath && linkUrl.hash === hash;
+    const isCurrent =
+      isHomePath(window.location.pathname) &&
+      linkUrl.pathname === homePath &&
+      linkUrl.hash === hash;
     if (isCurrent) link.setAttribute("aria-current", "location");
     else link.removeAttribute("aria-current");
   }
@@ -106,18 +153,25 @@ const setActiveSection = (hash: string) => {
 if (isHomePath(window.location.pathname)) {
   if (window.location.hash) setActiveSection(window.location.hash);
 
-  const observedSections = [...new Set(sectionLinks.map((link) => new URL(link.href).hash.slice(1)))]
+  const observedSections = [
+    ...new Set(sectionLinks.map((link) => new URL(link.href).hash.slice(1))),
+  ]
     .map((id) => document.getElementById(id))
     .filter((section): section is HTMLElement => Boolean(section));
 
   let activeTimer = 0;
-  let hashNavigationDeadline = window.location.hash ? performance.now() + 500 : 0;
+  let hashNavigationDeadline = window.location.hash
+    ? performance.now() + 500
+    : 0;
   const updateActiveSection = () => {
     activeTimer = 0;
     const hashNavigationRemaining = hashNavigationDeadline - performance.now();
     if (window.location.hash && hashNavigationRemaining > 0) {
       setActiveSection(window.location.hash);
-      activeTimer = window.setTimeout(updateActiveSection, hashNavigationRemaining + 20);
+      activeTimer = window.setTimeout(
+        updateActiveSection,
+        hashNavigationRemaining + 20,
+      );
       return;
     }
     const marker = window.innerHeight * 0.35;
@@ -150,12 +204,43 @@ if (isHomePath(window.location.pathname)) {
   else updateActiveSection();
 }
 
+const faq = document.querySelector<HTMLElement>("[data-faq]");
+const faqItems = Array.from(
+  faq?.querySelectorAll<HTMLElement>("[data-faq-item]") || [],
+);
+
+const setFaqItem = (item: HTMLElement, open: boolean) => {
+  const button = item.querySelector<HTMLButtonElement>("[data-faq-toggle]");
+  const panel = item.querySelector<HTMLElement>("[data-faq-panel]");
+  item.classList.toggle("is-open", open);
+  button?.setAttribute("aria-expanded", String(open));
+  panel?.setAttribute("aria-hidden", String(!open));
+};
+
+if (faq && faqItems.length > 0) {
+  faqItems.forEach((item) => setFaqItem(item, false));
+  faq.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const button = event.target.closest<HTMLButtonElement>("[data-faq-toggle]");
+    const item = button?.closest<HTMLElement>("[data-faq-item]");
+    if (!button || !item) return;
+
+    const willOpen = button.getAttribute("aria-expanded") !== "true";
+    faqItems.forEach((candidate) =>
+      setFaqItem(candidate, candidate === item && willOpen),
+    );
+  });
+}
+
 const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
 
 if (form) {
   form.noValidate = true;
-  const fields = Array.from(form.querySelectorAll<HTMLInputElement>("input:not([type='hidden'])"));
-  const submitButton = form.querySelector<HTMLButtonElement>("[data-form-submit]");
+  const fields = Array.from(
+    form.querySelectorAll<HTMLInputElement>("input:not([type='hidden'])"),
+  );
+  const submitButton =
+    form.querySelector<HTMLButtonElement>("[data-form-submit]");
   const formStatus = form.querySelector<HTMLElement>("[data-form-status]");
   const defaultSubmitLabel = submitButton?.innerHTML || "";
   let submitting = false;
@@ -170,9 +255,12 @@ if (form) {
       if (field.name === "email") return "Escribe tu email de trabajo.";
       return "Resume el contexto en una línea.";
     }
-    if (field.name === "nombre" && value.length < 2) return "Usa al menos 2 caracteres.";
-    if (field.name === "email" && field.validity.typeMismatch) return "Usa un email válido, por ejemplo nombre@empresa.com.";
-    if (field.name === "contexto" && value.length < 12) return "Añade un poco más de contexto (mínimo 12 caracteres).";
+    if (field.name === "nombre" && value.length < 2)
+      return "Usa al menos 2 caracteres.";
+    if (field.name === "email" && field.validity.typeMismatch)
+      return "Usa un email válido, por ejemplo nombre@empresa.com.";
+    if (field.name === "contexto" && value.length < 12)
+      return "Añade un poco más de contexto (mínimo 12 caracteres).";
     return "";
   };
 
@@ -199,6 +287,7 @@ if (form) {
     if (submitButton) {
       submitButton.disabled = false;
       submitButton.innerHTML = defaultSubmitLabel;
+      delete submitButton.dataset.state;
     }
   };
 
@@ -224,6 +313,7 @@ if (form) {
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = "Enviando…";
+      submitButton.dataset.state = "loading";
     }
     if (formStatus) formStatus.textContent = "Enviando tu contexto…";
     track("Form Submit Attempt", { form: "contacto" });
@@ -251,10 +341,20 @@ if (form) {
         // La confirmación conserva un copy neutro si el navegador bloquea sessionStorage.
       }
       track("Form Submit", { form: "contacto" });
+      form.removeAttribute("aria-busy");
+      if (submitButton) {
+        submitButton.dataset.state = "success";
+        submitButton.textContent = "Contexto enviado";
+      }
+      if (formStatus)
+        formStatus.textContent = "Contexto recibido. Abriendo la confirmación…";
+      // La pausa permite que el estado y el anuncio live se perciban; no es movimiento.
+      await new Promise((resolve) => window.setTimeout(resolve, 400));
       window.location.assign(form.action);
     } catch (error) {
       resetSubmitState();
-      const timedOut = error instanceof DOMException && error.name === "AbortError";
+      const timedOut =
+        error instanceof DOMException && error.name === "AbortError";
       if (formStatus) {
         formStatus.textContent = timedOut
           ? "El envío tardó demasiado. Revisa tu conexión e inténtalo de nuevo."
@@ -267,7 +367,9 @@ if (form) {
   });
 }
 
-const confirmation = document.querySelector<HTMLElement>("[data-submission-confirmation]");
+const confirmation = document.querySelector<HTMLElement>(
+  "[data-submission-confirmation]",
+);
 if (confirmation) {
   let submitted = false;
   try {
@@ -278,40 +380,47 @@ if (confirmation) {
   }
 
   if (submitted) {
-    const status = confirmation.querySelector<HTMLElement>("[data-confirmation-status]");
-    const title = confirmation.querySelector<HTMLElement>("[data-confirmation-title]");
-    const copy = confirmation.querySelector<HTMLElement>("[data-confirmation-copy]");
+    const status = confirmation.querySelector<HTMLElement>(
+      "[data-confirmation-status]",
+    );
+    const title = confirmation.querySelector<HTMLElement>(
+      "[data-confirmation-title]",
+    );
+    const copy = confirmation.querySelector<HTMLElement>(
+      "[data-confirmation-copy]",
+    );
     if (status) status.textContent = "mensaje recibido";
     if (title) title.textContent = "Ya tengo el contexto.";
-    if (copy) copy.textContent = "Lo revisaré personalmente. Recibirás una respuesta clara sobre encaje y siguiente paso.";
+    if (copy)
+      copy.textContent =
+        "Lo revisaré personalmente. Recibirás una respuesta clara sobre encaje y siguiente paso.";
   }
 }
 
-const proof = document.querySelector<HTMLElement>("[data-proof-section]");
-if (proof && "IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      track("Proof Viewed", { section: "compromisos-verificables" });
-      observer.disconnect();
-    },
-    { threshold: 0.15 },
-  );
-  observer.observe(proof);
-}
-
-const bookingButton = document.querySelector<HTMLButtonElement>("[data-booking-open]");
+const bookingButton = document.querySelector<HTMLButtonElement>(
+  "[data-booking-open]",
+);
 
 bookingButton?.addEventListener("click", () => {
   const frame = document.querySelector<HTMLElement>("[data-booking-frame]");
   const status = document.querySelector<HTMLElement>("[data-booking-status]");
-  if (!frame || !bookingButton.dataset.bookingUrl || bookingButton.dataset.loading === "true") return;
+  if (
+    !frame ||
+    !bookingButton.dataset.bookingUrl ||
+    bookingButton.dataset.loading === "true"
+  )
+    return;
 
   try {
     const bookingUrl = new URL(bookingButton.dataset.bookingUrl);
-    const isCal = bookingUrl.hostname === "cal.com" || bookingUrl.hostname.endsWith(".cal.com");
-    const isCalendly = bookingUrl.hostname === "calendly.com" || bookingUrl.hostname.endsWith(".calendly.com");
-    if (bookingUrl.protocol !== "https:" || (!isCal && !isCalendly)) throw new Error("Proveedor inválido");
+    const isCal =
+      bookingUrl.hostname === "cal.com" ||
+      bookingUrl.hostname.endsWith(".cal.com");
+    const isCalendly =
+      bookingUrl.hostname === "calendly.com" ||
+      bookingUrl.hostname.endsWith(".calendly.com");
+    if (bookingUrl.protocol !== "https:" || (!isCal && !isCalendly))
+      throw new Error("Proveedor inválido");
     if (isCal) bookingUrl.searchParams.set("embed", "true");
 
     const iframe = document.createElement("iframe");
@@ -331,7 +440,9 @@ bookingButton?.addEventListener("click", () => {
       frame.hidden = true;
       bookingButton.removeAttribute("aria-busy");
       delete bookingButton.dataset.loading;
-      if (status) status.textContent = "La agenda no respondió. Usa el enlace directo o inténtalo de nuevo.";
+      if (status)
+        status.textContent =
+          "La agenda no respondió. Usa el enlace directo o inténtalo de nuevo.";
       track("Booking Load Failed", { provider: bookingUrl.hostname });
     };
 
@@ -358,10 +469,17 @@ bookingButton?.addEventListener("click", () => {
     bookingButton.dataset.loading = "true";
     bookingButton.setAttribute("aria-busy", "true");
     if (status) status.textContent = "Cargando agenda…";
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    frame.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    frame.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
   } catch {
-    if (status) status.textContent = "La URL de agenda no es válida. Usa el formulario alternativo.";
+    if (status)
+      status.textContent =
+        "La URL de agenda no es válida. Usa el formulario alternativo.";
     track("Booking Load Failed", { provider: "invalid" });
   }
 });

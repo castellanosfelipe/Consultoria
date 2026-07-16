@@ -183,6 +183,8 @@ Se eligió Astro porque la landing es principalmente contenido: genera HTML est�
 | Entrega                   | GitHub Actions + GitHub Pages                 | Construye el artefacto Astro y lo publica bajo `/Consultoria/` sin Jekyll.          |
 | Alternativa de conversión | Netlify, ya configurado                       | Puede aplicar cabeceras y procesar Netlify Forms cuando se conecte un sitio real.   |
 
+La utilidad declarativa, los timings y la degradación accesible se documentan en [`docs/MOTION.md`](./docs/MOTION.md).
+
 ```text
 src/pages + src/components + src/styles
                   │

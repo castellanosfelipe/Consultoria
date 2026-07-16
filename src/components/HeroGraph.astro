@@ -1,18 +1,12 @@
-<figure class="hero-graph">
+<figure class="hero-graph" data-animate="system-graph">
   <svg class="hero-graph__desktop" viewBox="0 0 600 440" aria-hidden="true">
     <rect class="frame" x="1" y="1" width="598" height="438" rx="4" />
-    <text class="meta" x="28" y="38">01 / ESTADO DE LA OPERACIÓN</text>
+    <text class="meta meta--before" x="28" y="38">ANTES · FRAGMENTOS</text>
+    <text class="meta meta--after" x="28" y="38">DESPUÉS · SISTEMA</text>
     <text class="meta meta--right" x="572" y="38">8–16 SEMANAS</text>
 
     <g class="manual-network">
-      <text class="node-label" x="32" y="100">cierre_v7.xlsx</text>
-      <text class="node-label" x="32" y="174">correos</text>
-      <text class="node-label" x="32" y="248">ventas_FINAL</text>
-      <text class="node-label node-label--right" x="568" y="100">ERP</text>
-      <text class="node-label node-label--right" x="568" y="174">CRM</text>
-      <text class="node-label node-label--right" x="568" y="248">facturación</text>
-
-      <g class="edges">
+      <g class="manual-edges edges">
         <path d="M146 95 C220 95 220 152 288 169" />
         <path d="M104 169 C180 169 230 169 288 169" />
         <path d="M130 243 C214 243 226 190 288 169" />
@@ -21,22 +15,52 @@
         <path d="M312 169 C382 190 405 243 448 243" />
       </g>
 
-      <g class="source-nodes">
-        <circle cx="146" cy="95" r="6" />
-        <circle cx="104" cy="169" r="6" />
-        <circle cx="130" cy="243" r="6" />
-        <circle cx="468" cy="95" r="6" />
-        <circle cx="494" cy="169" r="6" />
-        <circle cx="448" cy="243" r="6" />
+      <g class="graph-fragment" style="--fragment-delay: 0ms; --align-x: -62px; --align-y: 279px; --drift-x: -3px; --drift-y: 2px">
+        <g class="graph-fragment__align">
+          <text class="node-label" x="32" y="100">cierre_v7.xlsx</text>
+          <circle class="fragment-node" cx="146" cy="95" r="6" />
+        </g>
       </g>
+      <g class="graph-fragment" style="--fragment-delay: 70ms; --align-x: 84px; --align-y: 205px; --drift-x: 3px; --drift-y: -2px">
+        <g class="graph-fragment__align">
+          <text class="node-label" x="32" y="174">correos</text>
+          <circle class="fragment-node" cx="104" cy="169" r="6" />
+        </g>
+      </g>
+      <g class="graph-fragment" style="--fragment-delay: 140ms; --align-x: 162px; --align-y: 131px; --drift-x: -2px; --drift-y: -3px">
+        <g class="graph-fragment__align">
+          <text class="node-label" x="32" y="248">ventas_FINAL</text>
+          <circle class="fragment-node" cx="130" cy="243" r="6" />
+        </g>
+      </g>
+      <g class="graph-fragment" style="--fragment-delay: 210ms; --align-x: -72px; --align-y: 279px; --drift-x: 2px; --drift-y: 3px">
+        <g class="graph-fragment__align">
+          <text class="node-label node-label--right" x="568" y="100">ERP</text>
+          <circle class="fragment-node" cx="468" cy="95" r="6" />
+        </g>
+      </g>
+      <g class="graph-fragment" style="--fragment-delay: 280ms; --align-x: 6px; --align-y: 205px; --drift-x: -3px; --drift-y: 1px">
+        <g class="graph-fragment__align">
+          <text class="node-label node-label--right" x="568" y="174">CRM</text>
+          <circle class="fragment-node" cx="494" cy="169" r="6" />
+        </g>
+      </g>
+      <g class="graph-fragment" style="--fragment-delay: 350ms; --align-x: 52px; --align-y: 131px; --drift-x: 3px; --drift-y: -2px">
+        <g class="graph-fragment__align">
+          <text class="node-label node-label--right" x="568" y="248">facturación</text>
+          <circle class="fragment-node" cx="448" cy="243" r="6" />
+        </g>
+      </g>
+
       <g class="broken-node">
         <circle cx="300" cy="169" r="17" />
         <path d="M293 162 L307 176 M307 162 L293 176" />
       </g>
       <g class="manual-chip">
-        <rect x="205" y="276" width="190" height="36" rx="4" />
-        <circle cx="228" cy="294" r="5" />
-        <text x="244" y="299">ESTADO: MANUAL</text>
+        <rect x="150" y="306" width="300" height="56" rx="4" />
+        <circle cx="174" cy="326" r="5" />
+        <text x="190" y="331">$ status</text>
+        <text x="174" y="350">ESTADO: MANUAL</text>
       </g>
     </g>
 
@@ -51,18 +75,19 @@
         <circle style="--delay: 240ms" cx="500" cy="374" r="9" />
       </g>
       <g class="production-chip">
-        <rect x="174" y="325" width="252" height="34" rx="4" />
-        <circle cx="198" cy="342" r="5" />
-        <text x="214" y="347">EN PRODUCCIÓN</text>
+        <rect x="150" y="306" width="300" height="56" rx="4" />
+        <circle cx="174" cy="326" r="5" />
+        <text class="terminal-line terminal-line--command" x="190" y="331">$ deploy --production</text>
+        <text class="terminal-line terminal-line--status" x="174" y="350">ESTADO: EN PRODUCCIÓN</text>
       </g>
     </g>
   </svg>
 
   <svg class="hero-graph__mobile" viewBox="0 0 360 248" aria-hidden="true">
     <rect class="frame" x="1" y="1" width="358" height="246" rx="4" />
-    <text class="meta" x="18" y="28">ANTES · FRAGMENTOS</text>
+    <text class="meta mobile-before" x="18" y="28">ANTES · FRAGMENTOS</text>
 
-    <g class="mobile-manual">
+    <g class="mobile-manual mobile-before">
       <text class="node-label" x="18" y="62">xlsx · correos</text>
       <text class="node-label" x="18" y="92">ERP × CRM</text>
       <g class="edges">
@@ -82,7 +107,7 @@
       <text class="mobile-manual-status" x="338" y="83">MANUAL</text>
     </g>
 
-    <path class="mobile-transition" d="M180 112 V137 M173 130 L180 137 L187 130" />
+    <path class="mobile-transition mobile-before" d="M180 112 V137 M173 130 L180 137 L187 130" />
     <text class="meta" x="18" y="157">DESPUÉS · SISTEMA</text>
     <path class="pipeline pipeline--static" d="M30 190 H312" />
     <path class="arrow arrow--static" d="M312 183 L328 190 L312 197 Z" />
@@ -155,7 +180,7 @@
     stroke-width: 1.5;
   }
 
-  .source-nodes circle {
+  .fragment-node {
     fill: var(--paper-raised);
     stroke: var(--ink);
     stroke-width: 2;
@@ -190,37 +215,41 @@
   }
 
   .manual-network {
-    transform-origin: center;
-    animation: quiet-manual var(--graph-motion) 2s both;
+    opacity: 0;
+  }
+
+  .meta--before {
+    opacity: 0;
+  }
+
+  .meta--after {
+    opacity: 1;
   }
 
   .pipeline {
     fill: none;
     stroke: var(--ink);
-    stroke-dasharray: 446;
-    stroke-dashoffset: 446;
     stroke-width: 3;
-    animation: draw-line 800ms 2.76s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    transform: scaleX(1);
+    transform-box: fill-box;
+    transform-origin: left center;
+    vector-effect: non-scaling-stroke;
   }
 
   .arrow {
     fill: var(--ink);
-    opacity: 0;
-    animation: appear 260ms 3.42s ease-out forwards;
+    opacity: 1;
   }
 
   .production-nodes circle {
     fill: var(--production);
-    opacity: 0;
+    opacity: 1;
     transform-box: fill-box;
     transform-origin: center;
-    animation: node-online 300ms calc(2.9s + var(--delay)) cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 
   .production-chip {
-    opacity: 0;
-    transform: translateY(var(--space-2));
-    animation: chip-online 360ms 3.32s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 1;
   }
 
   .production-chip rect {
@@ -238,6 +267,91 @@
     letter-spacing: 0.06em;
   }
 
+  /*
+   * Tres actos, sin GSAP: fragmentos (400 ms), alineación (600 ms) y
+   * deploy terminal (300–500 ms). El observer añade .is-visible una sola vez.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .hero-graph .manual-network {
+      opacity: 1;
+    }
+
+    :global(.motion-ready) .hero-graph .meta--before {
+      opacity: 1;
+    }
+
+    :global(.motion-ready) .hero-graph .meta--after,
+    :global(.motion-ready) .hero-graph .graph-fragment,
+    :global(.motion-ready) .hero-graph .manual-edges,
+    :global(.motion-ready) .hero-graph .broken-node,
+    :global(.motion-ready) .hero-graph .arrow,
+    :global(.motion-ready) .hero-graph .production-nodes circle,
+    :global(.motion-ready) .hero-graph .production-chip,
+    :global(.motion-ready) .hero-graph .terminal-line {
+      opacity: 0;
+    }
+
+    :global(.motion-ready) .hero-graph .pipeline {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .graph-fragment {
+      animation:
+        fragment-reveal 400ms var(--motion-ease) var(--fragment-delay) both,
+        fragment-retire var(--motion-fast) var(--motion-ease)
+          calc(1.05s + var(--fragment-delay)) forwards;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .graph-fragment__align {
+      animation: fragment-align var(--motion-slow) var(--motion-ease)
+        calc(480ms + var(--fragment-delay)) both;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .manual-edges,
+    :global(.motion-ready) .hero-graph.is-visible .broken-node {
+      animation:
+        graph-fade-in var(--motion-fast) var(--motion-ease) 100ms both,
+        graph-fade-out var(--motion-fast) var(--motion-ease) 850ms forwards;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .manual-chip {
+      animation: terminal-out var(--motion-fast) var(--motion-ease) 1.12s forwards;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .pipeline {
+      animation: pipeline-online var(--motion-duration) var(--motion-ease) 850ms both;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .arrow {
+      animation: graph-fade-in var(--motion-fast) var(--motion-ease) 1.18s both;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .production-nodes circle {
+      animation: node-online var(--motion-fast) var(--motion-ease)
+        calc(980ms + var(--delay)) both;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .production-chip {
+      animation: terminal-in 400ms var(--motion-ease) 1.18s both;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .terminal-line--command {
+      animation: terminal-line-in var(--motion-fast) var(--motion-ease) 1.28s both;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .terminal-line--status {
+      animation: terminal-line-in var(--motion-fast) var(--motion-ease) 1.43s both;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .meta--before {
+      animation: graph-fade-out var(--motion-fast) var(--motion-ease) 1s forwards;
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .meta--after {
+      animation: graph-fade-in var(--motion-fast) var(--motion-ease) 1.18s both;
+    }
+  }
+
   .mobile-transition {
     fill: none;
     stroke: var(--graphite);
@@ -246,29 +360,62 @@
     stroke-width: 1.5;
   }
 
-  @keyframes quiet-manual {
-    0%, 42% { opacity: 1; transform: translateY(0); }
-    76%, 100% { opacity: 0.32; transform: translateY(calc(-1 * var(--space-1))); }
+  @keyframes fragment-reveal {
+    from {
+      opacity: 0;
+      transform: translate(var(--drift-x), var(--drift-y));
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
   }
 
-  @keyframes draw-line {
-    to { stroke-dashoffset: 0; }
+  @keyframes fragment-retire {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
-  @keyframes appear {
+  @keyframes fragment-align {
+    from { transform: translate(0, 0); }
+    to { transform: translate(var(--align-x), var(--align-y)); }
+  }
+
+  @keyframes graph-fade-in {
+    from { opacity: 0; }
     to { opacity: 1; }
   }
 
+  @keyframes graph-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes pipeline-online {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
   @keyframes node-online {
-    0% { opacity: 0; transform: scale(0.4); }
+    0% { opacity: 0; transform: scale(0.72); }
     100% { opacity: 1; transform: scale(1); }
   }
 
-  @keyframes chip-online {
+  @keyframes terminal-out {
+    to { opacity: 0; transform: translateY(calc(-1 * var(--space-2))); }
+  }
+
+  @keyframes terminal-in {
+    from { opacity: 0; transform: translateY(var(--space-2)); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  @media (max-width: 37.4375rem) {
+  @keyframes terminal-line-in {
+    from { opacity: 0; transform: translateY(var(--space-1)); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 56.25rem) {
     .hero-graph__desktop {
       display: none;
     }
@@ -278,8 +425,7 @@
     }
 
     .pipeline--static {
-      stroke-dasharray: none;
-      stroke-dashoffset: 0;
+      transform: none;
       animation: none;
     }
 
@@ -310,14 +456,36 @@
     }
   }
 
+  @media (max-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .hero-graph .hero-graph__mobile {
+      opacity: 0;
+      transition: opacity var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) .hero-graph.is-visible .hero-graph__mobile {
+      opacity: 1;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .manual-network {
-      opacity: 0.32;
+      display: none;
+      opacity: 0;
       animation: none;
     }
 
+    .meta--before,
+    .mobile-before {
+      display: none;
+      opacity: 0;
+    }
+
+    .meta--after {
+      opacity: 1;
+    }
+
     .pipeline {
-      stroke-dashoffset: 0;
+      transform: none;
       animation: none;
     }
 

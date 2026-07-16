@@ -149,25 +149,25 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   <main id="contenido">
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">Software interno · automatización de datos</p>
-          <h1 id="hero-title">Software interno al ritmo de tu operación.</h1>
-          <p class="lead">
+        <div class="hero-copy" data-hero-sequence>
+          <p class="eyebrow" data-hero-item style="--hero-delay: 0ms">Software interno · automatización de datos</p>
+          <h1 id="hero-title" data-hero-item style="--hero-delay: 70ms">Software interno al ritmo de tu operación.</h1>
+          <p class="lead" data-hero-item style="--hero-delay: 140ms">
             Tu operación creció más rápido que tus sistemas. Diseño, gestiono y construyo — con mi equipo — el software y las automatizaciones que la ponen al día. En producción en 8–16 semanas, con un solo responsable de punta a punta.
           </p>
 
           <div class="hero-action">
-            <a class="button" href="#contacto" data-track="cta" data-location="hero">
+            <a class="button" href="#contacto" data-track="cta" data-location="hero" data-hero-item style="--hero-delay: 210ms">
               {hasBooking ? "Reservar llamada de encaje" : "Contarme tu proceso"} <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
             </a>
-            <p class="microcopy">
+            <p class="microcopy" data-hero-item style="--hero-delay: 280ms">
               {hasBooking
                 ? "30 minutos gratis, conmigo — no con un comercial. En 48 horas recibes una lectura y un rango."
                 : "Tres campos, sin newsletter. En 48 horas recibes una lectura y un rango, o una respuesta honesta."}
             </p>
           </div>
 
-          <dl class="hero-facts" aria-label="Condiciones principales">
+          <dl class="hero-facts" aria-label="Condiciones principales" data-hero-item style="--hero-delay: 350ms">
             <div><dt>Plazo</dt><dd>8–16 semanas</dd></div>
             <div><dt>Modelo</dt><dd>precio cerrado</dd></div>
             <div><dt>Propiedad</dt><dd>código tuyo</dd></div>
@@ -188,9 +188,9 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
         <div class="reading-column">
           <p class="eyebrow">Estado: manual</p>
           <h2 id="problem-title">¿Te suena?</h2>
-          <ul class="symptom-log">
+          <ul class="symptom-log" data-animate="fade-up" data-stagger="70">
             {symptoms.map((symptom) => (
-              <li><span aria-hidden="true"></span>{symptom}</li>
+              <li data-animate-item><span aria-hidden="true"></span>{symptom}</li>
             ))}
           </ul>
           <p class="problem-thesis">
@@ -208,20 +208,20 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           <p class="lead">Tratas con quien entiende, diseña y decide; respaldado por capacidad real para construir.</p>
         </div>
 
-        <div class="positioning-axis">
-          <article class="positioning-node positioning-node--edge">
+        <div class="positioning-axis" data-animate="fade-up" data-stagger="70">
+          <article class="positioning-node positioning-node--edge" data-animate-item>
             <p class="label">Freelancer</p>
             <h3>Directo, pero frágil</h3>
             <p>Económico; si se cae esa persona, también se cae tu proyecto.</p>
           </article>
           <span class="axis-line" aria-hidden="true"></span>
-          <article class="positioning-node positioning-node--core">
+          <article class="positioning-node positioning-node--core" data-animate-item data-emphasis="core" data-delay="200">
             <p class="label">Aquí · lo del medio</p>
             <h3>Responsable + equipo</h3>
             <p>Yo diseño y decido; un núcleo estable construye. Gestión y producto viven en la misma cabeza.</p>
           </article>
           <span class="axis-line" aria-hidden="true"></span>
-          <article class="positioning-node positioning-node--edge">
+          <article class="positioning-node positioning-node--edge" data-animate-item>
             <p class="label">Agencia</p>
             <h3>Estructura, pero distancia</h3>
             <p>Hablas con un comercial; construye alguien que no conoció tu problema.</p>
@@ -240,10 +240,10 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           <p class="lead">Tres etapas conectadas. Puedes salir con el diagnóstico o continuar con un alcance y un precio que ya entiendes.</p>
         </div>
 
-        <div class="offer-pipeline">
+        <div class="offer-pipeline" data-animate="fade-up" data-stagger="70">
           {offers.map((offer, index) => (
             <>
-              <article class:list={["offer-card", offer.core && "offer-card--core"]}>
+              <article class:list={["offer-card", offer.core && "offer-card--core"]} data-animate-item data-emphasis={offer.core ? "core-offer" : undefined}>
                 {offer.core && <span class="offer-card__core label">Core</span>}
                 <p class="offer-card__price data">{offer.price}</p>
                 <h3>{offer.title}</h3>
@@ -257,7 +257,14 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section proof" id="prueba" aria-labelledby="proof-title" data-proof-section>
+    <section
+      class="section proof"
+      id="prueba"
+      aria-labelledby="proof-title"
+      data-proof-section
+      data-track-view="Proof Viewed"
+      data-track-section="compromisos-verificables"
+    >
       <div class="container">
         <div class="section-heading section-heading--split">
           <div>
@@ -267,16 +274,25 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           <p class="lead">Sin métricas anónimas ni cifras sin contexto. Estas tres condiciones quedan visibles desde el inicio.</p>
         </div>
 
-        <div class="proof-artifact">
+        <div class="proof-artifact" data-animate="diff" data-stagger="70">
           <div class="proof-artifact__head label" aria-hidden="true">
             <span>Señal</span><span>Cómo se comprueba</span><span>Diff de estado</span>
           </div>
           {proofRows.map((row) => (
-            <article class="proof-row">
+            <article class="proof-row" data-animate-item>
               <h3>{row.label}</h3>
               <p>{row.copy}</p>
               <div class="proof-diff">
-                <div><span class="proof-before data">{row.before}</span><span class="icon-arrow" aria-hidden="true"></span><span class="proof-after data">{row.after}</span></div>
+                <div class="diff-line diff-line--old">
+                  <span class="diff-marker" aria-hidden="true">-</span>
+                  <span class="sr-only">Antes: </span>
+                  <del class="proof-before data">{row.before}</del>
+                </div>
+                <div class="diff-line diff-line--new">
+                  <span class="diff-marker" aria-hidden="true">+</span>
+                  <span class="sr-only">Después: </span>
+                  <ins class="proof-after data">{row.after}</ins>
+                </div>
                 <small class="label">{row.stack}</small>
               </div>
             </article>
@@ -295,10 +311,10 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           <p class="lead">La secuencia no termina en una presentación: llega a producción, propiedad y handover.</p>
         </div>
 
-        <ol class="phase-list">
+        <ol class="phase-list" data-animate="process" data-stagger="90">
           {phases.map((phase) => (
-            <li>
-              <span class="phase-number data">{phase.number}</span>
+            <li data-animate-item>
+              <span class="phase-number data" data-process-badge>{phase.number}</span>
               <div>
                 <p class="label">{phase.timing}</p>
                 <h3>{phase.title}</h3>
@@ -380,11 +396,30 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
           <p class="eyebrow">Objeciones a la vista</p>
           <h2 id="faq-title">Preguntas directas.</h2>
         </div>
-        <dl class="faq-grid">
-          {faqs.map((faq) => (
-            <div>
-              <dt>{faq.question}</dt>
-              <dd>{faq.answer}</dd>
+        <dl class="faq-grid" data-faq>
+          {faqs.map((faq, index) => (
+            <div class="faq-item is-open" data-faq-item>
+              <dt>
+                <button
+                  type="button"
+                  id={`faq-question-${index + 1}`}
+                  aria-expanded="true"
+                  aria-controls={`faq-answer-${index + 1}`}
+                  data-faq-toggle
+                >
+                  <span>{faq.question}</span>
+                  <span class="faq-icon" aria-hidden="true">+</span>
+                </button>
+              </dt>
+              <dd
+                id={`faq-answer-${index + 1}`}
+                role="region"
+                aria-labelledby={`faq-question-${index + 1}`}
+                aria-hidden="false"
+                data-faq-panel
+              >
+                <div><p>{faq.answer}</p></div>
+              </dd>
             </div>
           ))}
         </dl>
@@ -444,6 +479,30 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
   .hero-copy h1 {
     font-family: var(--font-display-fallback);
+  }
+
+  /* Entrada inmediata: el H1 empieza con CSS y nunca espera al bundle o al observer. */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-hero-item] {
+      animation: hero-enter var(--motion-duration) var(--motion-ease) both;
+      animation-delay: var(--hero-delay);
+    }
+  }
+
+  @keyframes hero-enter {
+    from {
+      opacity: 0.01;
+      transform: translateY(var(--motion-distance));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-fade {
+    from { opacity: 0.01; }
+    to { opacity: 1; }
   }
 
   .hero-action {
@@ -596,9 +655,33 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .positioning-node--core {
+    position: relative;
     min-height: 16rem;
     border: var(--border-strong) solid var(--ink);
     box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .positioning-node--core::after {
+    position: absolute;
+    inset: calc(-1 * var(--border-strong));
+    border: var(--border-strong) solid var(--production);
+    border-radius: var(--radius);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0.45);
+    transform-origin: left center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .positioning-axis.is-visible .positioning-node--core::after {
+      opacity: 1;
+      transform: scaleX(1);
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-duration) + var(--motion-sequence-delay, 0ms) + 200ms);
+    }
   }
 
   .positioning-node--core .label,
@@ -632,6 +715,38 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   .offer-card--core {
     border: var(--border-strong) solid var(--ink);
     box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .offer-pipeline .offer-card__core {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-duration) + var(--motion-sequence-delay, 0ms) + 200ms);
+    }
+
+    :global(.motion-ready) .offer-pipeline:not(.is-visible) .offer-card__core {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+
+    :global(.motion-ready) .offer-pipeline.is-visible .offer-card__core {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="fade-up"][data-stagger].is-visible
+      [data-animate-item][data-emphasis="core-offer"] {
+      animation: core-offer-lift var(--motion-fast) var(--motion-ease) forwards;
+      animation-delay: calc(var(--motion-duration) + var(--motion-sequence-delay, 0ms) + 200ms);
+    }
+  }
+
+  @keyframes core-offer-lift {
+    from { transform: translateY(0); }
+    to { transform: translateY(calc(-1 * var(--space-1))); }
   }
 
   .offer-card__core {
@@ -720,11 +835,23 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     line-height: 1.6;
   }
 
-  .proof-diff > div {
+  .proof-diff {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .diff-line {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    flex-wrap: wrap;
+  }
+
+  .diff-marker {
+    width: var(--space-4);
+    flex: 0 0 var(--space-4);
+    color: var(--graphite);
+    font-family: var(--font-data);
+    font-weight: 600;
   }
 
   .proof-before,
@@ -735,13 +862,26 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .proof-before {
+    position: relative;
     color: var(--manual);
-    text-decoration: line-through;
-    text-decoration-thickness: var(--border);
+    text-decoration: none;
+  }
+
+  .proof-before::after {
+    position: absolute;
+    top: 52%;
+    right: 0;
+    left: 0;
+    height: var(--border-strong);
+    background: currentColor;
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
   }
 
   .proof-after {
     color: var(--production);
+    text-decoration: none;
   }
 
   .proof-diff small {
@@ -750,7 +890,50 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     color: var(--graphite);
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="diff"] .proof-row {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: var(--motion-sequence-delay, 0ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row {
+      opacity: 0;
+      transform: translateY(var(--motion-distance));
+      will-change: opacity, transform;
+    }
+
+    :global(.motion-ready) [data-animate="diff"].is-visible .proof-row {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-before::after {
+      transition: transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(180ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-before::after {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--new {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(320ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+  }
+
   .phase-list {
+    position: relative;
+    isolation: isolate;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
@@ -760,7 +943,22 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     list-style: none;
   }
 
+  .phase-list::before {
+    position: absolute;
+    z-index: -1;
+    top: calc(var(--space-5) + var(--space-4));
+    right: calc(25% - var(--space-5) - var(--space-4));
+    left: calc(var(--space-5) + var(--space-4));
+    height: var(--border-strong);
+    background: var(--line-strong);
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
   .phase-list li {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--space-4);
@@ -773,9 +971,38 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   .phase-number {
+    width: var(--space-6);
+    height: var(--space-6);
+    display: grid;
+    place-items: center;
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius-round);
+    background: var(--paper);
     color: var(--ink);
     font-size: var(--text-small);
     font-weight: 600;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="process"]::before {
+      transition: transform var(--motion-slow) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::before {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="process"] [data-process-badge] {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(160ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) [data-process-badge] {
+      opacity: 0;
+      transform: scale(0.72);
+    }
   }
 
   .phase-list .label {
@@ -959,23 +1186,74 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     gap: 0 var(--space-7);
   }
 
-  .faq-grid div {
+  .faq-grid > .faq-item {
     padding-block: var(--space-5);
     border-top: var(--border) solid var(--line);
   }
 
-  .faq-grid dt {
+  .faq-grid dt,
+  .faq-grid button {
     font-family: var(--font-display);
     font-size: var(--text-h3);
     font-weight: 600;
     line-height: 1.25;
   }
 
+  .faq-grid button {
+    width: 100%;
+    min-height: var(--target);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+  }
+
   .faq-grid dd {
-    margin-top: var(--space-3);
+    display: grid;
+    grid-template-rows: 1fr;
     color: var(--graphite);
     font-size: var(--text-small);
     line-height: 1.6;
+    opacity: 1;
+    transition:
+      grid-template-rows 420ms var(--motion-ease),
+      opacity var(--motion-fast) var(--motion-ease);
+  }
+
+  .faq-grid dd > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .faq-grid dd p {
+    padding-top: var(--space-3);
+  }
+
+  .faq-icon {
+    width: var(--space-5);
+    flex: 0 0 var(--space-5);
+    color: var(--production);
+    font-family: var(--font-data);
+    font-size: var(--text-h3);
+    font-weight: 500;
+    text-align: center;
+    transform: rotate(45deg);
+    transition: transform var(--motion-fast) var(--motion-ease);
+  }
+
+  :global(.motion-ready) .faq-item:not(.is-open) dd {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  :global(.motion-ready) .faq-item:not(.is-open) .faq-icon {
+    transform: rotate(0deg);
   }
 
   .site-footer {
@@ -1055,6 +1333,10 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
   }
 
   @media (max-width: 56.25rem) {
+    [data-hero-item] {
+      animation-name: hero-fade;
+    }
+
     .section-heading--split,
     .about-grid,
     .exclusions-grid {
@@ -1075,6 +1357,15 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       min-height: auto;
     }
 
+    .positioning-node--core::after {
+      transform: none;
+    }
+
+    :global(.motion-ready) .positioning-axis.is-visible .positioning-node--core::after {
+      transform: none;
+      transition-property: opacity;
+    }
+
     .axis-line {
       width: var(--border);
       height: var(--space-5);
@@ -1087,6 +1378,11 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
     .offer-card {
       min-height: auto;
+    }
+
+    :global(.motion-ready) .offer-pipeline:not(.is-visible) .offer-card__core,
+    :global(.motion-ready) .offer-pipeline.is-visible .offer-card__core {
+      transform: none;
     }
 
     .offer-arrow {
@@ -1107,16 +1403,46 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       grid-column: 2;
     }
 
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row,
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new {
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-before::after {
+      transform: none;
+    }
+
     .phase-list {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
     }
 
-    .phase-list li:nth-child(2) {
+    .phase-list::before {
+      top: calc(var(--space-5) + var(--space-4));
+      right: auto;
+      bottom: calc(var(--space-5) + var(--space-4));
+      left: calc(var(--space-5) + var(--space-4));
+      width: var(--border-strong);
+      height: auto;
+      transform: scaleY(1);
+      transform-origin: center top;
+    }
+
+    .phase-list li {
       border-right: 0;
+      border-bottom: var(--border) solid var(--line);
     }
 
-    .phase-list li:nth-child(-n + 2) {
-      border-bottom: var(--border) solid var(--line);
+    .phase-list li:last-child {
+      border-bottom: 0;
+    }
+
+    :global(.motion-ready) [data-animate="process"]::before,
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::before {
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) [data-process-badge] {
+      transform: none;
     }
 
     .identity-panel {
@@ -1216,6 +1542,31 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
     .identity-panel {
       max-width: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-item],
+    .diff-line--new,
+    [data-process-badge] {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+
+    .positioning-node--core::after {
+      opacity: 1;
+      transform: none;
+    }
+
+    .proof-before::after,
+    .phase-list::before {
+      transform: none !important;
+    }
+
+    .faq-grid dd,
+    .faq-icon {
+      transition: none;
     }
   }
 </style>

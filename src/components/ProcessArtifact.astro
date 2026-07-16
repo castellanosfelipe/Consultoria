@@ -8,7 +8,7 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     <span class="status-chip"><span class="status-dot"></span> demo cada viernes</span>
   </div>
 
-  <div class="timeline" aria-hidden="true">
+  <div class="timeline" aria-hidden="true" data-animate="scale-x" data-stagger="90">
     <span class="timeline__corner"></span>
     {weeks.map((week) => <span class="timeline__week">S{week}</span>)}
 
@@ -17,13 +17,16 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     <span class="timeline__phase timeline__phase--build">CONSTRUCCIÓN — ENTREGA</span>
 
     <span class="timeline__label">FELIPE</span>
-    <span class="timeline__bar timeline__bar--owner"></span>
+    <span class="timeline__bar timeline__bar--owner"><i class="timeline__bar-fill" data-animate-item data-motion-index="0"></i></span>
 
     <span class="timeline__label">NÚCLEO</span>
-    <span class="timeline__bar timeline__bar--core"></span>
+    <span class="timeline__bar timeline__bar--core"><i class="timeline__bar-fill" data-animate-item data-motion-index="1"></i></span>
 
     <span class="timeline__label">RED FLEX.</span>
-    <span class="timeline__bar timeline__bar--flex">SOLO SI SE EXIGE</span>
+    <span class="timeline__bar timeline__bar--flex">
+      <i class="timeline__bar-fill" data-animate-item data-motion-index="2"></i>
+      <span class="timeline__bar-copy">SOLO SI SE EXIGE</span>
+    </span>
 
     <span class="timeline__label timeline__label--production">DEMO</span>
     <span class="timeline__demo timeline__demo--1"></span>
@@ -38,11 +41,11 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     <span class="timeline__demo timeline__demo--10"></span>
   </div>
 
-  <div class="mobile-lanes" aria-hidden="true">
+  <div class="mobile-lanes" aria-hidden="true" data-animate="scale-x" data-stagger="90">
     <span class="mobile-lanes__corner">ROL / RITMO</span><span>SEM. 1–2</span><span class="mobile-lanes__last">SEM. 3–12+</span>
-    <span class="mobile-lanes__label">FELIPE</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"></i>
-    <span class="mobile-lanes__label">NÚCLEO</span><i class="mobile-lanes__empty">—</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"></i>
-    <span class="mobile-lanes__label">RED FLEX.</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last">SEGÚN ALCANCE</i>
+    <span class="mobile-lanes__label">FELIPE</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"><span class="mobile-lanes__fill" data-animate-item data-motion-index="0"></span></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"><span class="mobile-lanes__fill" data-animate-item data-motion-index="0"></span></i>
+    <span class="mobile-lanes__label">NÚCLEO</span><i class="mobile-lanes__empty">—</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"><span class="mobile-lanes__fill" data-animate-item data-motion-index="1"></span></i>
+    <span class="mobile-lanes__label">RED FLEX.</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last"><span class="mobile-lanes__fill" data-animate-item data-motion-index="2"></span><span class="mobile-lanes__bar-copy">SEGÚN ALCANCE</span></i>
     <span class="mobile-lanes__label mobile-lanes__label--demo">DEMO</span><i class="mobile-lanes__demo">PRIMERO</i><i class="mobile-lanes__demo mobile-lanes__last">VIERNES</i>
   </div>
 
@@ -61,7 +64,7 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     </div>
   </dl>
 
-  <p class="sr-only">
+  <p class="process-artifact__summary sr-only">
     Felipe permanece durante todo el proyecto. El núcleo de ingeniería entra al construir; especialistas adicionales participan solo cuando son necesarios. Desde el primer demo, se muestra software cada viernes.
   </p>
 </div>
@@ -157,17 +160,35 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
   }
 
   .timeline__bar {
+    position: relative;
     min-height: var(--space-3);
+    overflow: hidden;
     border-radius: var(--radius);
+  }
+
+  .timeline__bar-fill,
+  .mobile-lanes__fill {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transform-origin: left center;
   }
 
   .timeline__bar--owner {
     grid-column: 2 / 14;
+  }
+
+  .timeline__bar--owner .timeline__bar-fill,
+  .mobile-lanes__bar--owner .mobile-lanes__fill {
     background: var(--ink);
   }
 
   .timeline__bar--core {
     grid-column: 4 / 14;
+  }
+
+  .timeline__bar--core .timeline__bar-fill,
+  .mobile-lanes__bar--core .mobile-lanes__fill {
     background: var(--graphite);
   }
 
@@ -179,6 +200,17 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     border: var(--border) dashed var(--line-strong);
     color: var(--graphite);
     font-size: var(--text-nano);
+  }
+
+  .timeline__bar--flex .timeline__bar-fill,
+  .mobile-lanes__bar--flex .mobile-lanes__fill {
+    background: color-mix(in srgb, var(--graphite) 12%, transparent);
+  }
+
+  .timeline__bar-copy,
+  .mobile-lanes__bar-copy {
+    position: relative;
+    z-index: 1;
   }
 
   .timeline__demo {
@@ -205,6 +237,10 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
 
   @media (max-width: 56.25rem) {
     .timeline {
+      display: none;
+    }
+
+    .process-artifact__summary {
       display: none;
     }
 
@@ -243,6 +279,7 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
     }
 
     .mobile-lanes__bar {
+      position: relative;
       width: calc(100% - var(--space-3));
       min-height: var(--space-3);
       align-self: center;
@@ -250,14 +287,7 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
       padding: 0;
       border: 0;
       border-radius: var(--radius);
-    }
-
-    .mobile-lanes__bar--owner {
-      background: var(--ink);
-    }
-
-    .mobile-lanes__bar--core {
-      background: var(--graphite);
+      overflow: hidden;
     }
 
     .mobile-lanes__bar--flex {

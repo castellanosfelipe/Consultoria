@@ -6,9 +6,9 @@ const formAction = withBasePath("/gracias/");
 const formSubmitUrl = withBasePath("/");
 ---
 
-<section class="section contact-section" id="contacto" aria-labelledby="contact-title">
+<section class="section contact-section" id="contacto" aria-labelledby="contact-title" data-animate="fade-up" data-stagger="90">
   <div class="container">
-    <div class="contact-intro">
+    <div class="contact-intro" data-animate-item>
       <p class="eyebrow">Siguiente paso</p>
       <h2 id="contact-title">¿Cuántas horas costó esta semana la brecha entre tu operación y tus sistemas?</h2>
       <p class="lead">
@@ -16,14 +16,14 @@ const formSubmitUrl = withBasePath("/");
       </p>
     </div>
 
-    <ol class="next-steps" aria-label="Qué pasa después">
+    <ol class="next-steps" aria-label="Qué pasa después" data-animate-item>
       <li><span>01</span><strong>Eliges ruta</strong><small>{hasBooking ? "Agenda o escribe. Dos minutos." : "Escribe el contexto. Dos minutos."}</small></li>
       <li><span>02</span><strong>Tres datos</strong><small>Nombre, email y contexto.</small></li>
       <li><span>03</span><strong>La llamada</strong><small>30 minutos sobre tu operación, conmigo.</small></li>
       <li><span>04</span><strong>En 48 horas</strong><small>Lectura + rango, o una respuesta honesta.</small></li>
     </ol>
 
-    <div class:list={["contact-grid", !hasBooking && "contact-grid--single"]}>
+    <div class:list={["contact-grid", !hasBooking && "contact-grid--single"]} data-animate-item>
       {hasBooking && (
         <article class="contact-card booking-card">
           <div>
@@ -297,6 +297,36 @@ const formSubmitUrl = withBasePath("/");
   .contact-form button[disabled] {
     cursor: wait;
     opacity: 0.72;
+  }
+
+  .contact-form [data-form-submit] {
+    min-width: 12rem;
+  }
+
+  .contact-form [data-form-submit][data-state="loading"]::after {
+    width: var(--space-4);
+    height: var(--space-4);
+    border: var(--border-strong) solid currentColor;
+    border-top-color: transparent;
+    border-radius: var(--radius-round);
+    content: "";
+    animation: submit-spin var(--motion-slow) linear 1 both;
+  }
+
+  .contact-form [data-form-submit][data-state="success"]::after {
+    content: "✓";
+    font-family: var(--font-data);
+    opacity: 1;
+    animation: submit-state-in var(--motion-fast) var(--motion-ease) both;
+  }
+
+  @keyframes submit-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes submit-state-in {
+    from { opacity: 0; transform: translateY(var(--space-1)); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .contact-form__wide {

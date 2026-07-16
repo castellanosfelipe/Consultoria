@@ -5,7 +5,7 @@ const homeHref = withBasePath("/");
 const sectionHref = (id: string) => `${homeHref}#${id}`;
 ---
 
-<header class="site-header">
+<header class="site-header" data-scroll-header>
   <div class="container header-inner">
     <a class="brand" href={homeHref}>
       <span class="brand-mark">FP</span>
@@ -43,20 +43,61 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
         <a href={sectionHref("prueba")}>Compromisos</a>
         <a href={sectionHref("proceso")}>Proceso</a>
       </div>
+
+      <noscript>
+        <div class="site-nav__noscript">
+          <a href={sectionHref("servicios")}>Servicios</a>
+          <a href={sectionHref("prueba")}>Compromisos</a>
+          <a href={sectionHref("proceso")}>Proceso</a>
+        </div>
+      </noscript>
     </nav>
   </div>
 </header>
 
+<noscript>
+  <style>
+    @media (max-width: 43.75rem) {
+      [data-menu-toggle] { display: none !important; }
+    }
+  </style>
+</noscript>
+
 <style>
   .site-header {
+    position: sticky;
+    z-index: 40;
+    top: 0;
     min-height: var(--header-height);
+    isolation: isolate;
     border-bottom: var(--border) solid var(--line);
-    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    background: transparent;
     font-family: var(--font-body-fallback);
+  }
+
+  .site-header::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background: color-mix(in srgb, var(--paper) 84%, transparent);
+    backdrop-filter: blur(var(--space-3));
+    content: "";
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity var(--motion-fast) var(--motion-ease);
+  }
+
+  :global(.motion-ready) .site-header:not(.is-scrolled)::before {
+    opacity: 0;
+  }
+
+  .site-header.is-scrolled::before {
+    opacity: 1;
   }
 
   .header-inner {
     position: relative;
+    z-index: 1;
     min-height: var(--header-height);
     display: flex;
     align-items: center;
@@ -123,6 +164,30 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     text-decoration: none;
   }
 
+  .site-nav a {
+    position: relative;
+  }
+
+  .site-nav a::after {
+    position: absolute;
+    right: 0;
+    bottom: var(--space-2);
+    left: 0;
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform var(--motion-fast) var(--motion-ease);
+  }
+
+  .site-nav a:hover::after,
+  .site-nav a:focus-visible::after,
+  .site-nav a[aria-current="location"]::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
   .site-nav a:not(.nav-cta),
   .menu-toggle {
     color: var(--graphite);
@@ -135,21 +200,17 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
 
   .site-nav a[aria-current="location"] {
     color: var(--ink);
-    text-decoration: underline;
-    text-decoration-color: var(--production);
-    text-decoration-thickness: var(--border-strong);
-    text-underline-offset: var(--space-2);
   }
 
   .nav-cta {
     gap: var(--space-2);
-    border-bottom: var(--border-strong) solid var(--production);
     color: var(--production);
     font-weight: 600;
   }
 
   .site-nav__mobile-controls,
-  .site-nav__mobile {
+  .site-nav__mobile,
+  .site-nav__noscript {
     display: none;
   }
 
@@ -181,7 +242,8 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
       gap: var(--space-3);
     }
 
-    .site-nav__mobile {
+    .site-nav__mobile,
+    .site-nav__noscript {
       position: absolute;
       z-index: 2;
       top: calc(100% + var(--border));
@@ -198,7 +260,12 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
       display: grid;
     }
 
-    .site-nav__mobile a {
+    .site-nav__noscript {
+      display: grid;
+    }
+
+    .site-nav__mobile a,
+    .site-nav__noscript a {
       padding-inline: var(--space-3);
     }
   }
