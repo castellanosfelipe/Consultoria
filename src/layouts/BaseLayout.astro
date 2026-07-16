@@ -1,26 +1,38 @@
 ---
 import "../styles/global.css";
 import { siteConfig, withBasePath } from "../config";
+import { getCopy, type Language } from "../i18n/copy";
 
 interface Props {
+  lang?: Language;
   title?: string;
   description?: string;
   canonicalPath?: string;
+  pageHomePath?: string;
   ogImage?: string;
   noindex?: boolean;
 }
 
 const {
-  title = siteConfig.title,
-  description = siteConfig.description,
-  canonicalPath = "/",
+  lang = "es",
+  title,
+  description,
+  canonicalPath,
+  pageHomePath,
   ogImage = siteConfig.ogImage,
   noindex = false,
 } = Astro.props;
+const t = getCopy(lang);
+const resolvedTitle = title ?? t.seo.title;
+const resolvedDescription = description ?? t.seo.description;
+const resolvedCanonicalPath = canonicalPath ?? (lang === "en" ? "/en/" : "/");
+const resolvedHomePath = pageHomePath ?? (lang === "en" ? "/en/" : "/");
 
 const siteOrigin = (Astro.site ?? new URL(siteConfig.siteUrl)).origin;
-const homeUrl = new URL(siteConfig.basePath, `${siteOrigin}/`).toString();
-const canonical = new URL(withBasePath(canonicalPath), `${siteOrigin}/`).toString();
+const homeUrl = new URL(withBasePath(resolvedHomePath), `${siteOrigin}/`).toString();
+const canonical = new URL(withBasePath(resolvedCanonicalPath), `${siteOrigin}/`).toString();
+const spanishUrl = new URL(withBasePath("/"), `${siteOrigin}/`).toString();
+const englishUrl = new URL(withBasePath("/en/"), `${siteOrigin}/`).toString();
 const shareImage = new URL(ogImage, `${siteOrigin}/`).toString();
 const sameAs = siteConfig.linkedInUrl ? [siteConfig.linkedInUrl] : undefined;
 
@@ -29,14 +41,14 @@ const schemas = [
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "@id": `${homeUrl}#service`,
-    name: `${siteConfig.name} · Software de operaciones`,
-    description,
+    name: t.seo.serviceName,
+    description: resolvedDescription,
     url: homeUrl,
     image: shareImage,
-    priceRange: "USD 1,900–50,000",
+    priceRange: lang === "en" ? "USD 1,900 to 50,000" : "USD 1.900 a 50.000",
     areaServed: [
       { "@type": "Country", name: "Colombia" },
-      { "@type": "Place", name: "Remoto" },
+      { "@type": "Place", name: t.seo.remote },
     ],
     address: {
       "@type": "PostalAddress",
@@ -51,20 +63,15 @@ const schemas = [
     "@id": `${homeUrl}#felipe`,
     name: siteConfig.name,
     url: homeUrl,
-    jobTitle: "Product manager técnico",
-    knowsAbout: [
-      "Software interno",
-      "Automatización de datos",
-      "Diseño de producto",
-      "Arquitectura de software",
-    ],
+    jobTitle: t.seo.jobTitle,
+    knowsAbout: t.seo.knowsAbout,
     sameAs,
   },
 ];
 ---
 
 <!doctype html>
-<html lang={siteConfig.language} data-base-path={siteConfig.basePath}>
+<html lang={t.htmlLang} data-base-path={siteConfig.basePath} data-home-path={withBasePath(resolvedHomePath)}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -72,27 +79,31 @@ const schemas = [
     <meta name="color-scheme" content="light" />
     <meta name="generator" content={Astro.generator} />
 
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{resolvedTitle}</title>
+    <meta name="description" content={resolvedDescription} />
     <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es-CO" href={spanishUrl} />
+    <link rel="alternate" hreflang="en" href={englishUrl} />
+    <link rel="alternate" hreflang="x-default" href={spanishUrl} />
 
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content={siteConfig.locale} />
+    <meta property="og:locale" content={t.ogLocale} />
+    <meta property="og:locale:alternate" content={lang === "en" ? "es_CO" : "en_US"} />
     <meta property="og:site_name" content={siteConfig.name} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={resolvedTitle} />
+    <meta property="og:description" content={resolvedDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={shareImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="De operación manual a sistema en producción, por Felipe Peña" />
+    <meta property="og:image:alt" content={t.seo.ogAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={resolvedTitle} />
+    <meta name="twitter:description" content={resolvedDescription} />
     <meta name="twitter:image" content={shareImage} />
-    <meta name="twitter:image:alt" content="De operación manual a sistema en producción, por Felipe Peña" />
+    <meta name="twitter:image:alt" content={t.seo.ogAlt} />
 
     <link rel="icon" href={withBasePath("/favicon.svg")} type="image/svg+xml" />
     {!noindex && <script is:inline type="application/ld+json" set:html={JSON.stringify(schemas)} />}
@@ -104,7 +115,7 @@ const schemas = [
     )}
   </head>
   <body>
-    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <a class="skip-link" href="#contenido">{lang === "en" ? "Skip to content" : "Saltar al contenido"}</a>
     <slot />
     <script src="../scripts/site.ts"></script>
   </body>

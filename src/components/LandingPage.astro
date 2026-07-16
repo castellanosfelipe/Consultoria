@@ -1,0 +1,2097 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "./SiteHeader.astro";
+import HeroGraph from "./HeroGraph.astro";
+import ProcessArtifact from "./ProcessArtifact.astro";
+import ContactPanel from "./ContactPanel.astro";
+import { siteConfig } from "../config";
+import { getCopy, type Language } from "../i18n/copy";
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = "es" } = Astro.props;
+const t = getCopy(lang);
+const {
+  symptoms,
+  offers,
+  proofRows,
+  phases,
+} = t.landing;
+const hasBooking = Boolean(siteConfig.bookingUrl);
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.seo.title}
+  description={t.seo.description}
+  canonicalPath={lang === "en" ? "/en/" : "/"}
+  pageHomePath={lang === "en" ? "/en/" : "/"}
+>
+  <SiteHeader lang={lang} />
+
+  <main id="contenido">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy" data-hero-sequence>
+          <p class="eyebrow" data-hero-item style="--hero-delay: 0ms">{t.landing.hero.eyebrow}</p>
+          <h1 id="hero-title" aria-label={t.landing.hero.title}>
+            <span class="hero-title__clip" aria-hidden="true"><span class="hero-title__line" style="--hero-line-delay: 70ms">{t.landing.hero.titleLine1}</span></span>
+            <span class="hero-title__clip" aria-hidden="true"><span class="hero-title__line" style="--hero-line-delay: 130ms">{t.landing.hero.titleLine2}</span></span>
+          </h1>
+          <p class="lead">{t.landing.hero.lead}</p>
+
+          <div class="hero-action">
+            <a class="button" href="#contacto" data-track="cta" data-location="hero" data-hero-item style="--hero-delay: 210ms">
+              {hasBooking ? t.landing.hero.bookingCta : t.landing.hero.formCta} <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
+            </a>
+            <p class="microcopy" data-hero-item style="--hero-delay: 280ms">
+              {hasBooking ? t.landing.hero.bookingMicrocopy : t.landing.hero.formMicrocopy}
+            </p>
+          </div>
+
+          <dl class="hero-facts" aria-label={t.landing.hero.factsLabel} data-hero-facts>
+            <div><dt>{t.landing.hero.timeline}</dt><dd>{t.landing.hero.timelineValue}</dd></div>
+            <div><dt>{t.landing.hero.model}</dt><dd>{t.landing.hero.modelValue}</dd></div>
+            <div><dt>{t.landing.hero.ownership}</dt><dd>{t.landing.hero.ownershipValue}</dd></div>
+          </dl>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-visual__status" data-hero-item style="--hero-delay: 320ms">
+            <span class="label">{t.landing.hero.visualLabel}</span>
+          </div>
+          <HeroGraph lang={lang} />
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule problem" id="problema" aria-labelledby="problem-title" data-scroll-section>
+      <div class="container">
+        <div class="reading-column">
+          <div data-animate="heading" data-stagger="60">
+            <p class="eyebrow" data-animate-item>{t.landing.problem.eyebrow}</p>
+            <h2 id="problem-title" data-animate-item>{t.landing.problem.title}</h2>
+          </div>
+          <ul class="symptom-log" data-animate="problem" data-stagger="70" data-mobile-reveal="items">
+            {symptoms.map((symptom) => (
+              <li data-animate-item><span aria-hidden="true"></span>{symptom}</li>
+            ))}
+          </ul>
+          <p class="problem-thesis" data-animate="fade-up" data-delay="120">{t.landing.problem.thesis}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule thesis" aria-labelledby="thesis-title" data-scroll-section>
+      <div class="container">
+        <div class="section-heading" data-animate="heading" data-stagger="60">
+          <p class="eyebrow" data-animate-item>{t.landing.positioning.eyebrow}</p>
+          <h2 id="thesis-title" data-animate-item>{t.landing.positioning.title}</h2>
+          <p class="lead" data-animate-item>{t.landing.positioning.lead}</p>
+        </div>
+
+        <div class="positioning-axis" data-animate="comparison" data-stagger="70" data-mobile-reveal="items">
+          <article class="positioning-node positioning-node--edge" data-animate-item>
+            <p class="label">{t.landing.positioning.independentLabel}</p>
+            <h3>{t.landing.positioning.independentTitle}</h3>
+            <p>{t.landing.positioning.independentCopy}</p>
+          </article>
+          <span class="axis-line" aria-hidden="true"></span>
+          <article class="positioning-node positioning-node--core" data-animate-item data-emphasis="core">
+            <p class="label">{t.landing.positioning.hereLabel}</p>
+            <h3>{t.landing.positioning.hereTitle}</h3>
+            <p>{t.landing.positioning.hereCopy}</p>
+          </article>
+          <span class="axis-line" aria-hidden="true"></span>
+          <article class="positioning-node positioning-node--edge" data-animate-item>
+            <p class="label">{t.landing.positioning.agencyLabel}</p>
+            <h3>{t.landing.positioning.agencyTitle}</h3>
+            <p>{t.landing.positioning.agencyCopy}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule services" id="servicios" aria-labelledby="services-title" data-scroll-section>
+      <div class="container">
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <div data-animate-item>
+            <p class="eyebrow">{t.landing.services.eyebrow}</p>
+            <h2 id="services-title">{t.landing.services.title}</h2>
+          </div>
+          <p class="lead" data-animate-item>{t.landing.services.lead}</p>
+        </div>
+
+        <div class="offer-pipeline" data-animate="offer-flow" data-stagger="110" data-mobile-reveal="items">
+          {offers.map((offer, index) => (
+            <>
+              <article class:list={["offer-card", offer.core && "offer-card--core"]} data-animate-item data-emphasis={offer.core ? "core-offer" : undefined}>
+                {offer.core && <span class="offer-card__core label">{t.landing.services.principal}</span>}
+                <p class="offer-card__price data">{offer.price}</p>
+                <h3>{offer.title}</h3>
+                <p class="offer-card__description">{offer.description}</p>
+                <p class="offer-card__owner label">{t.landing.services.ownerLabel} {offer.owner}</p>
+              </article>
+              {index < offers.length - 1 && <span class="offer-arrow icon-arrow" data-offer-arrow aria-hidden="true"></span>}
+            </>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="section proof"
+      id="prueba"
+      aria-labelledby="proof-title"
+      data-proof-section
+      data-track-view="Proof Viewed"
+      data-track-section="compromisos-verificables"
+      data-scroll-section
+    >
+      <div class="container">
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <div data-animate-item>
+            <p class="eyebrow">{t.landing.proof.eyebrow}</p>
+            <h2 id="proof-title">{t.landing.proof.title}</h2>
+          </div>
+          <p class="lead" data-animate-item>{t.landing.proof.lead}</p>
+        </div>
+
+        <div class="proof-artifact" data-animate="diff" data-stagger="70" data-mobile-reveal="items">
+          <div class="proof-artifact__head label" aria-hidden="true">
+            <span>{t.landing.proof.signal}</span><span>{t.landing.proof.verification}</span><span>{t.landing.proof.change}</span>
+          </div>
+          {proofRows.map((row) => (
+            <article class="proof-row" data-animate-item>
+              <h3>{row.label}</h3>
+              <p>{row.copy}</p>
+              <div class="proof-diff">
+                <div class="diff-line diff-line--old">
+                  <span class="diff-marker" aria-hidden="true">{t.landing.proof.beforeMarker}</span>
+                  <span class="sr-only">{t.landing.proof.before} </span>
+                  <del class="proof-before data">{row.before}</del>
+                </div>
+                <div class="diff-line diff-line--new">
+                  <span class="diff-marker" aria-hidden="true">{t.landing.proof.nowMarker}</span>
+                  <span class="sr-only">{t.landing.proof.now} </span>
+                  <ins class="proof-after data">{row.after}</ins>
+                </div>
+                <small class="label">{row.stack}</small>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule process" id="proceso" aria-labelledby="process-title" data-scroll-section>
+      <div class="container">
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <div data-animate-item>
+            <p class="eyebrow">{t.landing.process.eyebrow}</p>
+            <h2 id="process-title">{t.landing.process.title}</h2>
+          </div>
+          <p class="lead" data-animate-item>{t.landing.process.lead}</p>
+        </div>
+
+        <ol class="phase-list" data-animate="process" data-stagger="90" data-mobile-reveal="items">
+          {phases.map((phase) => (
+            <li data-animate-item>
+              <span class="phase-number data" data-process-badge>{phase.number}</span>
+              <div>
+                <p class="label">{phase.timing}</p>
+                <h3>{phase.title}</h3>
+                <p>{phase.copy}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <ProcessArtifact lang={lang} />
+      </div>
+    </section>
+
+    <section class="section section-rule about" id="quien" aria-labelledby="about-title" data-scroll-section>
+      <div class="container about-grid" data-animate="assembly" data-stagger="100" data-mobile-reveal="items">
+        <div class="identity-panel" data-animate-item>
+          {siteConfig.portraitPath ? (
+            <img
+              src={siteConfig.portraitPath}
+              width="560"
+              height="700"
+              loading="lazy"
+              decoding="async"
+              alt={t.landing.about.portraitAlt}
+            />
+          ) : (
+            <div class="identity-monogram" aria-hidden="true">
+              <span>FP</span>
+              <div class="identity-nodes"><i></i><i></i><i></i><i></i></div>
+            </div>
+          )}
+          <p class="label">{t.landing.about.role}</p>
+        </div>
+
+        <div class="about-copy" data-animate-item>
+          <p class="eyebrow">{t.landing.about.eyebrow}</p>
+          <h2 id="about-title">{t.landing.about.title}</h2>
+          <p class="lead">{t.landing.about.lead}</p>
+          <p>{t.landing.about.copy}</p>
+          {siteConfig.linkedInUrl && (
+            <a class="text-link" href={siteConfig.linkedInUrl} rel="me external">{t.landing.about.linkedIn} <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>
+          )}
+        </div>
+
+        <aside class="capacity-panel" aria-label={t.landing.about.capacityLabel} data-animate-item>
+          <p class="label">{t.landing.about.capacityTitle}</p>
+          <ul>
+            {t.landing.about.capacityItems.map((item) => <li><span aria-hidden="true"></span>{item}</li>)}
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section--tight section-rule exclusions" aria-labelledby="exclusions-title" data-scroll-section>
+      <div class="container exclusions-grid" data-animate="filter" data-stagger="100" data-mobile-reveal="items">
+        <div data-animate-item>
+          <p class="eyebrow">{t.landing.exclusions.eyebrow}</p>
+          <h2 id="exclusions-title">{t.landing.exclusions.title}</h2>
+        </div>
+        <div data-animate-item>
+          <ul>
+            {t.landing.exclusions.items.map((item) => <li><span aria-hidden="true">×</span>{item}</li>)}
+          </ul>
+          <p class="microcopy">{t.landing.exclusions.note}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule faq" id="preguntas" aria-labelledby="faq-title" data-scroll-section>
+      <div class="container">
+        <div class="section-heading" data-animate="heading" data-stagger="60">
+          <p class="eyebrow" data-animate-item>{t.landing.faq.eyebrow}</p>
+          <h2 id="faq-title" data-animate-item>{t.landing.faq.title}</h2>
+        </div>
+        <dl class="faq-grid" data-faq data-animate="faq-list" data-stagger="55" data-mobile-reveal="items">
+          {t.landing.faq.items.map((faq, index) => (
+            <div class="faq-item is-open" data-faq-item data-animate-item>
+              <dt>
+                <button
+                  type="button"
+                  id={`faq-question-${index + 1}`}
+                  aria-expanded="true"
+                  aria-controls={`faq-answer-${index + 1}`}
+                  data-faq-toggle
+                >
+                  <span>{faq.question}</span>
+                  <span class="faq-icon" aria-hidden="true"><span class="faq-icon__bar"></span><span class="faq-icon__bar faq-icon__bar--vertical"></span></span>
+                </button>
+              </dt>
+              <dd
+                id={`faq-answer-${index + 1}`}
+                role="region"
+                aria-labelledby={`faq-question-${index + 1}`}
+                aria-hidden="false"
+                data-faq-panel
+              >
+                <div><p>{faq.answer}</p></div>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <ContactPanel lang={lang} />
+  </main>
+
+  <footer class="site-footer" data-scroll-section>
+    <div class="container footer-grid" data-animate="footer" data-stagger="60">
+      <div class="footer-brand" data-animate-item>
+        <span class="footer-mark" aria-hidden="true">FP</span>
+        <p><strong>Felipe Peña</strong><br />{t.landing.footer.description}</p>
+      </div>
+      <p class="footer-stack data" data-animate-item>PYTHON · TYPESCRIPT · SQL · KAFKA · AIRFLOW · PYSPARK · FASTAPI</p>
+      <div class="footer-meta" data-animate-item>
+        {siteConfig.linkedInUrl && <a href={siteConfig.linkedInUrl} rel="me external">LinkedIn <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>}
+        <span>{t.landing.footer.location}</span>
+        <span>© {new Date().getFullYear()}</span>
+      </div>
+    </div>
+  </footer>
+
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: calc(45rem - var(--header-height));
+    display: grid;
+    align-items: center;
+    padding-block: clamp(var(--space-7), 7vh, var(--space-9));
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(23rem, 0.9fr);
+    gap: clamp(var(--space-7), 6vw, var(--space-9));
+    align-items: center;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: var(--font-body-fallback);
+  }
+
+  .hero-copy .eyebrow {
+    margin-bottom: var(--space-5);
+    font-family: var(--font-body-fallback);
+  }
+
+  .hero-copy .lead {
+    margin-top: var(--space-5);
+  }
+
+  .hero-copy h1 {
+    font-family: var(--font-display-fallback);
+  }
+
+  .hero-copy h1::after {
+    width: clamp(var(--space-8), 9vw, var(--space-10));
+    height: var(--border-strong);
+    display: block;
+    margin-top: var(--space-4);
+    background: var(--production);
+    content: "";
+    transform-origin: left center;
+  }
+
+  .hero-title__clip {
+    display: block;
+  }
+
+  .hero-title__line {
+    display: block;
+  }
+
+  /* El lead queda estático porque Chrome lo identifica como LCP; los demás elementos conservan el stagger de 70 ms. */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-hero-item] {
+      animation: hero-enter var(--motion-duration) var(--motion-ease) both;
+      animation-delay: var(--hero-delay);
+    }
+
+    [data-hero-facts]::before {
+      animation: hero-rule var(--motion-slow) var(--motion-ease) 330ms both;
+    }
+
+    [data-hero-facts] > div {
+      animation: hero-fact var(--motion-duration) var(--motion-ease) both;
+    }
+
+    [data-hero-facts] > div:nth-child(1) { animation-delay: 390ms; }
+    [data-hero-facts] > div:nth-child(2) { animation-delay: 445ms; }
+    [data-hero-facts] > div:nth-child(3) { animation-delay: 500ms; }
+  }
+
+  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    .hero-title__line {
+      animation: hero-title-line var(--motion-slow) var(--motion-ease) both;
+      animation-delay: var(--hero-line-delay);
+    }
+
+    .hero-copy h1::after {
+      animation: hero-rule var(--motion-slow) var(--motion-ease) 220ms both;
+    }
+  }
+
+  @keyframes hero-enter {
+    from {
+      opacity: 0.01;
+      transform: translateY(var(--motion-distance));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-fade {
+    from { opacity: 0.01; }
+    to { opacity: 1; }
+  }
+
+  @keyframes hero-title-line {
+    from { transform: translateY(var(--motion-distance)); }
+    to { transform: translateY(0); }
+  }
+
+  @keyframes hero-rule {
+    from { opacity: 0.2; transform: scaleX(0); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+
+  @keyframes hero-fact {
+    from { opacity: 0.01; transform: translateY(var(--space-2)); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-action {
+    display: grid;
+    grid-template-columns: auto minmax(13rem, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+    margin-top: var(--space-6);
+  }
+
+  .hero-action .microcopy {
+    max-width: 29ch;
+  }
+
+  .hero-facts {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+    padding-top: var(--space-4);
+  }
+
+  .hero-facts::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: var(--border);
+    background: var(--line);
+    content: "";
+    transform-origin: left center;
+  }
+
+  .hero-facts dt,
+  .hero-facts dd {
+    font-family: var(--font-body-fallback);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero-facts dt {
+    color: var(--graphite);
+    font-size: var(--text-label);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .hero-facts dd {
+    margin-top: var(--space-1);
+    font-size: var(--text-micro);
+    font-weight: 600;
+  }
+
+  .hero-visual {
+    align-self: center;
+  }
+
+  .hero-visual__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .hero-visual__status > .label {
+    color: var(--graphite);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .hero-action .button .icon-arrow {
+      transition: transform var(--motion-fast) var(--motion-ease);
+    }
+
+    .hero-action .button:hover .icon-arrow,
+    .hero-action .button:focus-visible .icon-arrow {
+      transform: translate(2px, 2px) rotate(var(--arrow-rotation));
+    }
+  }
+
+  .problem h2,
+  .section-heading h2 {
+    margin-top: var(--space-4);
+  }
+
+  .symptom-log {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    margin: var(--space-7) 0 0;
+    border-top: var(--border) solid var(--line);
+    list-style: none;
+  }
+
+  .symptom-log li {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--space-3) 1fr;
+    gap: var(--space-4);
+    align-items: start;
+    padding-block: var(--space-4);
+  }
+
+  .symptom-log li::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--border);
+    background: var(--line);
+    content: "";
+    transform-origin: left center;
+  }
+
+  .symptom-log li > span {
+    width: var(--space-2);
+    height: var(--space-2);
+    margin-top: 0.62em;
+    border-radius: var(--radius-round);
+    background: var(--manual);
+  }
+
+  .problem-thesis {
+    max-width: 58ch;
+    margin-top: var(--space-6);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: var(--text-statement);
+    font-stretch: 108%;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .section-heading {
+    max-width: var(--reading);
+    margin-bottom: var(--space-7);
+  }
+
+  .section-heading .lead {
+    margin-top: var(--space-5);
+  }
+
+  .section-heading--split {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.72fr);
+    gap: var(--space-7);
+    align-items: end;
+  }
+
+  .positioning-axis {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(var(--space-5), 0.22fr) minmax(0, 1.25fr) minmax(var(--space-5), 0.22fr) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .positioning-node {
+    min-height: 13rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .positioning-node .label {
+    margin-bottom: var(--space-4);
+    color: var(--graphite);
+  }
+
+  .positioning-node p:last-child {
+    margin-top: var(--space-3);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+
+  .positioning-node--edge {
+    border: var(--border) dashed var(--line-strong);
+  }
+
+  .positioning-node--core {
+    position: relative;
+    min-height: 16rem;
+    border: var(--border-strong) solid var(--ink);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .positioning-node--core::after {
+    position: absolute;
+    inset: calc(-1 * var(--border-strong));
+    border: var(--border-strong) solid var(--production);
+    border-radius: var(--radius);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0.45);
+    transform-origin: left center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .positioning-axis.is-visible .positioning-node--core::after {
+      opacity: 1;
+      transform: scaleX(1);
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-duration) + var(--motion-sequence-delay, 0ms) + 200ms);
+    }
+  }
+
+  .positioning-node--core .label,
+  .positioning-node--core p:last-child {
+    color: var(--ink);
+  }
+
+  .axis-line {
+    height: var(--border);
+    background: var(--ink);
+    transform-origin: left center;
+  }
+
+  .offer-pipeline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: stretch;
+  }
+
+  .offer-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 27rem;
+    padding: var(--space-6);
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .offer-card--core {
+    border: var(--border-strong) solid var(--ink);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .offer-pipeline .offer-card__core {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-duration) + var(--motion-sequence-delay, 0ms) + 200ms);
+    }
+
+    :global(.motion-ready) .offer-pipeline:not(.is-visible) .offer-card__core {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+
+    :global(.motion-ready) .offer-pipeline.is-visible .offer-card__core {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .offer-card__core {
+    position: absolute;
+    top: calc(-1 * var(--space-3));
+    right: var(--space-4);
+    border: var(--border) solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .offer-card__price {
+    min-height: var(--space-7);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
+    border-bottom: var(--border) solid var(--line);
+    font-size: var(--text-small);
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .offer-card__description {
+    margin-top: var(--space-4);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  .offer-card__owner {
+    margin-top: auto;
+    padding-top: var(--space-6);
+    color: var(--graphite);
+    line-height: 1.6;
+  }
+
+  .offer-arrow {
+    align-self: center;
+    color: var(--ink);
+    font-family: var(--font-data);
+    transform-origin: left center;
+  }
+
+  .proof {
+    border-block: var(--border-strong) solid var(--ink);
+    background: var(--paper-deep);
+  }
+
+  .proof-artifact {
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background-color: var(--paper-raised);
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--line) 56%, transparent) var(--border), transparent var(--border)),
+      linear-gradient(to bottom, color-mix(in srgb, var(--line) 36%, transparent) var(--border), transparent var(--border));
+    background-size: 4rem 4rem;
+  }
+
+  .proof-artifact__head,
+  .proof-row {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr) minmax(18rem, 0.8fr);
+    gap: var(--space-6);
+    align-items: center;
+    padding-inline: clamp(var(--space-4), 3vw, var(--space-6));
+  }
+
+  .proof-artifact__head {
+    min-height: var(--target);
+    color: var(--graphite);
+    border-bottom: var(--border) solid var(--line);
+  }
+
+  .proof-row {
+    min-height: 11rem;
+    border-bottom: var(--border) solid var(--line);
+  }
+
+  .proof-row:last-child {
+    border-bottom: 0;
+  }
+
+  .proof-row > p {
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  .proof-diff {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .proof-diff::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(-1 * var(--space-2));
+    left: 0;
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    opacity: 0.72;
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .diff-line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .diff-marker {
+    width: 4.25rem;
+    flex: 0 0 4.25rem;
+    color: var(--graphite);
+    font-family: var(--font-data);
+    font-size: var(--text-nano);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .proof-before,
+  .proof-after {
+    font-size: var(--text-diff);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .proof-before {
+    position: relative;
+    color: var(--manual);
+    text-decoration: none;
+  }
+
+  .proof-before::after {
+    position: absolute;
+    top: 52%;
+    right: 0;
+    left: 0;
+    height: var(--border-strong);
+    background: currentColor;
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .proof-after {
+    color: var(--production);
+    text-decoration: none;
+  }
+
+  .proof-diff small {
+    display: block;
+    margin-top: var(--space-3);
+    color: var(--graphite);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="diff"] .proof-row {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: var(--motion-sequence-delay, 0ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row {
+      opacity: 0;
+      transform: translateY(var(--motion-distance));
+    }
+
+    :global(.motion-ready) [data-animate="diff"].is-visible .proof-row {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-before::after {
+      transition: transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(180ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-before::after {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--new {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(320ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+  }
+
+  .phase-list {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 0;
+    margin: 0 0 var(--space-7);
+    border-block: var(--border) solid var(--line);
+    list-style: none;
+  }
+
+  .phase-list::before {
+    position: absolute;
+    z-index: -1;
+    top: calc(var(--space-5) + var(--space-4));
+    right: calc(25% - var(--space-5) - var(--space-4));
+    left: calc(var(--space-5) + var(--space-4));
+    height: var(--border-strong);
+    background: var(--line-strong);
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .phase-list::after {
+    position: absolute;
+    z-index: -1;
+    top: calc(var(--space-5) + var(--space-4));
+    right: calc(25% - var(--space-5) - var(--space-4));
+    left: calc(var(--space-5) + var(--space-4));
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .phase-list li {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-right: var(--border) solid var(--line);
+  }
+
+  .phase-list li:last-child {
+    border-right: 0;
+  }
+
+  .phase-number {
+    width: var(--space-6);
+    height: var(--space-6);
+    display: grid;
+    place-items: center;
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius-round);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="process"]::before {
+      transition: transform var(--motion-slow) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::before {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="process"] [data-process-badge] {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(160ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) [data-process-badge] {
+      opacity: 0;
+      transform: scale(0.72);
+    }
+  }
+
+  .phase-list .label {
+    color: var(--graphite);
+  }
+
+  .phase-list h3 {
+    margin-top: var(--space-2);
+  }
+
+  .phase-list li p:last-child {
+    margin-top: var(--space-3);
+    color: var(--graphite);
+    font-size: var(--text-micro);
+    line-height: 1.5;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.58fr) minmax(0, 1.15fr) minmax(16rem, 0.72fr);
+    gap: clamp(var(--space-6), 5vw, var(--space-8));
+    align-items: start;
+  }
+
+  .identity-panel {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .identity-panel img,
+  .identity-monogram {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    object-fit: cover;
+  }
+
+  .identity-monogram {
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .identity-monogram > span {
+    font-family: var(--font-display);
+    font-size: var(--text-monogram);
+    font-stretch: 112%;
+    font-weight: 650;
+    letter-spacing: -0.04em;
+  }
+
+  .identity-nodes {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    left: var(--space-4);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+  }
+
+  .identity-nodes::before {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: var(--border-strong);
+    background: var(--ink);
+    content: "";
+  }
+
+  .identity-nodes i {
+    z-index: 1;
+    width: var(--space-3);
+    height: var(--space-3);
+    justify-self: center;
+    border-radius: var(--radius-round);
+    background: var(--graphite);
+  }
+
+  .identity-panel > .label {
+    color: var(--graphite);
+    line-height: 1.5;
+  }
+
+  .about-copy h2 {
+    margin-top: var(--space-4);
+  }
+
+  .about-copy .lead,
+  .about-copy > p:not(.eyebrow) {
+    margin-top: var(--space-5);
+  }
+
+  .about-copy > p:not(.eyebrow, .lead) {
+    max-width: 56ch;
+  }
+
+  .text-link {
+    display: inline-flex;
+    min-height: var(--target);
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    color: var(--production);
+    font-weight: 600;
+  }
+
+  .capacity-panel {
+    padding-left: var(--space-5);
+    border-left: var(--border-strong) solid var(--line);
+  }
+
+  .capacity-panel > .label {
+    color: var(--ink);
+  }
+
+  .capacity-panel ul {
+    display: grid;
+    gap: var(--space-4);
+    padding: 0;
+    margin: var(--space-5) 0 0;
+    list-style: none;
+  }
+
+  .capacity-panel li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    color: var(--graphite);
+    font-family: var(--font-data);
+    font-size: var(--text-label);
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .capacity-panel li span {
+    width: var(--space-2);
+    height: var(--space-2);
+    align-self: center;
+    border-radius: var(--radius-round);
+    background: currentColor;
+    color: var(--ink);
+  }
+
+  .exclusions-grid {
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: var(--space-8);
+  }
+
+  .exclusions h2 {
+    margin-top: var(--space-4);
+  }
+
+  .exclusions ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    padding: 0;
+    margin: 0 0 var(--space-5);
+    list-style: none;
+  }
+
+  .exclusions li {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .exclusions li span {
+    color: var(--ink-muted);
+    font-family: var(--font-data);
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 var(--space-7);
+  }
+
+  .faq-grid > .faq-item {
+    position: relative;
+    padding-block: var(--space-5);
+    border-top: var(--border) solid var(--line);
+  }
+
+  .faq-grid > .faq-item::after {
+    position: absolute;
+    top: calc(-1 * var(--border));
+    right: 0;
+    left: 0;
+    height: var(--border-strong);
+    background: var(--production);
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+    transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  .faq-grid dt,
+  .faq-grid button {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .faq-grid button {
+    width: 100%;
+    min-height: var(--target);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .faq-grid dd {
+    display: grid;
+    grid-template-rows: 1fr;
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.6;
+    opacity: 1;
+    transition:
+      grid-template-rows 420ms var(--motion-ease),
+      opacity var(--motion-fast) var(--motion-ease);
+  }
+
+  .faq-grid dd > div {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--motion-fast) var(--motion-ease),
+      transform var(--motion-fast) var(--motion-ease);
+  }
+
+  .faq-grid dd p {
+    padding-top: var(--space-3);
+  }
+
+  .faq-icon {
+    position: relative;
+    width: var(--space-5);
+    height: var(--space-5);
+    flex: 0 0 var(--space-5);
+    color: var(--production);
+    font-family: var(--font-data);
+    font-size: var(--text-h3);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .faq-icon__bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--space-4);
+    height: var(--border-strong);
+    background: currentColor;
+    transition:
+      opacity var(--motion-fast) var(--motion-ease),
+      transform var(--motion-fast) var(--motion-ease);
+    transform: translate(-50%, -50%);
+  }
+
+  .faq-icon__bar--vertical {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(90deg) scale(0.82);
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open) dd {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open) dd > div {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-2)));
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open)::after {
+    transform: scaleX(0);
+  }
+
+  :global(.faq-ready) .faq-item:not(.is-open) .faq-icon__bar--vertical {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .site-footer {
+    padding-block: var(--space-6);
+    border-top: var(--border) solid var(--line-strong);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.4fr auto;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .footer-mark {
+    display: grid;
+    width: var(--target);
+    height: var(--target);
+    flex: none;
+    place-items: center;
+    border: var(--border) solid var(--paper);
+    border-radius: var(--radius);
+    font-family: var(--font-data);
+    font-size: var(--text-label);
+    font-weight: 600;
+  }
+
+  .footer-brand p {
+    font-size: var(--text-micro);
+    line-height: 1.45;
+  }
+
+  .footer-stack {
+    color: var(--line);
+    font-size: var(--text-tiny);
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .footer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    color: var(--line);
+    font-size: var(--text-micro);
+  }
+
+  .footer-meta a {
+    min-height: var(--target);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /*
+   * Coreografía editorial: cada artefacto representa una operación concreta
+   * (registrar, comparar, ensamblar o desplegar). 500 ms permite leer el cambio;
+   * Un intervalo de 55 a 110 ms hace perceptible el orden sin convertirlo en espectáculo.
+   */
+  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="heading"] .eyebrow::before,
+    :global(.motion-ready) [data-animate="problem"] .eyebrow::before {
+      transition: transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+      transform-origin: left center;
+    }
+
+    :global(.motion-ready) [data-animate="heading"]:not(.is-visible) .eyebrow::before,
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .eyebrow::before {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="problem"] [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) [data-animate-item] {
+      opacity: 0;
+      transform: translateY(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .symptom-log li {
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="problem"].is-visible [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="problem"] .symptom-log li > span {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 90ms);
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .symptom-log li > span {
+      opacity: 0;
+      transform: scale(0.35);
+    }
+
+    :global(.motion-ready) [data-animate="problem"] .symptom-log li::after {
+      transition: transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 150ms);
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .symptom-log li::after {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) [data-animate-item] {
+      opacity: 0;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .positioning-node:first-child {
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .positioning-node--core {
+      transform: translateY(var(--motion-distance)) scale(0.97);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .positioning-node:last-child {
+      transform: translateX(var(--motion-distance));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--core {
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] .axis-line {
+      opacity: 1;
+      transform: scaleX(1);
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] .axis-line:nth-child(2) {
+      transition-delay: 150ms;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"] .axis-line:nth-child(4) {
+      transition-delay: 290ms;
+    }
+
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) .axis-line {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--core::after {
+      transition-delay: 760ms;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-animate-item] {
+      opacity: 0;
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-emphasis="core-offer"] {
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-offer-arrow] {
+      opacity: 1;
+      transform: scaleX(1);
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-offer-arrow]:nth-child(2) {
+      transition-delay: 135ms;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] [data-offer-arrow]:nth-child(4) {
+      transition-delay: 355ms;
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-offer-arrow] {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"] .offer-card__core {
+      transition-delay: 720ms;
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-artifact__head,
+    :global(.motion-ready) [data-animate="diff"] .proof-row {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-artifact__head {
+      transition-delay: var(--motion-delay, 0ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-row {
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-artifact__head {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row {
+      opacity: 0;
+      transform: translateY(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--old {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 170ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"].is-visible .diff-line--old {
+      opacity: 0.55;
+      transform: translateX(calc(-1 * var(--space-2)));
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-before::after {
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 270ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--new {
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 410ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new {
+      transform: translateX(var(--motion-distance));
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .diff-line--new .diff-marker {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 500ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new .diff-marker {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+
+    :global(.motion-ready) [data-animate="diff"] .proof-diff small,
+    :global(.motion-ready) [data-animate="diff"] .proof-diff::after {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 560ms);
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-diff small {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-diff::after {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="process"]::before {
+      transition-delay: var(--motion-delay, 0ms);
+    }
+
+    :global(.motion-ready) [data-animate="process"]::after {
+      transition: transform var(--motion-slow) var(--motion-ease);
+      transition-delay: 300ms;
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::after {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="process"] [data-process-badge] {
+      transition-delay: calc(130ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) [data-process-badge] {
+      opacity: 0;
+      transform: scale(0.55);
+    }
+
+    :global(.motion-ready) [data-animate="process"] li > div {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(190ms + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) li > div {
+      opacity: 0;
+      transform: translateX(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"] > [data-animate-item] {
+      transition:
+        opacity var(--motion-duration) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
+      opacity: 0;
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :first-child,
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > :first-child {
+      transform: translateX(calc(-1 * var(--motion-distance)));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :nth-child(2) {
+      transform: translateY(var(--motion-distance)) scale(0.98);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :nth-child(3),
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > :nth-child(2) {
+      transform: translateX(var(--motion-distance));
+    }
+
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > :nth-child(odd) {
+      transform: translateX(calc(-1 * var(--space-3)));
+    }
+
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > :nth-child(even) {
+      transform: translateX(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
+      transform: translateY(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="assembly"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"].is-visible > [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes::before {
+      transition: transform var(--motion-slow) var(--motion-ease) 360ms;
+      transform-origin: left center;
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .identity-nodes::before {
+      transform: scaleX(0);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i,
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li,
+    :global(.motion-ready) [data-animate="filter"] li {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(1) { transition-delay: 420ms; }
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(2) { transition-delay: 475ms; }
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(3) { transition-delay: 530ms; }
+    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(4) { transition-delay: 585ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(1) { transition-delay: 420ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(2) { transition-delay: 480ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(3) { transition-delay: 540ms; }
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(4) { transition-delay: 600ms; }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .identity-nodes i {
+      opacity: 0;
+      transform: scale(0.35);
+    }
+
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .capacity-panel li {
+      opacity: 0;
+      transform: translateX(var(--space-3));
+    }
+
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(1) { transition-delay: 260ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(2) { transition-delay: 315ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(3) { transition-delay: 370ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(4) { transition-delay: 425ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(5) { transition-delay: 480ms; }
+    :global(.motion-ready) [data-animate="filter"] li:nth-child(6) { transition-delay: 535ms; }
+
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) li {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+
+    :global(.motion-ready) [data-animate="filter"] li > span {
+      display: inline-block;
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-fast) var(--motion-ease);
+      transition-delay: inherit;
+    }
+
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) li > span {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+  }
+
+  @media (min-width: 56.3125rem) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--edge:hover {
+      transform: translateY(calc(-1 * var(--space-1)));
+    }
+
+    :global(.motion-ready) [data-animate="comparison"].is-visible .positioning-node--core:hover {
+      transform: translateY(calc(-1 * var(--space-3)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible .offer-card:hover {
+      transform: translateY(calc(-1 * var(--space-1)));
+    }
+
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-emphasis="core-offer"]:hover {
+      transform: translateY(calc(-1 * var(--space-3)));
+    }
+  }
+
+  @media (max-width: 74.9375rem) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+
+    .hero-copy {
+      max-width: var(--reading);
+    }
+
+    .hero-visual {
+      width: min(100%, 46rem);
+    }
+  }
+
+  @media (max-width: 56.25rem) {
+    [data-hero-item] {
+      animation-name: hero-fade;
+    }
+
+    [data-hero-facts]::before,
+    [data-hero-facts] > div {
+      animation-name: hero-fade;
+    }
+
+    .section-heading--split,
+    .about-grid,
+    .exclusions-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+
+    .positioning-axis {
+      grid-template-columns: 1fr;
+      justify-items: stretch;
+    }
+
+    .positioning-node {
+      min-height: auto;
+    }
+
+    .positioning-node--core {
+      min-height: auto;
+    }
+
+    .positioning-node--core::after {
+      transform: none;
+    }
+
+    :global(.motion-ready) .positioning-axis.is-visible .positioning-node--core::after {
+      transform: none;
+      transition-property: opacity;
+    }
+
+    .axis-line {
+      width: var(--border);
+      height: var(--space-5);
+      justify-self: center;
+    }
+
+    .offer-pipeline {
+      grid-template-columns: 1fr;
+    }
+
+    .offer-card {
+      min-height: auto;
+    }
+
+    :global(.motion-ready) .offer-pipeline:not(.is-visible) .offer-card__core,
+    :global(.motion-ready) .offer-pipeline.is-visible .offer-card__core {
+      transform: none;
+    }
+
+    .offer-arrow {
+      transform: rotate(90deg);
+    }
+
+    .proof-artifact__head {
+      display: none;
+    }
+
+    .proof-row {
+      grid-template-columns: minmax(8rem, 0.5fr) 1.5fr;
+      gap: var(--space-4) var(--space-6);
+      padding-block: var(--space-5);
+    }
+
+    .proof-diff {
+      grid-column: 2;
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row,
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .diff-line--new {
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-before::after {
+      transform: none;
+    }
+
+    .phase-list {
+      grid-template-columns: 1fr;
+    }
+
+    .phase-list::before {
+      top: calc(var(--space-5) + var(--space-4));
+      right: auto;
+      bottom: calc(var(--space-5) + var(--space-4));
+      left: calc(var(--space-5) + var(--space-4));
+      width: var(--border-strong);
+      height: auto;
+      transform: scaleY(1);
+      transform-origin: center top;
+    }
+
+    .phase-list::after {
+      top: calc(var(--space-5) + var(--space-4));
+      right: auto;
+      bottom: calc(var(--space-5) + var(--space-4));
+      left: calc(var(--space-5) + var(--space-4));
+      width: var(--border-strong);
+      height: auto;
+      transform: scaleY(1);
+      transform-origin: center top;
+    }
+
+    .phase-list li {
+      border-right: 0;
+      border-bottom: var(--border) solid var(--line);
+    }
+
+    .phase-list li:last-child {
+      border-bottom: 0;
+    }
+
+    :global(.motion-ready) [data-animate="process"]::before,
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::before,
+    :global(.motion-ready) [data-animate="process"]::after,
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible)::after {
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) [data-process-badge] {
+      transform: none;
+    }
+
+    .identity-panel {
+      max-width: 18rem;
+    }
+
+    .capacity-panel {
+      padding-top: var(--space-5);
+      padding-left: 0;
+      border-top: var(--border-strong) solid var(--line);
+      border-left: 0;
+    }
+
+    .faq-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .faq-icon__bar {
+      transition: none;
+    }
+
+    .faq-grid dd > div,
+    :global(.faq-ready) .faq-item:not(.is-open) dd > div {
+      transform: none;
+    }
+
+    .faq-grid > .faq-item::after,
+    :global(.faq-ready) .faq-item:not(.is-open)::after {
+      transform: none;
+      transition-property: opacity;
+    }
+
+    :global(.faq-ready) .faq-item:not(.is-open)::after {
+      opacity: 0;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      text-align: left;
+    }
+
+    .footer-stack {
+      text-align: left;
+    }
+
+    .footer-meta {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="problem"] [data-animate-item],
+    :global(.motion-ready) [data-animate="comparison"] [data-animate-item],
+    :global(.motion-ready) [data-animate="offer-flow"] [data-animate-item],
+    :global(.motion-ready) [data-animate="diff"] .proof-artifact__head,
+    :global(.motion-ready) [data-animate="diff"] .proof-row,
+    :global(.motion-ready) [data-animate="process"] li > div,
+    :global(.motion-ready) [data-animate="assembly"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"] > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"] > [data-animate-item] {
+      transition: opacity var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+    }
+
+    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) [data-animate-item],
+    :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) [data-animate-item],
+    :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-animate-item],
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
+      opacity: 0;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="problem"].is-visible [data-animate-item],
+    :global(.motion-ready) [data-animate="comparison"].is-visible [data-animate-item],
+    :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-animate-item],
+    :global(.motion-ready) [data-animate="assembly"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="filter"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="faq-list"].is-visible > [data-animate-item],
+    :global(.motion-ready) [data-animate="footer"].is-visible > [data-animate-item] {
+      opacity: 1;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-artifact__head,
+    :global(.motion-ready) [data-animate="diff"]:not(.is-visible) .proof-row {
+      opacity: 0;
+      transform: none;
+    }
+
+    :global(.motion-ready) [data-animate="process"]:not(.is-visible) li > div {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 37.4375rem) {
+    .hero {
+      min-height: auto;
+      padding-top: var(--space-7);
+      padding-bottom: var(--space-8);
+    }
+
+    .hero-grid {
+      gap: var(--space-8);
+    }
+
+    .hero-action {
+      width: 100%;
+      grid-template-columns: 1fr;
+    }
+
+    .hero-action .microcopy {
+      max-width: none;
+    }
+
+    .hero-facts {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .hero-facts div {
+      display: grid;
+      grid-template-columns: 6rem 1fr;
+      gap: var(--space-3);
+    }
+
+    .hero-facts dd {
+      margin-top: 0;
+    }
+
+    .hero-visual__status {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .proof-row {
+      grid-template-columns: 1fr;
+    }
+
+    .proof-diff {
+      grid-column: auto;
+    }
+
+    .proof-before,
+    .proof-after {
+      font-size: var(--text-diff);
+    }
+
+    .phase-list {
+      grid-template-columns: 1fr;
+    }
+
+    .phase-list li {
+      border-right: 0;
+      border-bottom: var(--border) solid var(--line);
+    }
+
+    .phase-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .identity-panel {
+      max-width: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-item],
+    .diff-line--new,
+    [data-process-badge] {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+
+    .positioning-node--core::after {
+      opacity: 1;
+      transform: none;
+    }
+
+    .proof-before::after,
+    .phase-list::before {
+      transform: none !important;
+    }
+
+    .faq-grid dd,
+    .faq-icon,
+    .faq-icon__bar {
+      transition: none;
+    }
+  }
+</style>

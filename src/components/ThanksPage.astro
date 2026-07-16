@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "./SiteHeader.astro";
+import { withBasePath } from "../config";
+import { getCopy, type Language } from "../i18n/copy";
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = "es" } = Astro.props;
+const t = getCopy(lang).thanks;
+const homeHref = withBasePath(lang === "en" ? "/en/" : "/");
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.title}
+  description={t.description}
+  canonicalPath={lang === "en" ? "/en/thanks/" : "/gracias/"}
+  pageHomePath={lang === "en" ? "/en/" : "/"}
+  noindex
+>
+  <SiteHeader lang={lang} />
+  <main id="contenido" class="thanks-page">
+    <div class="container">
+      <div class="thanks-card" data-submission-confirmation>
+        <span class="status-chip"><span class="status-dot"></span> <span data-confirmation-status>{t.status}</span></span>
+        <p class="eyebrow">{t.eyebrow}</p>
+        <h1 data-confirmation-title>{t.heading}</h1>
+        <p class="lead" data-confirmation-copy>{t.copy}</p>
+        <a class="button button--secondary" href={homeHref}>{t.back} <span class="icon-arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .thanks-page {
+    min-height: calc(100vh - var(--header-height));
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-8);
+  }
+
+  .thanks-card {
+    max-width: var(--reading);
+    padding: clamp(var(--space-6), 6vw, var(--space-9));
+    border: var(--border-strong) solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .thanks-card .eyebrow {
+    margin-top: var(--space-7);
+  }
+
+  h1 {
+    margin-top: var(--space-4);
+  }
+
+  .lead {
+    margin-top: var(--space-5);
+  }
+
+  .button {
+    margin-top: var(--space-6);
+  }
+</style>

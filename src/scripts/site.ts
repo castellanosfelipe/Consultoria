@@ -22,8 +22,64 @@ const fallbackPlausible = ((
 
 window.plausible ||= fallbackPlausible;
 
+const isEnglish = document.documentElement.lang.toLowerCase().startsWith("en");
+const ui = isEnglish
+  ? {
+      menu: "Menu",
+      close: "Close",
+      requiredName: "Enter your name.",
+      requiredEmail: "Enter your work email.",
+      requiredContext: "Summarize the context in one line.",
+      shortName: "Use at least 2 characters.",
+      invalidEmail: "Enter a valid email, for example name@company.com.",
+      shortContext: "Add a little more context. Use at least 12 characters.",
+      reviewFields: "Review the highlighted fields.",
+      sending: "Sending…",
+      sendingContext: "Sending your context…",
+      sent: "Context sent",
+      receivedOpening: "Context received. Opening confirmation…",
+      timeout: "The request took too long. Check your connection and try again.",
+      network: "We could not send the form. Check your connection and try again.",
+      confirmationStatus: "message received",
+      confirmationTitle: "I have the context.",
+      confirmationCopy: "I will review it personally. You will receive a clear answer about fit and next steps.",
+      invalidProvider: "Invalid provider",
+      calendarTitle: "Calendar to book a 30 minute fit call",
+      calendarFailure: "The calendar did not respond. Use the direct link or try again.",
+      calendarReady: "Calendar ready.",
+      calendarLoading: "Loading calendar…",
+      invalidCalendar: "The calendar URL is not valid. Use the alternate form.",
+    }
+  : {
+      menu: "Menú",
+      close: "Cerrar",
+      requiredName: "Escribe tu nombre.",
+      requiredEmail: "Escribe tu correo de trabajo.",
+      requiredContext: "Resume el contexto en una línea.",
+      shortName: "Usa al menos 2 caracteres.",
+      invalidEmail: "Usa un correo válido, por ejemplo nombre@empresa.com.",
+      shortContext: "Añade un poco más de contexto. Usa al menos 12 caracteres.",
+      reviewFields: "Revisa los campos marcados.",
+      sending: "Enviando…",
+      sendingContext: "Enviando tu contexto…",
+      sent: "Contexto enviado",
+      receivedOpening: "Contexto recibido. Abriendo la confirmación…",
+      timeout: "El envío tardó demasiado. Revisa tu conexión e inténtalo de nuevo.",
+      network: "No pudimos enviar el formulario. Revisa tu conexión e inténtalo de nuevo.",
+      confirmationStatus: "mensaje recibido",
+      confirmationTitle: "Ya tengo el contexto.",
+      confirmationCopy: "Lo revisaré personalmente. Recibirás una respuesta clara sobre encaje y siguiente paso.",
+      invalidProvider: "Proveedor inválido",
+      calendarTitle: "Agenda para reservar una llamada de encaje de 30 minutos",
+      calendarFailure: "La agenda no respondió. Usa el enlace directo o inténtalo de nuevo.",
+      calendarReady: "Agenda lista.",
+      calendarLoading: "Cargando agenda…",
+      invalidCalendar: "La URL de agenda no es válida. Usa el formulario alternativo.",
+    };
+
 const basePath = document.documentElement.dataset.basePath || "/";
-const homePath = new URL(basePath, window.location.origin).pathname;
+const configuredHomePath = document.documentElement.dataset.homePath || basePath;
+const homePath = new URL(configuredHomePath, window.location.origin).pathname;
 const isHomePath = (pathname: string) =>
   pathname === homePath ||
   (homePath !== "/" && pathname === homePath.replace(/\/$/, ""));
@@ -74,6 +130,15 @@ document.addEventListener("click", (event) => {
   }
 });
 
+document.querySelectorAll<HTMLAnchorElement>("[data-language-link]").forEach((link) => {
+  link.addEventListener("click", () => {
+    if (!window.location.hash) return;
+    const destination = new URL(link.href, window.location.href);
+    destination.hash = window.location.hash;
+    link.href = destination.toString();
+  });
+});
+
 const navigation = document.querySelector<HTMLElement>(".site-nav");
 const scrollHeader = document.querySelector<HTMLElement>(
   "[data-scroll-header]",
@@ -112,7 +177,7 @@ const closeMenu = (restoreFocus = false) => {
   mobileMenu.setAttribute("aria-hidden", "true");
   mobileMenu.inert = true;
   menuToggle.setAttribute("aria-expanded", "false");
-  if (menuLabel) menuLabel.textContent = "Menú";
+  if (menuLabel) menuLabel.textContent = ui.menu;
   if (restoreFocus) menuToggle.focus();
 
   const finish = () => {
@@ -136,7 +201,7 @@ menuToggle?.addEventListener("click", () => {
   mobileMenu.inert = false;
   mobileMenu.setAttribute("aria-hidden", "false");
   menuToggle.setAttribute("aria-expanded", "true");
-  if (menuLabel) menuLabel.textContent = "Cerrar";
+  if (menuLabel) menuLabel.textContent = ui.close;
   // Un único layout read garantiza que opacity tenga un frame inicial visible.
   void mobileMenu.offsetWidth;
   mobileMenu.classList.add("is-open");
@@ -286,16 +351,16 @@ if (form) {
   const messageFor = (field: HTMLInputElement) => {
     const value = field.value.trim();
     if (!value) {
-      if (field.name === "nombre") return "Escribe tu nombre.";
-      if (field.name === "email") return "Escribe tu email de trabajo.";
-      return "Resume el contexto en una línea.";
+      if (field.name === "nombre") return ui.requiredName;
+      if (field.name === "email") return ui.requiredEmail;
+      return ui.requiredContext;
     }
     if (field.name === "nombre" && value.length < 2)
-      return "Usa al menos 2 caracteres.";
+      return ui.shortName;
     if (field.name === "email" && field.validity.typeMismatch)
-      return "Usa un email válido, por ejemplo nombre@empresa.com.";
+      return ui.invalidEmail;
     if (field.name === "contexto" && value.length < 12)
-      return "Añade un poco más de contexto (mínimo 12 caracteres).";
+      return ui.shortContext;
     return "";
   };
 
@@ -339,7 +404,7 @@ if (form) {
     const invalid = fields.filter((field) => !validateField(field));
     if (invalid.length > 0) {
       invalid[0].focus();
-      if (formStatus) formStatus.textContent = "Revisa los campos marcados.";
+      if (formStatus) formStatus.textContent = ui.reviewFields;
       return;
     }
 
@@ -347,10 +412,10 @@ if (form) {
     form.setAttribute("aria-busy", "true");
     if (submitButton) {
       submitButton.disabled = true;
-      submitButton.textContent = "Enviando…";
+      submitButton.textContent = ui.sending;
       submitButton.dataset.state = "loading";
     }
-    if (formStatus) formStatus.textContent = "Enviando tu contexto…";
+    if (formStatus) formStatus.textContent = ui.sendingContext;
     track("Form Submit Attempt", { form: "contacto" });
 
     const controller = new AbortController();
@@ -379,10 +444,10 @@ if (form) {
       form.removeAttribute("aria-busy");
       if (submitButton) {
         submitButton.dataset.state = "success";
-        submitButton.textContent = "Contexto enviado";
+        submitButton.textContent = ui.sent;
       }
       if (formStatus)
-        formStatus.textContent = "Contexto recibido. Abriendo la confirmación…";
+        formStatus.textContent = ui.receivedOpening;
       // La pausa permite que el estado y el anuncio live se perciban; no es movimiento.
       await new Promise((resolve) => window.setTimeout(resolve, 650));
       window.location.assign(form.action);
@@ -391,9 +456,7 @@ if (form) {
       const timedOut =
         error instanceof DOMException && error.name === "AbortError";
       if (formStatus) {
-        formStatus.textContent = timedOut
-          ? "El envío tardó demasiado. Revisa tu conexión e inténtalo de nuevo."
-          : "No pudimos enviar el formulario. Revisa tu conexión e inténtalo de nuevo.";
+        formStatus.textContent = timedOut ? ui.timeout : ui.network;
       }
       track("Form Submit Failed", { reason: timedOut ? "timeout" : "network" });
     } finally {
@@ -424,11 +487,9 @@ if (confirmation) {
     const copy = confirmation.querySelector<HTMLElement>(
       "[data-confirmation-copy]",
     );
-    if (status) status.textContent = "mensaje recibido";
-    if (title) title.textContent = "Ya tengo el contexto.";
-    if (copy)
-      copy.textContent =
-        "Lo revisaré personalmente. Recibirás una respuesta clara sobre encaje y siguiente paso.";
+    if (status) status.textContent = ui.confirmationStatus;
+    if (title) title.textContent = ui.confirmationTitle;
+    if (copy) copy.textContent = ui.confirmationCopy;
   }
 }
 
@@ -455,12 +516,15 @@ bookingButton?.addEventListener("click", () => {
       bookingUrl.hostname === "calendly.com" ||
       bookingUrl.hostname.endsWith(".calendly.com");
     if (bookingUrl.protocol !== "https:" || (!isCal && !isCalendly))
-      throw new Error("Proveedor inválido");
-    if (isCal) bookingUrl.searchParams.set("embed", "true");
+      throw new Error(ui.invalidProvider);
+    if (isCal) {
+      bookingUrl.searchParams.set("embed", "true");
+      bookingUrl.searchParams.set("locale", isEnglish ? "en" : "es");
+    }
 
     const iframe = document.createElement("iframe");
     iframe.src = bookingUrl.toString();
-    iframe.title = "Agenda para reservar una llamada de encaje de 30 minutos";
+    iframe.title = ui.calendarTitle;
     iframe.loading = "lazy";
     iframe.tabIndex = 0;
     iframe.referrerPolicy = "strict-origin-when-cross-origin";
@@ -476,8 +540,7 @@ bookingButton?.addEventListener("click", () => {
       bookingButton.removeAttribute("aria-busy");
       delete bookingButton.dataset.loading;
       if (status)
-        status.textContent =
-          "La agenda no respondió. Usa el enlace directo o inténtalo de nuevo.";
+        status.textContent = ui.calendarFailure;
       track("Booking Load Failed", { provider: bookingUrl.hostname });
     };
 
@@ -491,7 +554,7 @@ bookingButton?.addEventListener("click", () => {
         bookingButton.hidden = true;
         bookingButton.removeAttribute("aria-busy");
         delete bookingButton.dataset.loading;
-        if (status) status.textContent = "Agenda lista.";
+        if (status) status.textContent = ui.calendarReady;
         track("Booking Loaded", { provider: bookingUrl.hostname });
         if (hadButtonFocus) iframe.focus({ preventScroll: true });
       },
@@ -503,7 +566,7 @@ bookingButton?.addEventListener("click", () => {
     frame.hidden = false;
     bookingButton.dataset.loading = "true";
     bookingButton.setAttribute("aria-busy", "true");
-    if (status) status.textContent = "Cargando agenda…";
+    if (status) status.textContent = ui.calendarLoading;
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -513,8 +576,7 @@ bookingButton?.addEventListener("click", () => {
     });
   } catch {
     if (status)
-      status.textContent =
-        "La URL de agenda no es válida. Usa el formulario alternativo.";
+      status.textContent = ui.invalidCalendar;
     track("Booking Load Failed", { provider: "invalid" });
   }
 });

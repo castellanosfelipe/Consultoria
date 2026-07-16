@@ -76,6 +76,14 @@ function stripMarkup(value) {
   return decodeHtml(value.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 }
 
+function visibleText(html) {
+  return stripMarkup(
+    html
+      .replace(/<!--([\s\S]*?)-->/g, " ")
+      .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, " "),
+  );
+}
+
 function h1Count(html) {
   return [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].filter((match) => stripMarkup(match[1])).length;
 }
@@ -207,20 +215,36 @@ const env = await publicEnvironment();
 publicBasePath = normalizeBasePath(env.PUBLIC_BASE_PATH);
 const publicBasePrefix = publicBasePath === "/" ? "" : publicBasePath.slice(0, -1);
 const homePath = resolve(distDirectory, "index.html");
+const englishHomePath = resolve(distDirectory, "en", "index.html");
 const thanksPath = resolve(distDirectory, "gracias", "index.html");
+const englishThanksPath = resolve(distDirectory, "en", "thanks", "index.html");
 const notFoundPath = resolve(distDirectory, "404.html");
 const robotsPath = resolve(distDirectory, "robots.txt");
 const deployHeadersPath = resolve(distDirectory, "_headers");
 
-const [home, thanks, notFound, robots, deployHeaders] = await Promise.all([
+const [home, englishHome, thanks, englishThanks, notFound, robots, deployHeaders] = await Promise.all([
   readRequired(homePath, "la página principal"),
+  readRequired(englishHomePath, "la página principal en inglés"),
   readRequired(thanksPath, "la página de gracias"),
+  readRequired(englishThanksPath, "la página de confirmación en inglés"),
   readRequired(notFoundPath, "la página 404"),
   readRequired(robotsPath, "robots.txt"),
   readRequired(deployHeadersPath, "dist/_headers"),
 ]);
 
+const proseDashPattern = /[-\u2013\u2014\u2212]/;
+for (const [label, html] of [
+  ["la home en español", home],
+  ["la home en inglés", englishHome],
+  ["la confirmación en español", thanks],
+  ["la confirmación en inglés", englishThanks],
+  ["la página 404", notFound],
+]) {
+  check(!proseDashPattern.test(visibleText(html)), `La redacción visible de ${label} no debe contener guiones.`);
+}
+
 check(h1Count(home) === 1, "La home debe contener exactamente un h1 no vacío.");
+check(tags(home, "html")[0]?.attrs.lang === "es", "La home en español debe declarar lang=es.");
 check(metaContent(home, "name", "description")?.trim(), "La home debe tener meta description no vacía.");
 const homeRobots = (metaContent(home, "name", "robots") ?? "").toLowerCase();
 check(homeRobots.includes("index") && !homeRobots.includes("noindex"), "La home debe ser indexable.");
@@ -230,6 +254,39 @@ check(homeCanonicalTags.length === 1, "La home debe contener exactamente un cano
 const homeCanonical = absoluteHttpUrl(homeCanonicalTags[0]?.attrs.href, "El canonical de la home");
 const origin = homeCanonical?.origin ?? null;
 check(homeCanonical?.pathname === publicBasePath, `El canonical de la home debe apuntar a ${publicBasePath}.`);
+
+check(h1Count(englishHome) === 1, "La home en inglés debe contener exactamente un h1 no vacío.");
+check(tags(englishHome, "html")[0]?.attrs.lang === "en", "La home en inglés debe declarar lang=en.");
+check(metaContent(englishHome, "name", "description")?.trim(), "La home en inglés debe tener meta description no vacía.");
+const englishRobots = (metaContent(englishHome, "name", "robots") ?? "").toLowerCase();
+check(englishRobots.includes("index") && !englishRobots.includes("noindex"), "La home en inglés debe ser indexable.");
+const englishCanonicalTags = tags(englishHome, "link").filter(({ attrs }) => relIncludes(attrs, "canonical"));
+check(englishCanonicalTags.length === 1, "La home en inglés debe contener exactamente un canonical.");
+const englishCanonical = absoluteHttpUrl(englishCanonicalTags[0]?.attrs.href, "El canonical de la home en inglés");
+check(englishCanonical?.pathname === withPublicBasePath("/en/"), `El canonical inglés debe apuntar a ${withPublicBasePath("/en/")}.`);
+if (origin) sameOrigin(englishCanonical, origin, "Canonical de la home en inglés");
+
+for (const [label, html] of [["español", home], ["inglés", englishHome]]) {
+  const alternates = tags(html, "link").filter(({ attrs }) => relIncludes(attrs, "alternate"));
+  const byLanguage = (language) => alternates.find(({ attrs }) => attrs.hreflang?.toLowerCase() === language.toLowerCase());
+  check(byLanguage("es-CO")?.attrs.href === homeCanonical?.href, `El hreflang es-CO de ${label} debe apuntar a la home española.`);
+  check(byLanguage("en")?.attrs.href === englishCanonical?.href, `El hreflang en de ${label} debe apuntar a la home inglesa.`);
+  check(byLanguage("x-default")?.attrs.href === homeCanonical?.href, `El hreflang x-default de ${label} debe apuntar a la home española.`);
+}
+
+for (const [label, html, expectedCurrent] of [
+  ["español", home, publicBasePath],
+  ["inglés", englishHome, withPublicBasePath("/en/")],
+]) {
+  const languageLinks = tags(html, "a").filter(({ attrs }) => hasAttribute(attrs, "data-language-link"));
+  check(languageLinks.length === 4, `La home en ${label} debe incluir el selector ES/EN en escritorio y móvil.`);
+  check(languageLinks.filter(({ attrs }) => attrs.href === publicBasePath).length === 2, `El selector en ${label} debe enlazar dos veces a español.`);
+  check(languageLinks.filter(({ attrs }) => attrs.href === withPublicBasePath("/en/")).length === 2, `El selector en ${label} debe enlazar dos veces a inglés.`);
+  check(
+    languageLinks.filter(({ attrs }) => attrs["aria-current"] === "page" && attrs.href === expectedCurrent).length === 2,
+    `El selector en ${label} debe marcar el idioma actual en ambas variantes.`,
+  );
+}
 
 const stylesheets = tags(home, "link").filter(({ attrs }) => relIncludes(attrs, "stylesheet"));
 check(stylesheets.length === 1, "La home debe cargar exactamente una hoja CSS versionada.");
@@ -292,6 +349,7 @@ check(service?.founder?.["@id"] === person?.["@id"], "ProfessionalService.founde
 
 for (const [label, html, expectedPath] of [
   ["/gracias/", thanks, withPublicBasePath("/gracias/")],
+  ["/en/thanks/", englishThanks, withPublicBasePath("/en/thanks/")],
   ["/404/", notFound, withPublicBasePath("/404/")],
 ]) {
   check(h1Count(html) === 1, `${label} debe contener exactamente un h1 no vacío.`);
@@ -341,7 +399,8 @@ async function inspectSitemap(url, depth = 0) {
 }
 await inspectSitemap(sitemapUrl);
 check(indexedUrls.includes(homeCanonical?.href), "El sitemap debe incluir el canonical de la home.");
-check(!indexedUrls.some((url) => /\/(?:404|gracias)\/?$/.test(new URL(url).pathname)), "El sitemap no debe incluir páginas noindex.");
+check(indexedUrls.includes(englishCanonical?.href), "El sitemap debe incluir el canonical de la home en inglés.");
+check(!indexedUrls.some((url) => /\/(?:404|gracias|thanks)\/?$/.test(new URL(url).pathname)), "El sitemap no debe incluir páginas noindex.");
 
 const formMatches = [...home.matchAll(/<form\b([^>]*)>([\s\S]*?)<\/form>/gi)].map((match) => ({ attrs: attributes(match[1]), body: match[2] }));
 const contactForms = formMatches.filter(({ attrs }) => hasAttribute(attrs, "data-contact-form") || attrs.name === "contacto");
@@ -375,6 +434,17 @@ if (contactForm) {
     );
     check(hasLabel, `${name} debe tener un label asociado.`);
   }
+}
+
+const englishFormMatches = [...englishHome.matchAll(/<form\b([^>]*)>([\s\S]*?)<\/form>/gi)].map((match) => ({ attrs: attributes(match[1]), body: match[2] }));
+const englishContactForms = englishFormMatches.filter(({ attrs }) => hasAttribute(attrs, "data-contact-form") || attrs.name === "contacto");
+check(englishContactForms.length === 1, "Debe existir exactamente un formulario de contacto en inglés.");
+const englishContactForm = englishContactForms[0];
+if (englishContactForm) {
+  const action = resolvedHttpUrl(englishContactForm.attrs.action, englishCanonical ?? "http://local.invalid/", "Action del formulario inglés");
+  if (origin) sameOrigin(action, origin, "Action del formulario inglés");
+  check(action?.pathname === withPublicBasePath("/en/thanks/"), `El formulario inglés debe terminar en ${withPublicBasePath("/en/thanks/")}.`);
+  check(englishContactForm.attrs["data-submit-url"] === withPublicBasePath("/en/"), "El formulario inglés debe enviar a la ruta inglesa.");
 }
 
 const scriptTags = tags(home, "script");

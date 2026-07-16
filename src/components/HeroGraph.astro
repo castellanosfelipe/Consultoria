@@ -1,9 +1,20 @@
+---
+import { getCopy, type Language } from "../i18n/copy";
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = "es" } = Astro.props;
+const t = getCopy(lang).graph;
+---
+
 <figure class="hero-graph" data-animate="system-graph" data-delay="260">
   <svg class="hero-graph__desktop" viewBox="0 0 600 440" aria-hidden="true">
     <rect class="frame" x="1" y="1" width="598" height="438" rx="4" />
-    <text class="meta meta--before" x="28" y="38">HOY · DATOS DISPERSOS</text>
-    <text class="meta meta--after" x="28" y="38">RESULTADO · OPERACIÓN CONECTADA</text>
-    <text class="meta meta--right" x="572" y="38">8–16 SEMANAS</text>
+    <text class="meta meta--before" x="28" y="38">{t.before}</text>
+    <text class="meta meta--after" x="28" y="38">{t.after}</text>
+    <text class="meta meta--right" x="572" y="38">{t.weeks}</text>
 
     <g class="source-network">
       <g class="source-routes edges">
@@ -18,17 +29,17 @@
       <g class="source-node source-node--left" style="--source-delay: 0ms; --retire-x: 18px">
         <rect x="20" y="70" width="170" height="36" rx="4" />
         <circle cx="38" cy="88" r="4" />
-        <text x="52" y="93">cierre mensual</text>
+        <text x="52" y="93">{t.monthlyClose}</text>
       </g>
       <g class="source-node source-node--left" style="--source-delay: 70ms; --retire-x: 18px">
         <rect x="20" y="132" width="170" height="36" rx="4" />
         <circle cx="38" cy="150" r="4" />
-        <text x="52" y="155">pedidos por email</text>
+        <text x="52" y="155">{t.orders}</text>
       </g>
       <g class="source-node source-node--left" style="--source-delay: 140ms; --retire-x: 18px">
         <rect x="20" y="194" width="170" height="36" rx="4" />
         <circle cx="38" cy="212" r="4" />
-        <text x="52" y="217">reporte de ventas</text>
+        <text x="52" y="217">{t.salesReport}</text>
       </g>
       <g class="source-node source-node--right" style="--source-delay: 210ms; --retire-x: -18px">
         <rect x="410" y="70" width="170" height="36" rx="4" />
@@ -43,31 +54,31 @@
       <g class="source-node source-node--right" style="--source-delay: 350ms; --retire-x: -18px">
         <rect x="410" y="194" width="170" height="36" rx="4" />
         <circle cx="428" cy="212" r="4" />
-        <text x="442" y="217">facturación</text>
+        <text x="442" y="217">{t.billing}</text>
       </g>
 
       <g class="manual-core">
         <rect class="manual-core__shell" x="222" y="112" width="156" height="132" rx="4" />
-        <text class="manual-core__label" x="300" y="137">TRABAJO REPETITIVO</text>
+        <text class="manual-core__label" x="300" y="137">{t.repetitive}</text>
         <circle class="manual-core__fault" cx="300" cy="176" r="18" />
         <path class="manual-core__cross" d="M293 169 L307 183 M307 169 L293 183" />
-        <text class="manual-core__copy" x="300" y="215">COPIAR · REVISAR</text>
-        <text class="manual-core__copy" x="300" y="231">CORREGIR · REPETIR</text>
+        <text class="manual-core__copy" x="300" y="215">{t.copyReview}</text>
+        <text class="manual-core__copy" x="300" y="231">{t.fixRepeat}</text>
       </g>
 
       <g class="manual-chip">
         <rect x="150" y="270" width="300" height="60" rx="4" />
         <circle cx="174" cy="291" r="5" />
-        <text x="190" y="296">CIERRE DEL MES</text>
-        <text x="174" y="317">VARIAS FUENTES · UNA PERSONA</text>
+        <text x="190" y="296">{t.monthEnd}</text>
+        <text x="174" y="317">{t.sources}</text>
       </g>
     </g>
 
     <g class="compile-stage">
       <rect class="compile-stage__shell" x="170" y="112" width="260" height="132" rx="4" />
       <circle class="compile-stage__status" cx="194" cy="136" r="5" />
-      <text class="compile-stage__command" x="210" y="141">CONECTANDO TU OPERACIÓN</text>
-      <text class="compile-stage__copy" x="194" y="166">UNIFICANDO DATOS Y REGLAS</text>
+      <text class="compile-stage__command" x="210" y="141">{t.connecting}</text>
+      <text class="compile-stage__copy" x="194" y="166">{t.unifying}</text>
       <g class="build-bars">
         <rect class="build-track" x="194" y="182" width="212" height="5" rx="2.5" />
         <rect class="build-fill build-fill--one" x="194" y="182" width="212" height="5" rx="2.5" />
@@ -76,16 +87,16 @@
         <rect class="build-track" x="194" y="216" width="212" height="5" rx="2.5" />
         <rect class="build-fill build-fill--three" x="194" y="216" width="212" height="5" rx="2.5" />
       </g>
-      <text class="compile-stage__meta" x="300" y="237">DATOS · FLUJOS · RESPONSABLES</text>
+      <text class="compile-stage__meta" x="300" y="237">{t.buildMeta}</text>
     </g>
 
     <g class="production-network">
       <g class="production-labels">
-        <text style="--delay: 0ms" x="84" y="288">ENTRADAS</text>
-        <text style="--delay: 60ms" x="188" y="288">VALIDACIÓN</text>
-        <text style="--delay: 120ms" x="292" y="288">FLUJO</text>
-        <text style="--delay: 180ms" x="396" y="288">ALERTAS</text>
-        <text style="--delay: 240ms" x="500" y="288">CONTROL</text>
+        <text style="--delay: 0ms" x="84" y="288">{t.inputs}</text>
+        <text style="--delay: 60ms" x="188" y="288">{t.validation}</text>
+        <text style="--delay: 120ms" x="292" y="288">{t.flow}</text>
+        <text style="--delay: 180ms" x="396" y="288">{t.alerts}</text>
+        <text style="--delay: 240ms" x="500" y="288">{t.control}</text>
       </g>
       <path class="deploy-link" d="M300 218 V270" />
       <path class="pipeline" d="M70 310 H516" />
@@ -103,18 +114,18 @@
       <g class="production-chip">
         <rect x="150" y="158" width="300" height="60" rx="4" />
         <circle cx="174" cy="179" r="5" />
-        <text class="terminal-line terminal-line--command" x="190" y="184">OPERACIÓN CONECTADA</text>
-        <text class="terminal-line terminal-line--status" x="174" y="205">MENOS TRABAJO MANUAL · MÁS CONTROL</text>
+        <text class="terminal-line terminal-line--command" x="190" y="184">{t.connected}</text>
+        <text class="terminal-line terminal-line--status" x="174" y="205">{t.status}</text>
       </g>
     </g>
   </svg>
 
   <svg class="hero-graph__mobile" viewBox="0 0 360 248" aria-hidden="true">
     <rect class="frame" x="1" y="1" width="358" height="246" rx="4" />
-    <text class="meta mobile-before" x="18" y="28">HOY · DATOS DISPERSOS</text>
+    <text class="meta mobile-before" x="18" y="28">{t.before}</text>
 
     <g class="mobile-manual mobile-before">
-      <text class="node-label" x="18" y="62">Excel + correos</text>
+      <text class="node-label" x="18" y="62">{t.mobileSources}</text>
       <text class="node-label" x="18" y="92">ERP + CRM</text>
       <g class="edges">
         <path d="M122 57 C145 57 151 72 166 77" />
@@ -130,11 +141,11 @@
         <circle cx="180" cy="79" r="14" />
         <path d="M174 73 L186 85 M186 73 L174 85" />
       </g>
-      <text class="mobile-manual-status" x="338" y="83">TRABAJO MANUAL</text>
+      <text class="mobile-manual-status" x="338" y="83">{t.manual}</text>
     </g>
 
     <path class="mobile-transition mobile-before" d="M180 112 V137 M173 130 L180 137 L187 130" />
-    <text class="meta mobile-after" x="18" y="157">RESULTADO · OPERACIÓN CONECTADA</text>
+    <text class="meta mobile-after" x="18" y="157">{t.after}</text>
     <path class="pipeline pipeline--static mobile-after" d="M30 190 H312" />
     <path class="arrow arrow--static mobile-after" d="M312 183 L328 190 L312 197 Z" />
     <g class="production-nodes production-nodes--static mobile-after">
@@ -144,12 +155,10 @@
       <circle cx="238" cy="190" r="8" />
       <circle cx="302" cy="190" r="8" />
     </g>
-    <text class="mobile-status mobile-after" x="180" y="228">MENOS TRABAJO MANUAL · MÁS CONTROL</text>
+    <text class="mobile-status mobile-after" x="180" y="228">{t.status}</text>
   </svg>
 
-  <figcaption class="sr-only" id="graph-caption">
-    Excel, correos, ERP, CRM y facturación se integran en una operación conectada para reducir trabajo manual y dar más control.
-  </figcaption>
+  <figcaption class="sr-only" id="graph-caption">{t.caption}</figcaption>
 </figure>
 
 <style>

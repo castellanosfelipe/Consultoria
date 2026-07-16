@@ -1,7 +1,16 @@
 ---
 import { siteConfig, withBasePath } from "../config";
+import { getCopy, type Language } from "../i18n/copy";
 
-const homeHref = withBasePath("/");
+interface Props {
+  lang?: Language;
+}
+
+const { lang = "es" } = Astro.props;
+const t = getCopy(lang);
+const homeHref = withBasePath(lang === "en" ? "/en/" : "/");
+const spanishHref = withBasePath("/");
+const englishHref = withBasePath("/en/");
 const sectionHref = (id: string) => `${homeHref}#${id}`;
 ---
 
@@ -11,17 +20,22 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
       <span class="brand-mark">FP<span class="brand-status" aria-hidden="true"></span></span>
       <span class="brand-copy">
         <strong>{siteConfig.name}</strong>
-        <span>software de operaciones</span>
+        <span>{t.header.product}</span>
       </span>
-      <span class="sr-only">— inicio</span>
+      <span class="sr-only">{t.header.home}</span>
     </a>
 
-    <nav class="site-nav" aria-label="Navegación principal">
+    <nav class="site-nav" aria-label={t.header.navigation}>
       <div class="site-nav__desktop" data-nav-links>
-        <a href={sectionHref("servicios")}>Servicios</a>
-        <a href={sectionHref("prueba")}>Compromisos</a>
-        <a href={sectionHref("proceso")}>Proceso</a>
-        <a href={sectionHref("contacto")} class="nav-cta" data-track="cta" data-location="header">Hablemos <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span></a>
+        <a href={sectionHref("servicios")}>{t.header.services}</a>
+        <a href={sectionHref("prueba")}>{t.header.commitments}</a>
+        <a href={sectionHref("proceso")}>{t.header.process}</a>
+        <a href={sectionHref("contacto")} class="nav-cta" data-track="cta" data-location="header">{t.header.talk} <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span></a>
+        <div class="language-switch" role="group" aria-label={t.header.language}>
+          <a href={spanishHref} lang="es" hreflang="es-CO" aria-label={t.header.switchToSpanish} aria-current={lang === "es" ? "page" : undefined} data-language-link>ES</a>
+          <span aria-hidden="true">/</span>
+          <a href={englishHref} lang="en" hreflang="en" aria-label={t.header.switchToEnglish} aria-current={lang === "en" ? "page" : undefined} data-language-link>EN</a>
+        </div>
       </div>
 
       <div class="site-nav__mobile-controls">
@@ -32,23 +46,29 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
           aria-controls="navegacion-movil"
           data-menu-toggle
         >
-          <span data-menu-label>Menú</span>
+          <span data-menu-label>{t.header.menu}</span>
           <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
         </button>
-        <a href={sectionHref("contacto")} class="nav-cta" data-track="cta" data-location="header-mobile">Hablemos</a>
+        <div class="language-switch" role="group" aria-label={t.header.language}>
+          <a href={spanishHref} lang="es" hreflang="es-CO" aria-label={t.header.switchToSpanish} aria-current={lang === "es" ? "page" : undefined} data-language-link>ES</a>
+          <span aria-hidden="true">/</span>
+          <a href={englishHref} lang="en" hreflang="en" aria-label={t.header.switchToEnglish} aria-current={lang === "en" ? "page" : undefined} data-language-link>EN</a>
+        </div>
       </div>
 
       <div class="site-nav__mobile" id="navegacion-movil" data-mobile-menu data-nav-links hidden inert aria-hidden="true">
-        <a href={sectionHref("servicios")}>Servicios</a>
-        <a href={sectionHref("prueba")}>Compromisos</a>
-        <a href={sectionHref("proceso")}>Proceso</a>
+        <a href={sectionHref("servicios")}>{t.header.services}</a>
+        <a href={sectionHref("prueba")}>{t.header.commitments}</a>
+        <a href={sectionHref("proceso")}>{t.header.process}</a>
+        <a href={sectionHref("contacto")} class="nav-cta" data-track="cta" data-location="header-mobile">{t.header.talk}</a>
       </div>
 
       <noscript>
         <div class="site-nav__noscript">
-          <a href={sectionHref("servicios")}>Servicios</a>
-          <a href={sectionHref("prueba")}>Compromisos</a>
-          <a href={sectionHref("proceso")}>Proceso</a>
+          <a href={sectionHref("servicios")}>{t.header.services}</a>
+          <a href={sectionHref("prueba")}>{t.header.commitments}</a>
+          <a href={sectionHref("proceso")}>{t.header.process}</a>
+          <a href={sectionHref("contacto")}>{t.header.talk}</a>
         </div>
       </noscript>
     </nav>
@@ -188,6 +208,34 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     gap: clamp(var(--space-3), 2.4vw, var(--space-6));
   }
 
+  .language-switch {
+    min-height: var(--target);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding-left: var(--space-2);
+    border-left: var(--border) solid var(--line);
+    color: var(--ink-muted);
+    font-family: var(--font-data);
+    font-size: var(--text-nano);
+    letter-spacing: 0.08em;
+  }
+
+  .language-switch a {
+    min-width: 1.85rem;
+    justify-content: center;
+    padding-inline: 0.2rem;
+  }
+
+  .language-switch a::after {
+    display: none;
+  }
+
+  .site-nav .language-switch a[aria-current="page"] {
+    color: var(--production);
+    font-weight: 600;
+  }
+
   .site-nav {
     font-size: var(--text-micro);
   }
@@ -279,7 +327,8 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
   @media (prefers-reduced-motion: no-preference) {
     .brand-mark,
     .brand-copy,
-    .site-nav__desktop > a {
+    .site-nav__desktop > a,
+    .site-nav__desktop > .language-switch {
       animation: nav-boot 420ms var(--motion-ease) both;
     }
 
@@ -301,6 +350,10 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
 
     .site-nav__desktop > a:nth-child(4) {
       animation-delay: 260ms;
+    }
+
+    .site-nav__desktop > .language-switch {
+      animation-delay: 310ms;
     }
 
     .brand-status {
@@ -347,7 +400,11 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
 
     .site-nav__mobile-controls {
       display: flex;
-      gap: var(--space-3);
+      gap: var(--space-2);
+    }
+
+    .site-nav__mobile-controls .language-switch {
+      padding-left: var(--space-2);
     }
 
     .site-nav__mobile,
@@ -437,6 +494,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     .brand-copy,
     .brand-status,
     .site-nav__desktop > a,
+    .site-nav__desktop > .language-switch,
     .site-nav__mobile-controls {
       opacity: 1;
       transform: none;

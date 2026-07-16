@@ -17,7 +17,7 @@ export const siteConfig = {
   shortName: "FP",
   title: "Software interno y automatización de datos | Felipe Peña",
   description:
-    "Diseño y construyo software interno y automatizaciones de datos para poner al día operaciones B2B en 8–16 semanas.",
+    "Diseño y construyo software interno y automatizaciones de datos para poner al día operaciones B2B entre 8 y 16 semanas.",
   siteUrl,
   locale: "es_CO",
   language: "es",

@@ -1,34 +1,43 @@
 ---
+import { getCopy, type Language } from "../i18n/copy";
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = "es" } = Astro.props;
+const t = getCopy(lang).processArtifact;
 const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
+const weekPrefix = lang === "en" ? "W" : "S";
 ---
 
 <div class="process-artifact" data-animate="capacity">
   <div class="process-artifact__meta">
-    <span class="label">Capacidad por semana</span>
-    <span class="status-chip capacity-status"><span class="status-dot"></span> estado: demo cada viernes</span>
+    <span class="label">{t.capacity}</span>
+    <span class="status-chip capacity-status"><span class="status-dot"></span> {t.status}</span>
   </div>
 
   <div class="timeline" aria-hidden="true">
     <span class="timeline__corner"></span>
-    {weeks.map((week, index) => <span class="timeline__week" style={`--week-delay: ${120 + index * 24}ms`}>S{week}</span>)}
+    {weeks.map((week, index) => <span class="timeline__week" style={`--week-delay: ${120 + index * 24}ms`}>{weekPrefix}{week}</span>)}
 
-    <span class="timeline__label">TRABAJO</span>
-    <span class="timeline__phase timeline__phase--diagnosis"><span>DIAGNÓSTICO</span></span>
-    <span class="timeline__phase timeline__phase--build"><span>CONSTRUCCIÓN — ENTREGA</span></span>
+    <span class="timeline__label">{t.work}</span>
+    <span class="timeline__phase timeline__phase--diagnosis"><span>{t.diagnosis}</span></span>
+    <span class="timeline__phase timeline__phase--build"><span>{t.build}</span></span>
 
     <span class="timeline__label timeline__label--owner">FELIPE</span>
     <span class="timeline__bar timeline__bar--owner"><i class="timeline__bar-fill"></i></span>
 
-    <span class="timeline__label timeline__label--core">NÚCLEO</span>
+    <span class="timeline__label timeline__label--core">{t.core}</span>
     <span class="timeline__bar timeline__bar--core"><i class="timeline__bar-fill"></i></span>
 
-    <span class="timeline__label timeline__label--flex">RED FLEX.</span>
+    <span class="timeline__label timeline__label--flex">{t.network}</span>
     <span class="timeline__bar timeline__bar--flex">
       <i class="timeline__bar-fill"></i>
-      <span class="timeline__bar-copy">SOLO SI SE EXIGE</span>
+      <span class="timeline__bar-copy">{t.onlyIfNeeded}</span>
     </span>
 
-    <span class="timeline__label timeline__label--production">DEMO</span>
+    <span class="timeline__label timeline__label--production">{t.demo}</span>
     <span class="timeline__demo timeline__demo--1"></span>
     <span class="timeline__demo timeline__demo--2"></span>
     <span class="timeline__demo timeline__demo--3"></span>
@@ -42,31 +51,29 @@ const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
   </div>
 
   <div class="mobile-lanes" aria-hidden="true">
-    <span class="mobile-lanes__corner">ROL / RITMO</span><span>SEM. 1–2</span><span class="mobile-lanes__last">SEM. 3–12+</span>
+    <span class="mobile-lanes__corner">{t.roleCadence}</span><span>{t.firstPeriod}</span><span class="mobile-lanes__last">{t.secondPeriod}</span>
     <span class="mobile-lanes__label">FELIPE</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"><span class="mobile-lanes__fill"></span></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
-    <span class="mobile-lanes__label">NÚCLEO</span><i class="mobile-lanes__empty">—</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
-    <span class="mobile-lanes__label">RED FLEX.</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last"><span class="mobile-lanes__fill"></span><span class="mobile-lanes__bar-copy">SEGÚN ALCANCE</span></i>
-    <span class="mobile-lanes__label mobile-lanes__label--demo">DEMO</span><i class="mobile-lanes__demo">PRIMERO</i><i class="mobile-lanes__demo mobile-lanes__last">VIERNES</i>
+    <span class="mobile-lanes__label">{t.core}</span><i class="mobile-lanes__empty">{t.notActive}</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
+    <span class="mobile-lanes__label">{t.network}</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last"><span class="mobile-lanes__fill"></span><span class="mobile-lanes__bar-copy">{t.accordingToScope}</span></i>
+    <span class="mobile-lanes__label mobile-lanes__label--demo">{t.demo}</span><i class="mobile-lanes__demo">{t.first}</i><i class="mobile-lanes__demo mobile-lanes__last">{t.friday}</i>
   </div>
 
   <dl class="mobile-timeline">
     <div style="--mobile-delay: 260ms">
-      <dt>Semanas 1–2</dt>
-      <dd><strong>Diagnóstico.</strong> Felipe participa; el primer demo aparece entre la semana 1 y 2.</dd>
+      <dt>{t.firstWeeks}</dt>
+      <dd><strong>{t.diagnosisLead}</strong> {t.diagnosisCopy}</dd>
     </div>
     <div style="--mobile-delay: 330ms">
-      <dt>Semanas 3–12+</dt>
-      <dd><strong>Construcción y entrega.</strong> Felipe sigue; entra el núcleo de ingeniería y se demuestra software cada viernes.</dd>
+      <dt>{t.laterWeeks}</dt>
+      <dd><strong>{t.buildLead}</strong> {t.buildCopy}</dd>
     </div>
     <div style="--mobile-delay: 400ms">
-      <dt>Cuando se exige</dt>
-      <dd><strong>Especialistas.</strong> La red flexible entra solo para una capacidad concreta.</dd>
+      <dt>{t.whenNeeded}</dt>
+      <dd><strong>{t.specialists}</strong> {t.specialistsCopy}</dd>
     </div>
   </dl>
 
-  <p class="process-artifact__summary sr-only">
-    Felipe permanece durante todo el proyecto. El núcleo de ingeniería entra al construir; especialistas adicionales participan solo cuando son necesarios. Desde el primer demo, se muestra software cada viernes.
-  </p>
+  <p class="process-artifact__summary sr-only">{t.summary}</p>
 </div>
 
 <style>
