@@ -49,7 +49,7 @@ Cada `data-animate-item` pertenece a su contenedor `data-animate` más cercano. 
 ## Verbos visuales por sección
 
 - **Hero — declarar:** el H1 entra por dos máscaras verticales sin animar su opacidad; el párrafo LCP nunca espera al JavaScript.
-- **Diagrama — ordenar y desplegar:** cuatro actos one-shot — fuentes, operación manual, build/normalización y deploy — en unos 5 segundos. Ningún fragmento sale del marco y el estado final queda centrado y sostenido, sin loop.
+- **Diagrama — ordenar y desplegar:** cuatro actos one-shot — fuentes, operación manual, build/normalización y deploy — en unos 9,8 segundos. El estado manual conserva cerca de 2 segundos de lectura completa y el build permanece visible antes del deploy. Ningún fragmento sale del marco y el estado final queda centrado y sostenido, sin loop.
 - **Dolores — registrar:** señales laterales, puntos de estado y separadores que completan cada fila.
 - **Comparativa — converger:** extremos laterales y columna central que se confirma con borde y lift.
 - **Oferta — encadenar:** card, conector, core, conector y salida se revelan como un pipeline.

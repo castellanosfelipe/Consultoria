@@ -425,9 +425,38 @@
 
   /*
    * Cuatro actos, sin GSAP: fuentes, operación manual, build y producción.
-   * El arco completo dura 4.8 s, pero el contenido crítico ya está pintado.
+   * El arco completo dura ~9.8 s: cada estado conserva una pausa de lectura
+   * antes del siguiente cambio. El easing sigue siendo preciso, sin rebote.
   */
   @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    .hero-graph.graph-motion-ready {
+      --graph-source-in: 220ms;
+      --graph-route-in: 650ms;
+      --graph-manual-in: 1.1s;
+      --graph-manual-terminal-in: 1.65s;
+      --graph-source-out: 4.6s;
+      --graph-route-out: 4.55s;
+      --graph-manual-out: 4.6s;
+      --graph-manual-terminal-out: 4.7s;
+      --graph-build-in: 4.55s;
+      --graph-build-bar-one: 5.15s;
+      --graph-build-bar-two: 5.55s;
+      --graph-build-bar-three: 5.95s;
+      --graph-build-out: 7.75s;
+      --graph-meta-out: 7.5s;
+      --graph-meta-in: 7.85s;
+      --graph-pipeline-in: 7.6s;
+      --graph-deploy-link-in: 7.8s;
+      --graph-packet-one-in: 7.85s;
+      --graph-packet-two-in: 8.25s;
+      --graph-production-chip-in: 7.8s;
+      --graph-production-nodes-in: 8.15s;
+      --graph-production-command-in: 8.2s;
+      --graph-production-status-in: 8.6s;
+      --graph-production-arrow-in: 8.5s;
+      --graph-production-pulse-in: 8.75s;
+    }
+
     .hero-graph.graph-motion-ready .hero-graph__desktop {
       opacity: 0;
       transform: scale(0.985);
@@ -471,118 +500,118 @@
 
     .hero-graph.graph-motion-ready.is-visible .source-node {
       animation:
-        source-arrive 620ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 180ms + var(--source-delay)) both,
-        source-retire 560ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 2.05s + var(--source-delay)) forwards;
+        source-arrive 750ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-source-in) + var(--source-delay)) both,
+        source-retire 650ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-source-out) + var(--source-delay)) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .source-routes {
       animation:
-        route-arrive 700ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 480ms) both,
-        route-retire 520ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 1.98s) forwards;
+        route-arrive 900ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-route-in)) both,
+        route-retire 650ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-route-out)) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .manual-core {
       animation:
-        core-arrive 650ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 700ms) both,
-        core-retire 520ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 2.05s) forwards;
+        core-arrive 800ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-manual-in)) both,
+        core-retire 650ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-manual-out)) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .manual-chip {
       animation:
-        terminal-in 600ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 950ms) both,
-        terminal-out 500ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 2.1s) forwards;
+        terminal-in 750ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-manual-terminal-in)) both,
+        terminal-out 600ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-manual-terminal-out)) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .compile-stage {
       animation:
-        compile-arrive 650ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 2.2s) both,
-        compile-retire 500ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 3.55s) forwards;
+        compile-arrive 800ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-build-in)) both,
+        compile-retire 650ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--graph-build-out)) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .build-fill--one {
-      animation: build-progress 560ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 2.52s) both;
+      animation: build-progress 700ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-build-bar-one)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .build-fill--two {
-      animation: build-progress 560ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 2.72s) both;
+      animation: build-progress 700ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-build-bar-two)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .build-fill--three {
-      animation: build-progress 560ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 2.92s) both;
+      animation: build-progress 700ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-build-bar-three)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .pipeline {
-      animation: pipeline-online 800ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.42s) both;
+      animation: pipeline-online 1.1s var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-pipeline-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .deploy-link {
-      animation: deploy-link-in 560ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.58s) both;
+      animation: deploy-link-in 750ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-deploy-link-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .deploy-packet--one {
-      animation: packet-travel 950ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.58s) both;
+      animation: packet-travel 1.35s var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-packet-one-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .deploy-packet--two {
-      animation: packet-travel 950ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.82s) both;
+      animation: packet-travel 1.35s var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-packet-two-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .arrow {
-      animation: graph-fade-in 360ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 4.02s) both;
+      animation: graph-fade-in 450ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-production-arrow-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .production-labels text,
     .hero-graph.graph-motion-ready.is-visible .production-nodes circle {
-      animation: node-online 420ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.86s + var(--delay)) both;
+      animation: node-online 550ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-production-nodes-in) + var(--delay)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .production-chip {
-      animation: terminal-in 600ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.72s) both;
+      animation: terminal-in 800ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-production-chip-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .terminal-line--command {
-      animation: terminal-line-in 420ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 4s) both;
+      animation: terminal-line-in 550ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-production-command-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .terminal-line--status {
-      animation: terminal-line-in 420ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 4.2s) both;
+      animation: terminal-line-in 550ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-production-status-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .merge-pulse {
-      animation: merge-pulse 520ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 4.3s) both;
+      animation: merge-pulse 700ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-production-pulse-in)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .meta--before {
-      animation: graph-fade-out 450ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.3s) forwards;
+      animation: graph-fade-out 650ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-meta-out)) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .meta--after {
-      animation: graph-fade-in 500ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.55s) both;
+      animation: graph-fade-in 650ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--graph-meta-in)) both;
     }
   }
 
@@ -756,13 +785,13 @@
     }
 
     .hero-graph.graph-motion-ready.is-visible .mobile-before {
-      animation: graph-fade-out 550ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 1.05s) forwards;
+      animation: graph-fade-out 700ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + 2.6s) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .mobile-after {
-      animation: graph-fade-in 650ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 1.4s) both;
+      animation: graph-fade-in 750ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + 3.2s) both;
     }
   }
 
