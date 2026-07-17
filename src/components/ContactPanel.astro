@@ -16,21 +16,20 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
 <section class="section contact-section" id="contacto" aria-labelledby="contact-title" data-animate="contact" data-stagger="70" data-mobile-reveal="items" data-scroll-section>
   <div class="container">
     <div class="contact-intro">
-      <p class="eyebrow" data-animate-item data-contact-intro data-motion-index="0">{t.nextStep}</p>
-      <h2 id="contact-title" data-animate-item data-contact-intro data-motion-index="1">{t.title}</h2>
-      <p class="lead" data-animate-item data-contact-intro data-motion-index="2">{t.lead}</p>
+      <h2 id="contact-title" data-animate-item data-contact-intro data-motion-index="0">{t.title}</h2>
+      <p class="lead" data-animate-item data-contact-intro data-motion-index="1">{t.lead}</p>
     </div>
 
     <ol class="next-steps" aria-label={t.whatNext} data-contact-route>
-      <li data-animate-item data-contact-step data-motion-index="3"><span>01</span><strong>{t.chooseRoute}</strong><small>{hasBooking ? t.chooseBooking : t.chooseForm}</small></li>
-      <li data-animate-item data-contact-step data-motion-index="4"><span>02</span><strong>{t.details}</strong><small>{t.detailsCopy}</small></li>
-      <li data-animate-item data-contact-step data-motion-index="5"><span>03</span><strong>{t.call}</strong><small>{t.callCopy}</small></li>
-      <li data-animate-item data-contact-step data-motion-index="6"><span>04</span><strong>{t.response}</strong><small>{t.responseCopy}</small></li>
+      <li data-animate-item data-contact-step data-motion-index="2"><span>01</span><strong>{t.chooseRoute}</strong><small>{hasBooking ? t.chooseBooking : t.chooseForm}</small></li>
+      <li data-animate-item data-contact-step data-motion-index="3"><span>02</span><strong>{t.details}</strong><small>{t.detailsCopy}</small></li>
+      <li data-animate-item data-contact-step data-motion-index="4"><span>03</span><strong>{t.call}</strong><small>{t.callCopy}</small></li>
+      <li data-animate-item data-contact-step data-motion-index="5"><span>04</span><strong>{t.response}</strong><small>{t.responseCopy}</small></li>
     </ol>
 
     <div class:list={["contact-grid", !hasBooking && "contact-grid--single"]}>
       {hasBooking && (
-        <article class="contact-card booking-card" data-animate-item data-contact-card data-contact-direction="left" data-motion-index="7">
+        <article class="contact-card booking-card" data-animate-item data-contact-card data-contact-direction="left" data-motion-index="6">
           <div>
             <p class="label">{t.bookingRoute}</p>
             <h3>{t.bookingTitle}</h3>
@@ -63,7 +62,7 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
         data-animate-item
         data-contact-card
         data-contact-direction="right"
-        data-motion-index={hasBooking ? "8" : "7"}
+        data-motion-index={hasBooking ? "7" : "6"}
       >
         <div>
           <p class="label">{hasBooking ? t.formRoute : t.tellContext}</p>
@@ -84,19 +83,19 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
           <input type="hidden" name="form-name" value="contacto" />
           <input type="hidden" name="bot-field" />
 
-          <label for="nombre" data-animate-item data-contact-field data-motion-index={hasBooking ? "9" : "8"}>
+          <label for="nombre" data-animate-item data-contact-field data-motion-index={hasBooking ? "8" : "7"}>
             <span class="field-label">{t.name}</span>
             <span class="field-control"><input id="nombre" name="nombre" type="text" autocomplete="name" required minlength="2" maxlength="80" aria-describedby="nombre-error" /></span>
             <span class="field-error" id="nombre-error" data-error-for="nombre" aria-live="polite"></span>
           </label>
 
-          <label for="email" data-animate-item data-contact-field data-motion-index={hasBooking ? "10" : "9"}>
+          <label for="email" data-animate-item data-contact-field data-motion-index={hasBooking ? "9" : "8"}>
             <span class="field-label">{t.email}</span>
             <span class="field-control"><input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" aria-describedby="email-error" /></span>
             <span class="field-error" id="email-error" data-error-for="email" aria-live="polite"></span>
           </label>
 
-          <label class="contact-form__wide" for="contexto" data-animate-item data-contact-field data-motion-index={hasBooking ? "11" : "10"}>
+          <label class="contact-form__wide" for="contexto" data-animate-item data-contact-field data-motion-index={hasBooking ? "10" : "9"}>
             <span class="field-label">{t.context}</span>
             <span class="field-control">
               <input
@@ -113,7 +112,7 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
             <span class="field-error" id="contexto-error" data-error-for="contexto" aria-live="polite"></span>
           </label>
 
-          <div class="contact-form__actions contact-form__wide" data-animate-item data-contact-field data-motion-index={hasBooking ? "12" : "11"}>
+          <div class="contact-form__actions contact-form__wide" data-animate-item data-contact-field data-motion-index={hasBooking ? "11" : "10"}>
             <button class="button" type="submit" data-form-submit>{t.submit} <span class="icon-arrow" aria-hidden="true"></span></button>
             <div>
               <p>{t.privacy}</p>
@@ -170,22 +169,6 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
       transform: translateX(var(--space-5)) scale(0.985);
     }
 
-    :global(.motion-ready) [data-animate="contact"] .contact-intro .eyebrow::before {
-      transform-origin: left center;
-      transition:
-        opacity 300ms var(--motion-ease),
-        transform 360ms var(--motion-ease);
-      transition-delay: var(--motion-sequence-delay, 0ms);
-    }
-
-    :global(.motion-ready)
-      [data-animate="contact"]:not(.is-visible)
-      .contact-intro
-      .eyebrow::before {
-      opacity: 0;
-      transform: scaleX(0);
-    }
-
     :global(.motion-ready) [data-animate="contact"] [data-contact-route]::after {
       transition:
         opacity 320ms var(--motion-ease),
@@ -221,10 +204,6 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
     grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.75fr);
     gap: var(--space-7);
     align-items: end;
-  }
-
-  .contact-intro .eyebrow {
-    grid-column: 1 / -1;
   }
 
   .contact-intro h2 {
@@ -631,7 +610,6 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
   @media (prefers-reduced-motion: reduce) {
     [data-animate="contact"] [data-animate-item],
     [data-contact-step] > span,
-    .contact-intro .eyebrow::before,
     [data-contact-route]::after {
       opacity: 1;
       transform: none;

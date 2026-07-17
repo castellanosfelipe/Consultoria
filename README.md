@@ -72,7 +72,8 @@ La demo pública sirve el build estático de Astro desde GitHub Pages. El 15 de 
 | Feature                                   | Descripción                                                                                        |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | 🎯 **Narrativa orientada al problema**    | Lleva al visitante desde síntomas reconocibles hasta una oferta y un siguiente paso concretos.     |
-| 💵 **Oferta y límites visibles**          | Publica etapas, precios de entrada, plazos, propiedad del código y aquello que no se ofrece.       |
+| 💵 **Oferta visible**                     | Publica etapas, precios de entrada, plazos y propiedad del código desde el primer recorrido.       |
+| 🤖 **IA e industrias**                    | Explica integraciones concretas con IA y experiencia sectorial en Colombia, México y Perú.         |
 | ✅ **Prueba sin cifras inventadas**       | Sustituye testimonios ausentes por compromisos verificables de alcance, avance y propiedad.        |
 | ⚡ **Conversión progresiva**              | Incluye un formulario mínimo y una agenda opcional que solo se crea cuando el usuario la solicita. |
 | ♿ **Experiencia responsive y accesible** | Conserva navegación por teclado, foco visible, labels, reduced motion y layouts desde 320 px.      |

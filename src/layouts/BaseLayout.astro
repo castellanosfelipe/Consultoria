@@ -34,6 +34,7 @@ const canonical = new URL(withBasePath(resolvedCanonicalPath), `${siteOrigin}/`)
 const spanishUrl = new URL(withBasePath("/"), `${siteOrigin}/`).toString();
 const englishUrl = new URL(withBasePath("/en/"), `${siteOrigin}/`).toString();
 const shareImage = new URL(ogImage, `${siteOrigin}/`).toString();
+const portraitImage = new URL(siteConfig.portraitPath, `${siteOrigin}/`).toString();
 const sameAs = siteConfig.linkedInUrl ? [siteConfig.linkedInUrl] : undefined;
 
 const schemas = [
@@ -48,13 +49,9 @@ const schemas = [
     priceRange: lang === "en" ? "USD 1,900 to 50,000" : "USD 1.900 a 50.000",
     areaServed: [
       { "@type": "Country", name: "Colombia" },
-      { "@type": "Place", name: t.seo.remote },
+      { "@type": "Country", name: lang === "en" ? "Mexico" : "México" },
+      { "@type": "Country", name: lang === "en" ? "Peru" : "Perú" },
     ],
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: siteConfig.city,
-      addressCountry: siteConfig.country,
-    },
     founder: { "@id": `${homeUrl}#felipe` },
   },
   {
@@ -63,6 +60,7 @@ const schemas = [
     "@id": `${homeUrl}#felipe`,
     name: siteConfig.name,
     url: homeUrl,
+    image: portraitImage,
     jobTitle: t.seo.jobTitle,
     knowsAbout: t.seo.knowsAbout,
     sameAs,

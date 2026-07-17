@@ -25,7 +25,7 @@ const weekPrefix = lang === "en" ? "W" : "S";
     <span class="timeline__phase timeline__phase--diagnosis"><span>{t.diagnosis}</span></span>
     <span class="timeline__phase timeline__phase--build"><span>{t.build}</span></span>
 
-    <span class="timeline__label timeline__label--owner">FELIPE</span>
+    <span class="timeline__label timeline__label--owner">{t.owner}</span>
     <span class="timeline__bar timeline__bar--owner"><i class="timeline__bar-fill"></i></span>
 
     <span class="timeline__label timeline__label--core">{t.core}</span>
@@ -52,7 +52,7 @@ const weekPrefix = lang === "en" ? "W" : "S";
 
   <div class="mobile-lanes" aria-hidden="true">
     <span class="mobile-lanes__corner">{t.roleCadence}</span><span>{t.firstPeriod}</span><span class="mobile-lanes__last">{t.secondPeriod}</span>
-    <span class="mobile-lanes__label">FELIPE</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"><span class="mobile-lanes__fill"></span></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
+    <span class="mobile-lanes__label">{t.owner}</span><i class="mobile-lanes__bar mobile-lanes__bar--owner"><span class="mobile-lanes__fill"></span></i><i class="mobile-lanes__bar mobile-lanes__bar--owner mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
     <span class="mobile-lanes__label">{t.core}</span><i class="mobile-lanes__empty">{t.notActive}</i><i class="mobile-lanes__bar mobile-lanes__bar--core mobile-lanes__last"><span class="mobile-lanes__fill"></span></i>
     <span class="mobile-lanes__label">{t.network}</span><i class="mobile-lanes__bar mobile-lanes__bar--flex mobile-lanes__last"><span class="mobile-lanes__fill"></span><span class="mobile-lanes__bar-copy">{t.accordingToScope}</span></i>
     <span class="mobile-lanes__label mobile-lanes__label--demo">{t.demo}</span><i class="mobile-lanes__demo">{t.first}</i><i class="mobile-lanes__demo mobile-lanes__last">{t.friday}</i>

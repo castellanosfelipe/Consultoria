@@ -35,7 +35,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero-grid">
         <div class="hero-copy" data-hero-sequence>
-          <p class="eyebrow" data-hero-item style="--hero-delay: 0ms">{t.landing.hero.eyebrow}</p>
           <h1 id="hero-title" aria-label={t.landing.hero.title}>
             <span class="hero-title__clip" aria-hidden="true"><span class="hero-title__line" style="--hero-line-delay: 70ms">{t.landing.hero.titleLine1}</span></span>
             <span class="hero-title__clip" aria-hidden="true"><span class="hero-title__line" style="--hero-line-delay: 130ms">{t.landing.hero.titleLine2}</span></span>
@@ -69,10 +68,9 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
     <section class="section section-rule problem" id="problema" aria-labelledby="problem-title" data-scroll-section>
       <div class="container">
-        <div class="reading-column">
-          <div data-animate="heading" data-stagger="60">
-            <p class="eyebrow" data-animate-item>{t.landing.problem.eyebrow}</p>
-            <h2 id="problem-title" data-animate-item>{t.landing.problem.title}</h2>
+          <div class="reading-column">
+            <div data-animate="heading" data-stagger="60">
+              <h2 id="problem-title" data-animate-item>{t.landing.problem.title}</h2>
           </div>
           <ul class="symptom-log" data-animate="problem" data-stagger="70" data-mobile-reveal="items">
             {symptoms.map((symptom) => (
@@ -87,7 +85,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     <section class="section section-rule thesis" aria-labelledby="thesis-title" data-scroll-section>
       <div class="container">
         <div class="section-heading" data-animate="heading" data-stagger="60">
-          <p class="eyebrow" data-animate-item>{t.landing.positioning.eyebrow}</p>
           <h2 id="thesis-title" data-animate-item>{t.landing.positioning.title}</h2>
           <p class="lead" data-animate-item>{t.landing.positioning.lead}</p>
         </div>
@@ -117,10 +114,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     <section class="section section-rule services" id="servicios" aria-labelledby="services-title" data-scroll-section>
       <div class="container">
         <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
-          <div data-animate-item>
-            <p class="eyebrow">{t.landing.services.eyebrow}</p>
-            <h2 id="services-title">{t.landing.services.title}</h2>
-          </div>
+          <h2 id="services-title" data-animate-item>{t.landing.services.title}</h2>
           <p class="lead" data-animate-item>{t.landing.services.lead}</p>
         </div>
 
@@ -141,6 +135,48 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
+    <section class="section section-rule ai-integration" id="integracion-ia" aria-labelledby="ai-title" data-scroll-section>
+      <div class="container">
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <h2 id="ai-title" data-animate-item>{t.landing.ai.title}</h2>
+          <p class="lead" data-animate-item>{t.landing.ai.lead}</p>
+        </div>
+
+        <div class="ai-grid" data-animate="fade-up" data-stagger="80" data-mobile-reveal="items">
+          {t.landing.ai.items.map((item, index) => (
+            <article class="ai-card" data-animate-item>
+              <span class="ai-card__index data" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <h3>{item.title}</h3>
+              <p>{item.copy}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule industries" id="industrias" aria-labelledby="industries-title" data-scroll-section>
+      <div class="container">
+        <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
+          <h2 id="industries-title" data-animate-item>{t.landing.industries.title}</h2>
+          <p class="lead" data-animate-item>{t.landing.industries.lead}</p>
+        </div>
+
+        <div class="industries-layout">
+          <ul class="industry-grid" data-animate="fade-up" data-stagger="60" data-mobile-reveal="items">
+            {t.landing.industries.items.map((item, index) => (
+              <li data-animate-item><span class="data" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{item}</li>
+            ))}
+          </ul>
+          <aside class="country-panel" data-animate="fade-up" data-delay="160" aria-label={t.landing.industries.countriesLabel}>
+            <p>{t.landing.industries.countriesCopy}</p>
+            <ul>
+              {t.landing.industries.countries.map((country) => <li>{country}</li>)}
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <section
       class="section proof"
       id="prueba"
@@ -152,10 +188,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     >
       <div class="container">
         <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
-          <div data-animate-item>
-            <p class="eyebrow">{t.landing.proof.eyebrow}</p>
-            <h2 id="proof-title">{t.landing.proof.title}</h2>
-          </div>
+          <h2 id="proof-title" data-animate-item>{t.landing.proof.title}</h2>
           <p class="lead" data-animate-item>{t.landing.proof.lead}</p>
         </div>
 
@@ -189,10 +222,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     <section class="section section-rule process" id="proceso" aria-labelledby="process-title" data-scroll-section>
       <div class="container">
         <div class="section-heading section-heading--split" data-animate="heading" data-stagger="70">
-          <div data-animate-item>
-            <p class="eyebrow">{t.landing.process.eyebrow}</p>
-            <h2 id="process-title">{t.landing.process.title}</h2>
-          </div>
+          <h2 id="process-title" data-animate-item>{t.landing.process.title}</h2>
           <p class="lead" data-animate-item>{t.landing.process.lead}</p>
         </div>
 
@@ -216,26 +246,22 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     <section class="section section-rule about" id="quien" aria-labelledby="about-title" data-scroll-section>
       <div class="container about-grid" data-animate="assembly" data-stagger="100" data-mobile-reveal="items">
         <div class="identity-panel" data-animate-item>
-          {siteConfig.portraitPath ? (
+          <picture>
+            {siteConfig.portraitAvifPath && <source srcset={siteConfig.portraitAvifPath} type="image/avif" />}
             <img
               src={siteConfig.portraitPath}
-              width="560"
-              height="700"
+              width="720"
+              height="900"
               loading="lazy"
               decoding="async"
+              fetchpriority="low"
               alt={t.landing.about.portraitAlt}
             />
-          ) : (
-            <div class="identity-monogram" aria-hidden="true">
-              <span>FP</span>
-              <div class="identity-nodes"><i></i><i></i><i></i><i></i></div>
-            </div>
-          )}
+          </picture>
           <p class="label">{t.landing.about.role}</p>
         </div>
 
         <div class="about-copy" data-animate-item>
-          <p class="eyebrow">{t.landing.about.eyebrow}</p>
           <h2 id="about-title">{t.landing.about.title}</h2>
           <p class="lead">{t.landing.about.lead}</p>
           <p>{t.landing.about.copy}</p>
@@ -253,25 +279,9 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       </div>
     </section>
 
-    <section class="section section--tight section-rule exclusions" aria-labelledby="exclusions-title" data-scroll-section>
-      <div class="container exclusions-grid" data-animate="filter" data-stagger="100" data-mobile-reveal="items">
-        <div data-animate-item>
-          <p class="eyebrow">{t.landing.exclusions.eyebrow}</p>
-          <h2 id="exclusions-title">{t.landing.exclusions.title}</h2>
-        </div>
-        <div data-animate-item>
-          <ul>
-            {t.landing.exclusions.items.map((item) => <li><span aria-hidden="true">×</span>{item}</li>)}
-          </ul>
-          <p class="microcopy">{t.landing.exclusions.note}</p>
-        </div>
-      </div>
-    </section>
-
     <section class="section section-rule faq" id="preguntas" aria-labelledby="faq-title" data-scroll-section>
       <div class="container">
         <div class="section-heading" data-animate="heading" data-stagger="60">
-          <p class="eyebrow" data-animate-item>{t.landing.faq.eyebrow}</p>
           <h2 id="faq-title" data-animate-item>{t.landing.faq.title}</h2>
         </div>
         <dl class="faq-grid" data-faq data-animate="faq-list" data-stagger="55" data-mobile-reveal="items">
@@ -313,12 +323,11 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
         <span class="footer-mark" aria-hidden="true">FP</span>
         <p><strong>Felipe Peña</strong><br />{t.landing.footer.description}</p>
       </div>
-      <p class="footer-stack data" data-animate-item>PYTHON · TYPESCRIPT · SQL · KAFKA · AIRFLOW · PYSPARK · FASTAPI</p>
-      <div class="footer-meta" data-animate-item>
-        {siteConfig.linkedInUrl && <a href={siteConfig.linkedInUrl} rel="me external">LinkedIn <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>}
-        <span>{t.landing.footer.location}</span>
-        <span>© {new Date().getFullYear()}</span>
-      </div>
+      {siteConfig.linkedInUrl && (
+        <div class="footer-meta" data-animate-item>
+          <a href={siteConfig.linkedInUrl} rel="me external">LinkedIn <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>
+        </div>
+      )}
     </div>
   </footer>
 
@@ -343,11 +352,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    font-family: var(--font-body-fallback);
-  }
-
-  .hero-copy .eyebrow {
-    margin-bottom: var(--space-5);
     font-family: var(--font-body-fallback);
   }
 
@@ -746,6 +750,119 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     transform-origin: left center;
   }
 
+  .ai-integration {
+    background: var(--paper-deep);
+  }
+
+  .ai-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--border);
+    overflow: hidden;
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--line);
+  }
+
+  .ai-card {
+    min-height: 18rem;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5);
+    background: var(--paper-raised);
+  }
+
+  .ai-card__index {
+    color: var(--production);
+    font-weight: 700;
+  }
+
+  .ai-card h3 {
+    margin-top: auto;
+    padding-top: var(--space-7);
+  }
+
+  .ai-card p {
+    margin-top: var(--space-3);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  .industries-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(17rem, 0.55fr);
+    gap: var(--space-7);
+    align-items: stretch;
+  }
+
+  .industry-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0;
+    margin: 0;
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    list-style: none;
+  }
+
+  .industry-grid li {
+    min-height: calc(var(--target) + var(--space-4));
+    display: grid;
+    grid-template-columns: var(--space-7) minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-4) var(--space-5);
+    border-right: var(--border) solid var(--line);
+    border-bottom: var(--border) solid var(--line);
+    font-weight: 600;
+  }
+
+  .industry-grid li:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .industry-grid li:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .industry-grid span {
+    color: var(--production);
+  }
+
+  .country-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    border: var(--border-strong) solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
+  }
+
+  .country-panel > p {
+    color: var(--graphite);
+    line-height: 1.6;
+  }
+
+  .country-panel ul {
+    display: grid;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .country-panel li {
+    padding-top: var(--space-3);
+    border-top: var(--border) solid var(--line);
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 650;
+  }
+
   .proof {
     border-block: var(--border-strong) solid var(--ink);
     background: var(--paper-deep);
@@ -1011,62 +1128,29 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     align-items: start;
   }
 
+  .about-grid > * {
+    min-width: 0;
+  }
+
   .identity-panel {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
   }
 
-  .identity-panel img,
-  .identity-monogram {
+  .identity-panel picture,
+  .identity-panel img {
+    display: block;
+    min-width: 0;
     width: 100%;
     aspect-ratio: 4 / 5;
+  }
+
+  .identity-panel img {
     border: var(--border) solid var(--line-strong);
     border-radius: var(--radius);
     background: var(--paper-raised);
     object-fit: cover;
-  }
-
-  .identity-monogram {
-    position: relative;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-  }
-
-  .identity-monogram > span {
-    font-family: var(--font-display);
-    font-size: var(--text-monogram);
-    font-stretch: 112%;
-    font-weight: 650;
-    letter-spacing: -0.04em;
-  }
-
-  .identity-nodes {
-    position: absolute;
-    right: var(--space-4);
-    bottom: var(--space-4);
-    left: var(--space-4);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    align-items: center;
-  }
-
-  .identity-nodes::before {
-    position: absolute;
-    right: 0;
-    left: 0;
-    height: var(--border-strong);
-    background: var(--ink);
-    content: "";
-  }
-
-  .identity-nodes i {
-    z-index: 1;
-    width: var(--space-3);
-    height: var(--space-3);
-    justify-self: center;
-    border-radius: var(--radius-round);
-    background: var(--graphite);
   }
 
   .identity-panel > .label {
@@ -1074,16 +1158,12 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     line-height: 1.5;
   }
 
-  .about-copy h2 {
-    margin-top: var(--space-4);
-  }
-
   .about-copy .lead,
-  .about-copy > p:not(.eyebrow) {
+  .about-copy > p {
     margin-top: var(--space-5);
   }
 
-  .about-copy > p:not(.eyebrow, .lead) {
+  .about-copy > p:not(.lead) {
     max-width: 56ch;
   }
 
@@ -1132,36 +1212,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     border-radius: var(--radius-round);
     background: currentColor;
     color: var(--ink);
-  }
-
-  .exclusions-grid {
-    display: grid;
-    grid-template-columns: 0.7fr 1.3fr;
-    gap: var(--space-8);
-  }
-
-  .exclusions h2 {
-    margin-top: var(--space-4);
-  }
-
-  .exclusions ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3) var(--space-6);
-    padding: 0;
-    margin: 0 0 var(--space-5);
-    list-style: none;
-  }
-
-  .exclusions li {
-    display: inline-flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  .exclusions li span {
-    color: var(--ink-muted);
-    font-family: var(--font-data);
   }
 
   .faq-grid {
@@ -1296,7 +1346,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 0.8fr 1.4fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--space-6);
     align-items: center;
   }
@@ -1325,14 +1375,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     line-height: 1.45;
   }
 
-  .footer-stack {
-    color: var(--line);
-    font-size: var(--text-tiny);
-    letter-spacing: 0.05em;
-    line-height: 1.7;
-    text-align: center;
-  }
-
   .footer-meta {
     display: flex;
     flex-wrap: wrap;
@@ -1354,18 +1396,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
    * Un intervalo de 55 a 110 ms hace perceptible el orden sin convertirlo en espectáculo.
    */
   @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
-    :global(.motion-ready) [data-animate="heading"] .eyebrow::before,
-    :global(.motion-ready) [data-animate="problem"] .eyebrow::before {
-      transition: transform var(--motion-duration) var(--motion-ease);
-      transition-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
-      transform-origin: left center;
-    }
-
-    :global(.motion-ready) [data-animate="heading"]:not(.is-visible) .eyebrow::before,
-    :global(.motion-ready) [data-animate="problem"]:not(.is-visible) .eyebrow::before {
-      transform: scaleX(0);
-    }
-
     :global(.motion-ready) [data-animate="problem"] [data-animate-item] {
       transition:
         opacity var(--motion-duration) var(--motion-ease),
@@ -1625,7 +1655,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     }
 
     :global(.motion-ready) [data-animate="assembly"] > [data-animate-item],
-    :global(.motion-ready) [data-animate="filter"] > [data-animate-item],
     :global(.motion-ready) [data-animate="faq-list"] > [data-animate-item],
     :global(.motion-ready) [data-animate="footer"] > [data-animate-item] {
       transition:
@@ -1635,14 +1664,12 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     }
 
     :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > [data-animate-item],
-    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > [data-animate-item],
     :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > [data-animate-item],
     :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
       opacity: 0;
     }
 
-    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :first-child,
-    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > :first-child {
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :first-child {
       transform: translateX(calc(-1 * var(--motion-distance)));
     }
 
@@ -1650,8 +1677,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       transform: translateY(var(--motion-distance)) scale(0.98);
     }
 
-    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :nth-child(3),
-    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > :nth-child(2) {
+    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > :nth-child(3) {
       transform: translateX(var(--motion-distance));
     }
 
@@ -1668,73 +1694,28 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     }
 
     :global(.motion-ready) [data-animate="assembly"].is-visible > [data-animate-item],
-    :global(.motion-ready) [data-animate="filter"].is-visible > [data-animate-item],
     :global(.motion-ready) [data-animate="faq-list"].is-visible > [data-animate-item],
     :global(.motion-ready) [data-animate="footer"].is-visible > [data-animate-item] {
       opacity: 1;
       transform: none;
     }
 
-    :global(.motion-ready) [data-animate="assembly"] .identity-nodes::before {
-      transition: transform var(--motion-slow) var(--motion-ease) 360ms;
-      transform-origin: left center;
-    }
-
-    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .identity-nodes::before {
-      transform: scaleX(0);
-    }
-
-    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i,
-    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li,
-    :global(.motion-ready) [data-animate="filter"] li {
+    :global(.motion-ready) [data-animate="assembly"] .capacity-panel li {
       transition:
         opacity var(--motion-fast) var(--motion-ease),
         transform var(--motion-duration) var(--motion-ease);
     }
 
-    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(1) { transition-delay: 420ms; }
-    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(2) { transition-delay: 475ms; }
-    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(3) { transition-delay: 530ms; }
-    :global(.motion-ready) [data-animate="assembly"] .identity-nodes i:nth-child(4) { transition-delay: 585ms; }
     :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(1) { transition-delay: 420ms; }
     :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(2) { transition-delay: 480ms; }
     :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(3) { transition-delay: 540ms; }
     :global(.motion-ready) [data-animate="assembly"] .capacity-panel li:nth-child(4) { transition-delay: 600ms; }
-
-    :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .identity-nodes i {
-      opacity: 0;
-      transform: scale(0.35);
-    }
 
     :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) .capacity-panel li {
       opacity: 0;
       transform: translateX(var(--space-3));
     }
 
-    :global(.motion-ready) [data-animate="filter"] li:nth-child(1) { transition-delay: 260ms; }
-    :global(.motion-ready) [data-animate="filter"] li:nth-child(2) { transition-delay: 315ms; }
-    :global(.motion-ready) [data-animate="filter"] li:nth-child(3) { transition-delay: 370ms; }
-    :global(.motion-ready) [data-animate="filter"] li:nth-child(4) { transition-delay: 425ms; }
-    :global(.motion-ready) [data-animate="filter"] li:nth-child(5) { transition-delay: 480ms; }
-    :global(.motion-ready) [data-animate="filter"] li:nth-child(6) { transition-delay: 535ms; }
-
-    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) li {
-      opacity: 0;
-      transform: translateY(var(--space-2));
-    }
-
-    :global(.motion-ready) [data-animate="filter"] li > span {
-      display: inline-block;
-      transition:
-        opacity var(--motion-fast) var(--motion-ease),
-        transform var(--motion-fast) var(--motion-ease);
-      transition-delay: inherit;
-    }
-
-    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) li > span {
-      opacity: 0;
-      transform: scale(0.5);
-    }
   }
 
   @media (min-width: 56.3125rem) and (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -1782,9 +1763,13 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
     .section-heading--split,
     .about-grid,
-    .exclusions-grid {
+    .industries-layout {
       grid-template-columns: 1fr;
       gap: var(--space-5);
+    }
+
+    .ai-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .positioning-axis {
@@ -1940,10 +1925,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       text-align: left;
     }
 
-    .footer-stack {
-      text-align: left;
-    }
-
     .footer-meta {
       justify-content: flex-start;
     }
@@ -1957,7 +1938,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     :global(.motion-ready) [data-animate="diff"] .proof-row,
     :global(.motion-ready) [data-animate="process"] li > div,
     :global(.motion-ready) [data-animate="assembly"] > [data-animate-item],
-    :global(.motion-ready) [data-animate="filter"] > [data-animate-item],
     :global(.motion-ready) [data-animate="faq-list"] > [data-animate-item],
     :global(.motion-ready) [data-animate="footer"] > [data-animate-item] {
       transition: opacity var(--motion-duration) var(--motion-ease);
@@ -1968,7 +1948,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     :global(.motion-ready) [data-animate="comparison"]:not(.is-visible) [data-animate-item],
     :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-animate-item],
     :global(.motion-ready) [data-animate="assembly"]:not(.is-visible) > [data-animate-item],
-    :global(.motion-ready) [data-animate="filter"]:not(.is-visible) > [data-animate-item],
     :global(.motion-ready) [data-animate="faq-list"]:not(.is-visible) > [data-animate-item],
     :global(.motion-ready) [data-animate="footer"]:not(.is-visible) > [data-animate-item] {
       opacity: 0;
@@ -1979,7 +1958,6 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     :global(.motion-ready) [data-animate="comparison"].is-visible [data-animate-item],
     :global(.motion-ready) [data-animate="offer-flow"].is-visible [data-animate-item],
     :global(.motion-ready) [data-animate="assembly"].is-visible > [data-animate-item],
-    :global(.motion-ready) [data-animate="filter"].is-visible > [data-animate-item],
     :global(.motion-ready) [data-animate="faq-list"].is-visible > [data-animate-item],
     :global(.motion-ready) [data-animate="footer"].is-visible > [data-animate-item] {
       opacity: 1;
@@ -2036,6 +2014,22 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     .hero-visual__status {
       align-items: flex-start;
       flex-direction: column;
+    }
+
+    .ai-grid,
+    .industry-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .industry-grid li,
+    .industry-grid li:nth-child(2n),
+    .industry-grid li:nth-last-child(-n + 2) {
+      border-right: 0;
+      border-bottom: var(--border) solid var(--line);
+    }
+
+    .industry-grid li:last-child {
+      border-bottom: 0;
     }
 
     .proof-row {

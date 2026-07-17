@@ -248,6 +248,19 @@ check(metaContent(home, "name", "description")?.trim(), "La home debe tener meta
 const homeRobots = (metaContent(home, "name", "robots") ?? "").toLowerCase();
 check(homeRobots.includes("index") && !homeRobots.includes("noindex"), "La home debe ser indexable.");
 
+const spanishHomeText = visibleText(home);
+const englishHomeText = visibleText(englishHome);
+const spanishSectionIds = new Set(tags(home, "section").map(({ attrs }) => attrs.id).filter(Boolean));
+check(spanishSectionIds.has("integracion-ia"), "La home debe incluir la sección de integración con IA.");
+check(spanishSectionIds.has("industrias"), "La home debe incluir la sección de industrias.");
+check(spanishHomeText.includes("4 a 8 semanas"), "La home debe comunicar el plazo de 4 a 8 semanas.");
+check(!spanishHomeText.includes("8 a 16 semanas"), "La home no debe conservar el plazo anterior.");
+check(!spanishHomeText.includes("Qué no hago"), "La sección Qué no hago debe estar eliminada.");
+check(!spanishHomeText.includes("¿Trabajan con cualquier empresa?"), "La pregunta sobre trabajar con cualquier empresa debe estar eliminada.");
+check(!/\b(?:PYTHON|TYPESCRIPT|KAFKA|AIRFLOW|PYSPARK|FASTAPI)\b/.test(spanishHomeText), "La home no debe mostrar lenguajes o tecnologías en el pie.");
+check(!/\beyebrow\b/.test(home) && !/\beyebrow\b/.test(englishHome), "Las etiquetas previas a los títulos deben estar eliminadas.");
+check(englishHomeText.includes("4 to 8 weeks"), "La home en inglés debe comunicar el plazo de 4 a 8 semanas.");
+
 const homeCanonicalTags = tags(home, "link").filter(({ attrs }) => relIncludes(attrs, "canonical"));
 check(homeCanonicalTags.length === 1, "La home debe contener exactamente un canonical.");
 const homeCanonical = absoluteHttpUrl(homeCanonicalTags[0]?.attrs.href, "El canonical de la home");
@@ -490,21 +503,29 @@ if (plausibleDomain) {
   check(plausibleDomainMeta.length === 0 && plausibleSrcMeta.length === 0, "No debe configurarse analítica sin PUBLIC_PLAUSIBLE_DOMAIN.");
 }
 
-const portraitPath = (env.PUBLIC_PORTRAIT_PATH ?? "").trim();
-if (portraitPath) {
-  const deployedPortraitPath = withPublicBasePath(portraitPath);
-  const portraits = tags(home, "img").filter(({ attrs }) => attrs.src === deployedPortraitPath);
-  check(portraits.length === 1, "PUBLIC_PORTRAIT_PATH debe renderizar exactamente una imagen.");
-  const portrait = portraits[0]?.attrs;
-  check(Number.parseInt(portrait?.width, 10) > 0 && Number.parseInt(portrait?.height, 10) > 0, "El retrato debe declarar width y height.");
-  check(portrait?.loading?.toLowerCase() === "lazy", "El retrato fuera del viewport debe usar loading=lazy.");
-  check(Boolean(portrait?.alt?.trim()), "El retrato debe tener alt real.");
+const configuredPortraitPath = (env.PUBLIC_PORTRAIT_PATH ?? "").trim();
+const portraitPath = configuredPortraitPath || "/images/felipe-pena.webp";
+const deployedPortraitPath = withPublicBasePath(portraitPath);
+const portraits = tags(home, "img").filter(({ attrs }) => attrs.src === deployedPortraitPath);
+check(portraits.length === 1, "La home debe renderizar exactamente un retrato de Felipe.");
+const portrait = portraits[0]?.attrs;
+check(Number.parseInt(portrait?.width, 10) > 0 && Number.parseInt(portrait?.height, 10) > 0, "El retrato debe declarar width y height.");
+check(portrait?.loading?.toLowerCase() === "lazy", "El retrato fuera del viewport debe usar loading=lazy.");
+check(Boolean(portrait?.alt?.trim()), "El retrato debe tener alt real.");
+if (!configuredPortraitPath) {
+  const deployedAvifPath = withPublicBasePath("/images/felipe-pena.avif");
+  check(tags(home, "source").some(({ attrs }) => attrs.srcset === deployedAvifPath && attrs.type === "image/avif"), "El retrato predeterminado debe ofrecer una fuente AVIF.");
   if (homeCanonical) {
-    const portraitUrl = new URL(deployedPortraitPath, homeCanonical);
-    if (origin) sameOrigin(portraitUrl, origin, "PUBLIC_PORTRAIT_PATH");
-    const portraitFile = outputPathFromUrl(portraitUrl);
-    if (portraitFile) await readRequired(portraitFile, "el retrato configurado");
+    const avifUrl = new URL(deployedAvifPath, homeCanonical);
+    const avifFile = outputPathFromUrl(avifUrl);
+    if (avifFile) await readRequired(avifFile, "el retrato AVIF");
   }
+}
+if (homeCanonical) {
+  const portraitUrl = new URL(deployedPortraitPath, homeCanonical);
+  if (origin) sameOrigin(portraitUrl, origin, "el retrato");
+  const portraitFile = outputPathFromUrl(portraitUrl);
+  if (portraitFile) await readRequired(portraitFile, "el retrato");
 }
 
 if (origin && configuredUrl && !isLocalHost(configuredUrl.hostname)) {

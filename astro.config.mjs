@@ -128,8 +128,8 @@ if (plausibleSrc) {
   }
 }
 
-const portraitPath = value("PUBLIC_PORTRAIT_PATH");
-if (portraitPath) {
+const portraitPath = value("PUBLIC_PORTRAIT_PATH") || "/images/felipe-pena.webp";
+{
   const publicRoot = resolve(process.cwd(), "public");
   const portraitFile = resolve(publicRoot, `.${portraitPath}`);
   const validPath =

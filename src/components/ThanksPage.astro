@@ -26,7 +26,6 @@ const homeHref = withBasePath(lang === "en" ? "/en/" : "/");
     <div class="container">
       <div class="thanks-card" data-submission-confirmation>
         <span class="status-chip"><span class="status-dot"></span> <span data-confirmation-status>{t.status}</span></span>
-        <p class="eyebrow">{t.eyebrow}</p>
         <h1 data-confirmation-title>{t.heading}</h1>
         <p class="lead" data-confirmation-copy>{t.copy}</p>
         <a class="button button--secondary" href={homeHref}>{t.back} <span class="icon-arrow" aria-hidden="true"></span></a>
@@ -52,12 +51,8 @@ const homeHref = withBasePath(lang === "en" ? "/en/" : "/");
     box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--line);
   }
 
-  .thanks-card .eyebrow {
-    margin-top: var(--space-7);
-  }
-
   h1 {
-    margin-top: var(--space-4);
+    margin-top: var(--space-7);
   }
 
   .lead {

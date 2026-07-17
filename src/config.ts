@@ -9,7 +9,8 @@ export const withBasePath = (path = "/") => {
   return relativePath ? `${basePath}${relativePath}` : basePath;
 };
 
-const portraitPath = env(import.meta.env.PUBLIC_PORTRAIT_PATH);
+const configuredPortraitPath = env(import.meta.env.PUBLIC_PORTRAIT_PATH);
+const portraitPath = configuredPortraitPath || "/images/felipe-pena.webp";
 const plausibleSrc = env(import.meta.env.PUBLIC_PLAUSIBLE_SRC) || "https://plausible.io/js/script.js";
 
 export const siteConfig = {
@@ -17,17 +18,18 @@ export const siteConfig = {
   shortName: "FP",
   title: "Software interno y automatización de datos | Felipe Peña",
   description:
-    "Diseño y construyo software interno y automatizaciones de datos para poner al día operaciones B2B entre 8 y 16 semanas.",
+    "Diseñamos y construimos software interno, automatizaciones de datos e integraciones con IA para poner al día operaciones B2B entre 4 y 8 semanas.",
   siteUrl,
   locale: "es_CO",
   language: "es",
-  city: "Bogotá",
-  country: "CO",
   email: "",
   basePath,
   bookingUrl: env(import.meta.env.PUBLIC_CAL_URL),
   linkedInUrl: env(import.meta.env.PUBLIC_LINKEDIN_URL),
-  portraitPath: portraitPath ? withBasePath(portraitPath) : "",
+  portraitPath: withBasePath(portraitPath),
+  portraitAvifPath: configuredPortraitPath
+    ? ""
+    : withBasePath("/images/felipe-pena.avif"),
   plausibleDomain: env(import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN),
   plausibleSrc: plausibleSrc.startsWith("/") ? withBasePath(plausibleSrc) : plausibleSrc,
   ogImage: withBasePath("/images/og-felipe-pena.png"),
