@@ -310,6 +310,9 @@ function localAsset(reference, basePathname, siteOrigin) {
 }
 
 async function addAsset(reference, basePathname, siteOrigin, reason, parseAsCss = false, parseAsJavaScript = false) {
+  // /_vercel/* lo inyecta la plataforma en runtime (Web Analytics): no existe
+  // en dist/ y no puede contarse en el presupuesto local.
+  if (/^\/_vercel\//.test(reference)) return;
   const asset = localAsset(reference, basePathname, siteOrigin);
   if (!asset) return;
 
