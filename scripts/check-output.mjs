@@ -213,6 +213,9 @@ async function publicEnvironment() {
 
 const env = await publicEnvironment();
 publicBasePath = normalizeBasePath(env.PUBLIC_BASE_PATH);
+// Un PUBLIC_FORM_ENDPOINT configurado (por ejemplo /api/contact en Vercel)
+// reemplaza el POST al base path; ambos idiomas comparten ese endpoint.
+const formEndpoint = (env.PUBLIC_FORM_ENDPOINT || "").trim();
 const homePath = resolve(distDirectory, "index.html");
 const englishHomePath = resolve(distDirectory, "en", "index.html");
 const thanksPath = resolve(distDirectory, "gracias", "index.html");
@@ -489,7 +492,7 @@ if (contactForm) {
   const action = resolvedHttpUrl(contactForm.attrs.action, homeCanonical ?? "http://local.invalid/", "Action del formulario");
   if (origin) sameOrigin(action, origin, "Action del formulario");
   check(action?.pathname === withPublicBasePath("/gracias/"), `El formulario debe terminar en ${withPublicBasePath("/gracias/")}.`);
-  check(contactForm.attrs["data-submit-url"] === publicBasePath, "El formulario debe enviar al base path configurado.");
+  check(contactForm.attrs["data-submit-url"] === (formEndpoint || publicBasePath), "El formulario debe enviar al endpoint configurado o al base path.");
 
   const inputs = tags(contactForm.body, "input").map(({ attrs }) => attrs);
   const visibleInputs = inputs.filter((attrs) => (attrs.type ?? "text").toLowerCase() !== "hidden");
@@ -527,7 +530,7 @@ if (englishContactForm) {
   const action = resolvedHttpUrl(englishContactForm.attrs.action, englishCanonical ?? "http://local.invalid/", "Action del formulario inglés");
   if (origin) sameOrigin(action, origin, "Action del formulario inglés");
   check(action?.pathname === withPublicBasePath("/en/thanks/"), `El formulario inglés debe terminar en ${withPublicBasePath("/en/thanks/")}.`);
-  check(englishContactForm.attrs["data-submit-url"] === withPublicBasePath("/en/"), "El formulario inglés debe enviar a la ruta inglesa.");
+  check(englishContactForm.attrs["data-submit-url"] === (formEndpoint || withPublicBasePath("/en/")), "El formulario inglés debe enviar al endpoint configurado o a la ruta inglesa.");
   const englishInputs = tags(englishContactForm.body, "input").map(({ attrs }) => attrs);
   check(englishInputs.some((attrs) => attrs.name === "country" && attrs.value === "CO" && hasAttribute(attrs, "data-country-field")), "El formulario inglés debe registrar el país seleccionado.");
   check(englishInputs.some((attrs) => attrs.name === "currency" && attrs.value === "COP" && hasAttribute(attrs, "data-currency-field")), "El formulario inglés debe registrar la moneda seleccionada.");
