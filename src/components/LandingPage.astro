@@ -6,7 +6,7 @@ import ProcessArtifact from "./ProcessArtifact.astro";
 import ScrollThread from "./ScrollThread.astro";
 import ContactPanel from "./ContactPanel.astro";
 import LineIcon from "./LineIcon.astro";
-import { siteConfig } from "../config";
+import { siteConfig, withBasePath } from "../config";
 import { getCopy, type Language } from "../i18n/copy";
 
 interface Props {
@@ -198,6 +198,18 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
             </ul>
           </aside>
         </div>
+
+        <div class="vignette-list" data-animate="fade-up" data-delay="120">
+          <p class="label">{t.landing.industries.vignettesLabel}</p>
+          <ul>
+            {t.landing.industries.vignettes.map((vignette) => (
+              <li>
+                <span class="vignette-sector data">{vignette.sector}</span>
+                <span>{vignette.line}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -217,7 +229,7 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
         </div>
 
         <div class="proof-artifact" data-animate="diff" data-stagger="70" data-mobile-reveal="items">
-          <div class="proof-artifact__head label" aria-hidden="true">
+          <div class="proof-artifact__head label">
             <span>{t.landing.proof.signal}</span><span>{t.landing.proof.verification}</span><span>{t.landing.proof.change}</span>
           </div>
           {proofRows.map((row) => (
@@ -239,6 +251,16 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
               </div>
             </article>
           ))}
+        </div>
+
+        <div class="cta-band" data-animate="fade-up" data-delay="120">
+          <div>
+            <h3>{t.landing.ctaBand.title}</h3>
+            <p class="microcopy">{t.landing.ctaBand.copy}</p>
+          </div>
+          <a class="button" href="#contacto" data-track="cta" data-location="mid-page">
+            {t.landing.ctaBand.cta} <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
+          </a>
         </div>
       </div>
     </section>
@@ -361,13 +383,18 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
     <div class="container footer-grid" data-animate="footer" data-stagger="60">
       <div class="footer-brand" data-animate-item>
         <span class="footer-mark" aria-hidden="true">FP</span>
-        <p><strong>Felipe Peña</strong><br />{t.landing.footer.description}</p>
+        <p>
+          <strong>Felipe Peña</strong><br />{t.landing.footer.description}<br />
+          <span class="footer-location">{t.landing.footer.location}</span>
+        </p>
       </div>
-      {siteConfig.linkedInUrl && (
-        <div class="footer-meta" data-animate-item>
+      <div class="footer-meta" data-animate-item>
+        {siteConfig.email && <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>}
+        {siteConfig.linkedInUrl && (
           <a href={siteConfig.linkedInUrl} rel="me external">LinkedIn <span class="icon-arrow icon-arrow--up" aria-hidden="true"></span></a>
-        </div>
-      )}
+        )}
+        <a href={withBasePath(lang === "en" ? "/en/privacy/" : "/privacidad/")}>{t.landing.footer.privacy}</a>
+      </div>
     </div>
   </footer>
 
@@ -953,6 +980,63 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
     }
   }
 
+  .vignette-list {
+    margin-top: var(--space-6);
+  }
+
+  .vignette-list > .label {
+    color: var(--graphite);
+  }
+
+  .vignette-list ul {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+    border-top: var(--border) solid var(--line);
+    list-style: none;
+  }
+
+  .vignette-list li {
+    display: grid;
+    grid-template-columns: minmax(11rem, 0.32fr) 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+    border-bottom: var(--border) solid var(--line);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+
+  .vignette-sector {
+    color: var(--ink);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .cta-band {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    margin-top: var(--space-7);
+    padding: var(--space-5) var(--space-6);
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+  }
+
+  .cta-band .microcopy {
+    margin-top: var(--space-2);
+    max-width: 44ch;
+  }
+
+  .cta-band .button {
+    flex: none;
+  }
+
   .country-panel {
     display: flex;
     flex-direction: column;
@@ -1057,11 +1141,11 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
   }
 
   .diff-marker {
-    width: 4.25rem;
-    flex: 0 0 4.25rem;
+    width: 4.75rem;
+    flex: 0 0 4.75rem;
     color: var(--graphite);
     font-family: var(--font-data);
-    font-size: var(--text-nano);
+    font-size: var(--text-label);
     font-weight: 600;
     letter-spacing: 0.05em;
   }
@@ -1498,11 +1582,15 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
     line-height: 1.45;
   }
 
+  .footer-location {
+    color: color-mix(in srgb, var(--paper) 76%, var(--ink));
+  }
+
   .footer-meta {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: var(--space-3);
+    gap: var(--space-4);
     color: var(--line);
     font-size: var(--text-micro);
   }
@@ -1511,6 +1599,7 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
     min-height: var(--target);
     display: inline-flex;
     align-items: center;
+    gap: var(--space-2);
   }
 
   /*
@@ -2172,6 +2261,16 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
 
     .proof-diff {
       grid-column: auto;
+    }
+
+    .cta-band {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .vignette-list li {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
     }
 
     .proof-before,

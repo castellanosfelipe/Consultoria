@@ -40,10 +40,13 @@ const ui = isEnglish
       sent: "Context sent",
       receivedOpening: "Context received. Opening confirmation…",
       timeout: "The request took too long. Check your connection and try again.",
-      network: "We could not send the form. Check your connection and try again.",
+      network: "We could not send the form. Check your connection and try again, or send it by email:",
+      serverError: "The server did not accept the submission. Send it by email instead, your message is ready:",
+      sendByEmail: "Send by email",
+      mailtoSubject: "Operational context",
       confirmationStatus: "message received",
       confirmationTitle: "We have the context.",
-      confirmationCopy: "Our team will review it. You will receive a clear answer about fit and next steps.",
+      confirmationCopy: "We reply within 1 business day with a proposed time for the 30 minute call. If you want a head start, have in mind: which process hurts the most, which systems are involved and who operates it.",
       invalidProvider: "Invalid provider",
       calendarTitle: "Calendar to book a 30 minute fit call",
       calendarFailure: "The calendar did not respond. Use the direct link or try again.",
@@ -66,10 +69,13 @@ const ui = isEnglish
       sent: "Contexto enviado",
       receivedOpening: "Contexto recibido. Abriendo la confirmación…",
       timeout: "El envío tardó demasiado. Revisa tu conexión e inténtalo de nuevo.",
-      network: "No pudimos enviar el formulario. Revisa tu conexión e inténtalo de nuevo.",
+      network: "No pudimos enviar el formulario. Revisa tu conexión e inténtalo de nuevo, o envíalo por correo:",
+      serverError: "El servidor no aceptó el envío. Envíalo por correo, tu mensaje ya queda listo:",
+      sendByEmail: "Enviar por correo",
+      mailtoSubject: "Contexto operativo",
       confirmationStatus: "mensaje recibido",
       confirmationTitle: "Ya tenemos el contexto.",
-      confirmationCopy: "El equipo lo revisará. Recibirás una respuesta clara sobre encaje y siguiente paso.",
+      confirmationCopy: "Te respondemos en 1 día hábil con una propuesta de horario para la llamada de 30 minutos. Si quieres adelantar, ten presente: qué proceso duele más, qué sistemas intervienen y quién lo opera.",
       invalidProvider: "Proveedor inválido",
       calendarTitle: "Agenda para reservar una llamada de encaje de 30 minutos",
       calendarFailure: "La agenda no respondió. Usa el enlace directo o inténtalo de nuevo.",
@@ -301,16 +307,16 @@ const renderCop = () => {
 };
 
 const renderRateLoading = (currency: CurrencyCode) => {
+  // El valor base en COP nunca desaparece: la conversión se añade como contexto.
   currencyValues.forEach((element) => {
+    const base = element.dataset.cop || "";
     element.setAttribute("aria-busy", "true");
     element.textContent =
       currencyKindFor(element) === "sentence"
         ? isEnglish
-          ? `an equivalent amount in ${currency} that is being updated`
-          : `un valor equivalente en ${currency} que estamos actualizando`
-        : isEnglish
-          ? `Calculating the equivalent in ${currency}…`
-          : `Calculando la equivalencia en ${currency}…`;
+          ? `${base} (calculating the ${currency} equivalent…)`
+          : `${base} (calculando la equivalencia en ${currency}…)`
+        : `${base} · ≈ ${currency} …`;
   });
   syncDiagnosisReference();
 };
@@ -321,16 +327,17 @@ const renderEquivalent = (currency: CurrencyCode, rate: number) => {
     const baseMax = Number(element.dataset.baseMax);
     if (!Number.isFinite(baseMin) || !Number.isFinite(baseMax)) return;
 
+    const base = element.dataset.cop || "";
     const minimum = numberFormatter.format(Math.round(baseMin * rate));
     const maximum = numberFormatter.format(Math.round(baseMax * rate));
     element.textContent =
       currencyKindFor(element) === "sentence"
         ? isEnglish
-          ? `approximately ${currency} ${minimum} to ${currency} ${maximum}`
-          : `entre ${currency} ${minimum} y ${currency} ${maximum} aproximadamente`
+          ? `${base} (≈ ${currency} ${minimum} to ${maximum}, today’s rate)`
+          : `${base} (≈ ${currency} ${minimum} a ${maximum}, tasa del día)`
         : isEnglish
-          ? `≈ ${currency} ${minimum} to ${maximum} · daily equivalent`
-          : `≈ ${currency} ${minimum} a ${maximum} · equivalencia diaria`;
+          ? `${base} · ≈ ${currency} ${minimum} to ${maximum}`
+          : `${base} · ≈ ${currency} ${minimum} a ${maximum}`;
     element.removeAttribute("aria-busy");
   });
   syncDiagnosisReference();
@@ -672,6 +679,33 @@ if (form) {
     }
   };
 
+  const contactEmail = form.dataset.contactEmail || "";
+
+  const buildMailto = () => {
+    const value = (name: string) =>
+      form.querySelector<HTMLInputElement>(`[name='${name}']`)?.value.trim() || "";
+    const subject = `${ui.mailtoSubject} · ${value("nombre")}`;
+    const body = [
+      `${value("nombre")}`,
+      `${value("email")}`,
+      "",
+      `${value("contexto")}`,
+    ].join("\n");
+    return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  // Cuando el envío falla, el mensaje distingue servidor de red y ofrece una
+  // vía que siempre funciona: el correo con el contexto ya redactado.
+  const showFailure = (message: string) => {
+    if (!formStatus) return;
+    formStatus.textContent = `${message} `;
+    if (!contactEmail) return;
+    const link = document.createElement("a");
+    link.href = buildMailto();
+    link.textContent = ui.sendByEmail;
+    formStatus.append(link);
+  };
+
   window.addEventListener("pageshow", resetSubmitState);
 
   form.addEventListener("submit", async (event) => {
@@ -715,7 +749,12 @@ if (form) {
         signal: controller.signal,
       });
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) {
+        resetSubmitState();
+        showFailure(ui.serverError);
+        track("Form Submit Failed", { reason: `http-${response.status}` });
+        return;
+      }
       try {
         sessionStorage.setItem("contacto-enviado", "true");
       } catch {
@@ -736,8 +775,10 @@ if (form) {
       resetSubmitState();
       const timedOut =
         error instanceof DOMException && error.name === "AbortError";
-      if (formStatus) {
-        formStatus.textContent = timedOut ? ui.timeout : ui.network;
+      if (timedOut) {
+        if (formStatus) formStatus.textContent = ui.timeout;
+      } else {
+        showFailure(ui.network);
       }
       track("Form Submit Failed", { reason: timedOut ? "timeout" : "network" });
     } finally {

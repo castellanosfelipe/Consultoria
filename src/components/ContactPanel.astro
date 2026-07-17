@@ -12,7 +12,9 @@ const t = copy.contact;
 const diagnosisReference = copy.landing.services.diagnosisCurrency.card.cop;
 const hasBooking = Boolean(siteConfig.bookingUrl);
 const formAction = withBasePath(lang === "en" ? "/en/thanks/" : "/gracias/");
-const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
+const formSubmitUrl =
+  siteConfig.formEndpoint || withBasePath(lang === "en" ? "/en/" : "/");
+const privacyHref = withBasePath(lang === "en" ? "/en/privacy/" : "/privacidad/");
 ---
 
 <section class="section contact-section" id="contacto" aria-labelledby="contact-title" data-animate="contact" data-stagger="70" data-mobile-reveal="items" data-scroll-section>
@@ -23,7 +25,7 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
     </div>
 
     <ol class="next-steps" aria-label={t.whatNext} data-contact-route>
-      <li data-animate-item data-contact-step data-motion-index="2"><span>01</span><strong>{t.chooseRoute}</strong><small>{hasBooking ? t.chooseBooking : t.chooseForm}</small></li>
+      <li data-animate-item data-contact-step data-motion-index="2"><span>01</span><strong>{hasBooking ? t.chooseRoute : t.chooseWrite}</strong><small>{hasBooking ? t.chooseBooking : t.chooseForm}</small></li>
       <li data-animate-item data-contact-step data-motion-index="3"><span>02</span><strong>{t.details}</strong><small>{t.detailsCopy}</small></li>
       <li data-animate-item data-contact-step data-motion-index="4"><span>03</span><strong>{t.call}</strong><small>{t.callCopy}</small></li>
       <li data-animate-item data-contact-step data-motion-index="5"><span>04</span><strong>{t.response}</strong><small>{t.responseCopy}</small></li>
@@ -67,8 +69,8 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
         data-motion-index={hasBooking ? "7" : "6"}
       >
         <div>
-          <p class="label">{hasBooking ? t.formRoute : t.tellContext}</p>
-          <h3>{t.formTitle}</h3>
+          <p class="label">{hasBooking ? t.formRoute : t.writeLabel}</p>
+          <h3>{hasBooking ? t.formTitle : t.formTitleSolo}</h3>
           <p class="microcopy">{t.formCopy}</p>
         </div>
 
@@ -78,6 +80,7 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
           method="POST"
           action={formAction}
           data-submit-url={formSubmitUrl}
+          data-contact-email={siteConfig.email}
           data-netlify="true"
           data-netlify-honeypot="bot-field"
           data-contact-form
@@ -120,7 +123,12 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
           <div class="contact-form__actions contact-form__wide" data-animate-item data-contact-field data-motion-index={hasBooking ? "11" : "10"}>
             <button class="button" type="submit" data-form-submit>{t.submit} <span class="icon-arrow" aria-hidden="true"></span></button>
             <div>
-              <p>{t.privacy}</p>
+              <p>{t.responseTime} {t.privacy} <a href={privacyHref}>{t.privacyLink}</a></p>
+              {siteConfig.email && (
+                <p class="contact-email-alt">
+                  {t.emailAlt} <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+                </p>
+              )}
               <p class="form-status" data-form-status role="status" aria-live="polite"></p>
             </div>
           </div>
@@ -543,6 +551,21 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
     font-size: var(--text-micro);
   }
 
+  .contact-form__actions a {
+    color: var(--ink);
+    text-decoration-thickness: var(--border);
+    text-underline-offset: 0.2em;
+  }
+
+  .contact-email-alt {
+    margin-top: var(--space-1);
+  }
+
+  .form-status a {
+    color: var(--production);
+    font-weight: 600;
+  }
+
   @media (max-width: 56.25rem) {
     .contact-intro,
     .contact-grid {
@@ -583,6 +606,27 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
   }
 
   @media (max-width: 37.4375rem) {
+    /* En móvil el formulario aparece antes que los pasos: el CTA promete
+       tres campos y el visitante los encuentra sin atravesar cuatro tarjetas. */
+    .contact-section .container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-intro {
+      order: 1;
+    }
+
+    .contact-grid {
+      order: 2;
+      margin-top: var(--space-7);
+    }
+
+    .next-steps {
+      order: 3;
+      margin: var(--space-7) 0 0;
+    }
+
     .next-steps,
     .contact-form {
       grid-template-columns: 1fr;

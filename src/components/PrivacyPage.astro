@@ -1,0 +1,90 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "./SiteHeader.astro";
+import { siteConfig, withBasePath } from "../config";
+import { getCopy, type Language } from "../i18n/copy";
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = "es" } = Astro.props;
+const t = getCopy(lang).privacy;
+const homeHref = withBasePath(lang === "en" ? "/en/" : "/");
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.title}
+  description={t.description}
+  canonicalPath={lang === "en" ? "/en/privacy/" : "/privacidad/"}
+  pageHomePath={lang === "en" ? "/en/" : "/"}
+>
+  <SiteHeader lang={lang} />
+  <main id="contenido" class="privacy-page">
+    <div class="container">
+      <div class="reading-column">
+        <p class="label">{t.updated}</p>
+        <h1>{t.heading}</h1>
+        <p class="lead">{t.intro}</p>
+
+        {t.sections.map((section) => (
+          <section>
+            <h2>{section.heading}</h2>
+            <p>{section.copy}</p>
+          </section>
+        ))}
+
+        <section>
+          <h2>{t.contactHeading}</h2>
+          <p>
+            Felipe Peña ·{" "}
+            <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+          </p>
+        </section>
+
+        <a class="button button--secondary" href={homeHref}>{t.back} <span class="icon-arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .privacy-page {
+    padding-block: clamp(var(--space-8), 9vw, var(--space-9));
+  }
+
+  .privacy-page .label {
+    color: var(--graphite);
+  }
+
+  h1 {
+    margin-top: var(--space-4);
+  }
+
+  .lead {
+    margin-top: var(--space-5);
+  }
+
+  section {
+    margin-top: var(--space-7);
+  }
+
+  h2 {
+    font-size: var(--text-h3);
+  }
+
+  section p {
+    margin-top: var(--space-3);
+    color: var(--graphite);
+    line-height: 1.65;
+  }
+
+  section a {
+    color: var(--ink);
+  }
+
+  .button {
+    margin-top: var(--space-8);
+  }
+</style>

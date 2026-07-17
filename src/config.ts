@@ -22,9 +22,11 @@ export const siteConfig = {
   siteUrl,
   locale: "es_CO",
   language: "es",
-  email: "",
+  // DEMO: reemplaza por el correo público de contacto definitivo.
+  email: env(import.meta.env.PUBLIC_CONTACT_EMAIL) || "ing.felipe55@outlook.com",
   basePath,
   bookingUrl: env(import.meta.env.PUBLIC_CAL_URL),
+  formEndpoint: env(import.meta.env.PUBLIC_FORM_ENDPOINT),
   linkedInUrl: env(import.meta.env.PUBLIC_LINKEDIN_URL),
   portraitPath: withBasePath(portraitPath),
   portraitAvifPath: configuredPortraitPath

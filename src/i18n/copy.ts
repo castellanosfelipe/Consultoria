@@ -34,29 +34,29 @@ export const copy = {
       switchToSpanish: "Ver la página en español",
       switchToEnglish: "Ver la página en inglés",
       currency: "País y moneda",
-      currencyColombia: "CO · COP",
-      currencyMexico: "MX · MXN",
-      currencyPeru: "PE · PEN",
-      currencyInternational: "US · USD",
+      currencyColombia: "CO·COP",
+      currencyMexico: "MX·MXN",
+      currencyPeru: "PE·PEN",
+      currencyInternational: "US·USD",
     },
     landing: {
       hero: {
-        title: "Software interno al ritmo de tu operación.",
-        titleLine1: "Software interno",
-        titleLine2: "al ritmo de tu operación.",
+        title: "Tu operación, sin trabajo manual: software interno en 4 a 8 semanas.",
+        titleLine1: "Tu operación, sin trabajo manual:",
+        titleLine2: "software interno en 4 a 8 semanas.",
         lead:
-          "Tu operación creció más rápido que tus sistemas. Nuestro equipo diseña, gestiona y construye el software y las automatizaciones que la ponen al día. En producción entre 4 y 8 semanas, con Felipe al frente y un equipo responsable de principio a fin.",
+          "Tu operación creció más rápido que tus sistemas. Diseñamos y construimos el software y las automatizaciones que la ponen al día, con Felipe al frente y un equipo responsable de principio a fin.",
         bookingCta: "Reservar llamada de encaje",
-        formCta: "Cuéntanos tu proceso",
+        formCta: "Cuéntanos tu contexto",
         bookingMicrocopy:
           "30 minutos sin costo con Felipe y el equipo. En esa llamada determinamos si el proyecto es viable y si conviene avanzar al diagnóstico.",
         formMicrocopy:
-          "Tres campos, sin boletín. Si el contexto encaja, coordinamos la primera llamada para revisar la viabilidad.",
+          "Tres campos, dos minutos, sin boletín. Respondemos en 1 día hábil para coordinar una llamada de 30 minutos.",
         factsLabel: "Condiciones principales",
         timeline: "Plazo",
         timelineValue: "4 a 8 semanas",
-        model: "Viabilidad",
-        modelValue: "primera llamada",
+        model: "Primer paso",
+        modelValue: "llamada sin costo",
         ownership: "Propiedad",
         ownershipValue: "código tuyo",
         visualLabel: "De datos dispersos a una operación conectada",
@@ -73,7 +73,7 @@ export const copy = {
           "No es un problema de tecnología. Es la brecha entre cómo creció tu negocio y los sistemas con los que lo operas. Esa brecha se paga todos los meses, en horas y en errores.",
       },
       positioning: {
-        title: "La estructura justa, sin teléfono roto.",
+        title: "La estructura justa, sin intermediarios.",
         lead:
           "Trabajas directamente con un equipo que entiende, diseña y decide, con capacidad real para construir.",
         independentLabel: "Profesional independiente",
@@ -87,7 +87,7 @@ export const copy = {
         agencyLabel: "Agencia",
         agencyTitle: "Estructura, pero distancia",
         agencyCopy:
-          "Hablas con un comercial. Construye alguien que no conoció tu problema.",
+          "Hablas con un comercial. Quien vende no es quien construye tu solución.",
       },
       services: {
         title: "De entender la operación a ponerla en producción.",
@@ -102,7 +102,7 @@ export const copy = {
           sentence: {
             cop: "entre COP 600.000 y COP 1.000.000 según el proyecto",
           },
-          rateNote: "Equivalencias aproximadas ·",
+          rateNote: "Equivalencias aproximadas con la tasa del día ·",
         },
       },
       offers: [
@@ -171,6 +171,21 @@ export const copy = {
           "Construcción y obra",
           "Gobierno nacional",
         ],
+        vignettesLabel: "Casos tipo",
+        vignettes: [
+          {
+            sector: "Laboratorio · Colombia",
+            line: "Consolidación manual de resultados → portal interno con trazabilidad de muestras.",
+          },
+          {
+            sector: "Transporte · México",
+            line: "Despachos coordinados por WhatsApp y Excel → tablero de operación con alertas.",
+          },
+          {
+            sector: "Servicios financieros · Perú",
+            line: "Conciliación entre ERP y facturación a mano → integración con validaciones diarias.",
+          },
+        ],
       },
       proof: {
         title: "Compromisos que puedes verificar antes de la entrega.",
@@ -207,6 +222,11 @@ export const copy = {
           stack: "CÓDIGO · DOCUMENTACIÓN · TRANSFERENCIA",
         },
       ],
+      ctaBand: {
+        title: "¿Suena a tu operación?",
+        copy: "Cuéntanos el proceso que más fricción genera y te decimos si es viable.",
+        cta: "Cuéntanos tu contexto",
+      },
       process: {
         title: "Sabrás dónde está tu proyecto cada semana.",
         lead:
@@ -216,14 +236,14 @@ export const copy = {
         {
           number: "01",
           title: "Diagnóstico",
-          timing: "2 semanas",
+          timing: "semanas 1 y 2",
           copy: "Entrevistas, mapa de sistemas y definición de alcance, plazo y valor.",
         },
         {
           number: "02",
           title: "Primera demostración",
-          timing: "semanas 1 y 2",
-          copy: "Versión navegable. Desde aquí ves software cada viernes, no diapositivas.",
+          timing: "semana 1 o 2",
+          copy: "Versión navegable del flujo crítico. Desde aquí ves software cada viernes, no diapositivas.",
         },
         {
           number: "03",
@@ -245,8 +265,8 @@ export const copy = {
         lead:
           "Felipe cuenta con más de 8 años dirigiendo proyectos de tecnología como gerente de proyectos y gerente de producto. La iniciativa de mayor escala que ha liderado superó los 5 mil millones de pesos colombianos.",
         copy:
-          "Felipe conduce el diagnóstico, las decisiones de producto y la gestión. Un núcleo de ingeniería construye y especialistas se integran cuando el alcance lo exige. Cada persona tiene nombre, rol y responsabilidad visibles.",
-        linkedIn: "Ver perfil en LinkedIn",
+          "Felipe conduce el diagnóstico, las decisiones de producto y la gestión. Un núcleo de ingeniería construye y especialistas se integran cuando el alcance lo exige. En la propuesta, cada persona aparece con nombre, rol y momento de entrada.",
+        linkedIn: "Verifícalo en su LinkedIn",
         capacityLabel: "Capacidad del equipo",
         capacityTitle: "La capacidad, en concreto",
         capacityItems: [
@@ -261,9 +281,13 @@ export const copy = {
         items: [
           {
             question: "¿Cómo se define la inversión?",
-            answerBefore: "En la primera llamada determinamos si el proyecto es viable. Si hay encaje, el diagnóstico cuesta ",
-            answerAfter: ". Sus hallazgos definen el alcance, el plazo y el valor del proyecto antes de construir.",
+            answerBefore: "La primera llamada no tiene costo: ahí determinamos si el proyecto es viable. Si avanzamos, el diagnóstico cuesta ",
+            answerAfter: ". El resultado es tuyo, decidas construir con nosotros o con otro equipo: mapa de procesos, arquitectura y propuesta con alcance, plazo y valor.",
             currencyPrice: true,
+          },
+          {
+            question: "¿Qué pasa si el diagnóstico no me convence?",
+            answer: "El documento es tuyo: el mapa, la arquitectura y la propuesta sirven aunque construyas con otro equipo. Y si construimos juntos, el diagnóstico se abona al valor del proyecto.",
           },
           {
             question: "¿Quién hace realmente el trabajo?",
@@ -271,11 +295,15 @@ export const copy = {
           },
           {
             question: "¿Cuánto se demora?",
-            answer: "Normalmente entre 4 y 8 semanas. El plazo se compromete en la propuesta y no queda como una estimación abierta.",
+            answer: "Normalmente entre 4 y 8 semanas en total, incluido el diagnóstico. El plazo se compromete en la propuesta y no queda como una estimación abierta.",
           },
           {
             question: "¿Voy a terminar hablando con alguien con poca experiencia?",
-            answer: "No. Felipe permanece como interlocutor y líder del proyecto. No hay teléfono roto entre quien entiende el problema, quien decide y el equipo que construye.",
+            answer: "No. Felipe permanece como interlocutor y líder del proyecto. Quien entiende el problema decide junto al equipo que construye, sin intermediarios.",
+          },
+          {
+            question: "¿Qué necesito preparar para la llamada?",
+            answer: "Solo tres cosas: qué proceso te duele más, qué sistemas intervienen y quién lo opera. No necesitas documentación técnica.",
           },
           {
             question: "¿De quién es el código?",
@@ -293,6 +321,8 @@ export const copy = {
       },
       footer: {
         description: "Software interno, automatización de datos e integraciones con IA.",
+        location: "Bogotá, Colombia · Proyectos en Colombia, México y Perú",
+        privacy: "Política de privacidad",
       },
     },
     graph: {
@@ -356,8 +386,9 @@ export const copy = {
       lead: "En la primera llamada revisamos el proceso que más fricción genera y determinamos la viabilidad. Si hay encaje, el diagnóstico define el alcance y el valor del proyecto.",
       whatNext: "Qué pasa después",
       chooseRoute: "Eliges ruta",
+      chooseWrite: "Escribes el contexto",
       chooseBooking: "Agenda o escribe. Dos minutos.",
-      chooseForm: "Escribe el contexto. Dos minutos.",
+      chooseForm: "Tres campos. Dos minutos.",
       details: "Tres datos",
       detailsCopy: "Nombre, correo y contexto.",
       call: "La llamada",
@@ -372,14 +403,19 @@ export const copy = {
       openBookingTab: "Abrir agenda en una pestaña nueva",
       formRoute: "Ruta B · mensaje",
       tellContext: "Cuéntanos el contexto",
+      writeLabel: "Escríbenos",
       formTitle: "Prefiero escribir",
+      formTitleSolo: "Cuéntanos tu contexto",
       formCopy: "Tres campos. Sin boletín ni secuencias automáticas.",
       name: "Nombre",
       email: "Correo de trabajo",
       context: "Una línea de contexto",
-      placeholder: "Ejemplo: conciliamos pedidos de cuatro sistemas a mano",
+      placeholder: "Ej.: conciliamos pedidos a mano",
       submit: "Enviar contexto",
       privacy: "Solo usaremos estos datos para responderte.",
+      privacyLink: "Política de privacidad",
+      responseTime: "Respondemos en 1 día hábil.",
+      emailAlt: "¿Prefieres correo? Escríbenos a",
     },
     thanks: {
       title: "Siguiente paso | Felipe Peña",
@@ -395,6 +431,39 @@ export const copy = {
       heading: "Este nodo no conecta con nada.",
       copy: "La dirección puede haber cambiado o el enlace está incompleto.",
       back: "Volver al sistema",
+    },
+    privacy: {
+      title: "Política de privacidad | Felipe Peña",
+      description:
+        "Cómo tratamos los datos personales que compartes a través del formulario de contacto.",
+      heading: "Política de privacidad",
+      updated: "Última actualización: julio de 2026",
+      intro:
+        "Esta política describe cómo Felipe Peña, como responsable del tratamiento, maneja los datos personales que compartes a través de esta página, en cumplimiento de la Ley 1581 de 2012 y sus decretos reglamentarios en Colombia.",
+      sections: [
+        {
+          heading: "Qué datos recogemos",
+          copy: "Solo los que escribes en el formulario de contacto: nombre, correo de trabajo y la descripción del contexto operativo que decidas compartir. No usamos rastreadores publicitarios ni compramos datos de terceros.",
+        },
+        {
+          heading: "Para qué los usamos",
+          copy: "Únicamente para responderte y coordinar la llamada de viabilidad. No enviamos boletines, no hacemos secuencias automáticas de correo y no compartimos tus datos con terceros con fines comerciales.",
+        },
+        {
+          heading: "Cuánto tiempo los conservamos",
+          copy: "Mientras exista una conversación comercial activa o una relación contractual. Si no avanzamos, puedes pedir la eliminación en cualquier momento.",
+        },
+        {
+          heading: "Tus derechos",
+          copy: "Puedes conocer, actualizar, rectificar o solicitar la supresión de tus datos, y revocar la autorización de tratamiento, escribiendo al correo de contacto. Respondemos dentro de los plazos que establece la ley.",
+        },
+        {
+          heading: "Encargados y herramientas",
+          copy: "El formulario se procesa a través del proveedor de infraestructura del sitio y el correo llega a una cuenta gestionada por el responsable. Si activamos analítica, será agregada y sin identificar personas.",
+        },
+      ],
+      contactHeading: "Contacto para temas de datos",
+      back: "Volver al inicio",
     },
   },
   en: {
@@ -430,26 +499,26 @@ export const copy = {
       switchToSpanish: "View this page in Spanish",
       switchToEnglish: "View this page in English",
       currency: "Country and currency",
-      currencyColombia: "CO · COP",
-      currencyMexico: "MX · MXN",
-      currencyPeru: "PE · PEN",
-      currencyInternational: "US · USD",
+      currencyColombia: "CO·COP",
+      currencyMexico: "MX·MXN",
+      currencyPeru: "PE·PEN",
+      currencyInternational: "US·USD",
     },
     landing: {
       hero: {
-        title: "Internal software that keeps pace with your operation.",
-        titleLine1: "Internal software",
-        titleLine2: "that keeps pace with your operation.",
-        lead: "Your operation grew faster than your systems. Our team designs, manages and builds the software and automations that bring it up to speed. Live in 4 to 8 weeks, with Felipe leading an accountable team from start to finish.",
+        title: "Your operation, without manual work: internal software in 4 to 8 weeks.",
+        titleLine1: "Your operation, without manual work:",
+        titleLine2: "internal software in 4 to 8 weeks.",
+        lead: "Your operation grew faster than your systems. We design and build the software and automations that bring it up to speed, with Felipe leading an accountable team from start to finish.",
         bookingCta: "Book a fit call",
-        formCta: "Share your process",
+        formCta: "Share your context",
         bookingMicrocopy: "30 minutes at no cost with Felipe and the team. On that call, we determine whether the project is viable and whether an assessment is the right next step.",
-        formMicrocopy: "Three fields. No newsletter. If the context fits, we coordinate the first call to review viability.",
+        formMicrocopy: "Three fields, two minutes, no newsletter. We reply within 1 business day to coordinate a 30 minute call.",
         factsLabel: "Main terms",
         timeline: "Timeline",
         timelineValue: "4 to 8 weeks",
-        model: "Viability",
-        modelValue: "first call",
+        model: "First step",
+        modelValue: "free call",
         ownership: "Ownership",
         ownershipValue: "your code",
         visualLabel: "From scattered data to a connected operation",
@@ -465,7 +534,7 @@ export const copy = {
         thesis: "This is not a technology problem. It is the gap between how your business grew and the systems you use to run it. You pay for that gap every month in hours and errors.",
       },
       positioning: {
-        title: "Enough structure, without communication layers.",
+        title: "Enough structure, without middlemen.",
         lead: "You work directly with a team that understands, designs and decides, with real delivery capacity.",
         independentLabel: "Independent consultant",
         independentTitle: "Direct, but fragile",
@@ -475,7 +544,7 @@ export const copy = {
         hereCopy: "Felipe leads design and decisions while a stable core team builds. Product and delivery stay under the team’s responsibility.",
         agencyLabel: "Agency",
         agencyTitle: "Structure, but distance",
-        agencyCopy: "You speak with a salesperson. Someone who never saw your problem does the building.",
+        agencyCopy: "You speak with a salesperson. The person selling is not the person building your solution.",
       },
       services: {
         title: "From understanding the operation to running it in production.",
@@ -489,7 +558,7 @@ export const copy = {
           sentence: {
             cop: "between COP 600,000 and COP 1,000,000 depending on the project",
           },
-          rateNote: "Approximate equivalents ·",
+          rateNote: "Approximate equivalents at today’s rate ·",
         },
       },
       offers: [
@@ -553,6 +622,21 @@ export const copy = {
           "Construction and civil works",
           "National government",
         ],
+        vignettesLabel: "Sample projects",
+        vignettes: [
+          {
+            sector: "Laboratory · Colombia",
+            line: "Manual consolidation of results → internal portal with sample traceability.",
+          },
+          {
+            sector: "Transportation · Mexico",
+            line: "Dispatches coordinated over WhatsApp and Excel → operations board with alerts.",
+          },
+          {
+            sector: "Financial services · Peru",
+            line: "Manual reconciliation between ERP and billing → integration with daily validations.",
+          },
+        ],
       },
       proof: {
         title: "Commitments you can verify before delivery.",
@@ -588,6 +672,11 @@ export const copy = {
           stack: "CODE · DOCUMENTATION · HANDOFF",
         },
       ],
+      ctaBand: {
+        title: "Sound like your operation?",
+        copy: "Tell us about the process causing the most friction and we will tell you whether it is viable.",
+        cta: "Share your context",
+      },
       process: {
         title: "You will know where your project stands every week.",
         lead: "The sequence does not end with a presentation. It ends in production, ownership and a technical handoff.",
@@ -596,14 +685,14 @@ export const copy = {
         {
           number: "01",
           title: "Diagnosis",
-          timing: "2 weeks",
+          timing: "weeks 1 and 2",
           copy: "Interviews, systems map and a defined scope, timeline and value.",
         },
         {
           number: "02",
           title: "First working version",
           timing: "week 1 or 2",
-          copy: "A navigable version. From then on, you see working software every Friday, not slides.",
+          copy: "A navigable version of the critical flow. From then on, you see working software every Friday, not slides.",
         },
         {
           number: "03",
@@ -623,8 +712,8 @@ export const copy = {
         role: "Technology project and product leadership",
         title: "Felipe leads; the team takes the solution to production.",
         lead: "Felipe has more than 8 years leading technology projects as a project manager and product manager. The largest initiative he has led had a budget above COP 5 billion.",
-        copy: "Felipe leads the assessment, product decisions and project management. A core engineering team builds, while specialists join when the scope requires them. Every person has a visible name, role and responsibility.",
-        linkedIn: "View profile on LinkedIn",
+        copy: "Felipe leads the assessment, product decisions and project management. A core engineering team builds, while specialists join when the scope requires them. In the proposal, every person appears with a name, a role and a start date.",
+        linkedIn: "Verify it on LinkedIn",
         capacityLabel: "Team capacity",
         capacityTitle: "Delivery capacity, in concrete terms",
         capacityItems: [
@@ -639,9 +728,13 @@ export const copy = {
         items: [
           {
             question: "How is the investment defined?",
-            answerBefore: "On the first call, we determine whether the project is viable. If there is a fit, the assessment costs ",
-            answerAfter: ". Its findings define the project scope, timeline and value before the build begins.",
+            answerBefore: "The first call is free: that is where we determine whether the project is viable. If we move forward, the assessment costs ",
+            answerAfter: ". The result is yours whether you build with us or with another team: a process map, an architecture and a proposal with scope, timeline and value.",
             currencyPrice: true,
+          },
+          {
+            question: "What if the assessment does not convince me?",
+            answer: "The document is yours: the map, the architecture and the proposal are useful even if another team builds. And if we build together, the assessment is credited toward the project value.",
           },
           {
             question: "Who actually does the work?",
@@ -649,11 +742,15 @@ export const copy = {
           },
           {
             question: "How long does it take?",
-            answer: "Usually 4 to 8 weeks. The timeline is committed in the proposal, not left as an open estimate.",
+            answer: "Usually 4 to 8 weeks in total, including the assessment. The timeline is committed in the proposal, not left as an open estimate.",
           },
           {
             question: "Will I end up speaking with someone inexperienced?",
-            answer: "No. Felipe remains your point of contact and project lead. There is no relay between the person who understands the problem, the person who decides and the team that builds.",
+            answer: "No. Felipe remains your point of contact and project lead. The person who understands the problem decides together with the team that builds, with no middlemen.",
+          },
+          {
+            question: "What do I need to prepare for the call?",
+            answer: "Just three things: which process hurts the most, which systems are involved and who operates it. No technical documentation needed.",
           },
           {
             question: "Who owns the code?",
@@ -671,6 +768,8 @@ export const copy = {
       },
       footer: {
         description: "Internal software, data automation and AI integrations.",
+        location: "Bogotá, Colombia · Projects in Colombia, Mexico and Peru",
+        privacy: "Privacy policy",
       },
     },
     graph: {
@@ -734,8 +833,9 @@ export const copy = {
       lead: "On the first call, we review the process causing the most friction and determine viability. If there is a fit, the assessment defines the project scope and value.",
       whatNext: "What happens next",
       chooseRoute: "Choose a route",
+      chooseWrite: "Share the context",
       chooseBooking: "Book or write. Two minutes.",
-      chooseForm: "Share the context. Two minutes.",
+      chooseForm: "Three fields. Two minutes.",
       details: "Three details",
       detailsCopy: "Name, email and context.",
       call: "The call",
@@ -750,14 +850,19 @@ export const copy = {
       openBookingTab: "Open calendar in a new tab",
       formRoute: "Route B · message",
       tellContext: "Tell us the context",
+      writeLabel: "Write to us",
       formTitle: "I prefer to write",
+      formTitleSolo: "Share your context",
       formCopy: "Three fields. No newsletter or automated sequences.",
       name: "Name",
       email: "Work email",
       context: "One line of context",
-      placeholder: "Example: we reconcile orders from four systems by hand",
+      placeholder: "E.g.: we reconcile orders by hand",
       submit: "Send context",
       privacy: "We will only use this information to reply.",
+      privacyLink: "Privacy policy",
+      responseTime: "We reply within 1 business day.",
+      emailAlt: "Prefer email? Write to us at",
     },
     thanks: {
       title: "Next step | Felipe Peña",
@@ -773,6 +878,39 @@ export const copy = {
       heading: "This node does not connect to anything.",
       copy: "The address may have changed or the link may be incomplete.",
       back: "Back to the system",
+    },
+    privacy: {
+      title: "Privacy policy | Felipe Peña",
+      description:
+        "How we handle the personal data you share through the contact form.",
+      heading: "Privacy policy",
+      updated: "Last updated: July 2026",
+      intro:
+        "This policy describes how Felipe Peña, as data controller, handles the personal data you share through this page, in compliance with Colombian Law 1581 of 2012 and its regulatory decrees.",
+      sections: [
+        {
+          heading: "What data we collect",
+          copy: "Only what you type into the contact form: your name, work email and the operational context you decide to share. We do not use advertising trackers or buy third-party data.",
+        },
+        {
+          heading: "What we use it for",
+          copy: "Only to reply to you and coordinate the viability call. We do not send newsletters, run automated email sequences or share your data with third parties for commercial purposes.",
+        },
+        {
+          heading: "How long we keep it",
+          copy: "For as long as there is an active commercial conversation or a contractual relationship. If we do not move forward, you can request deletion at any time.",
+        },
+        {
+          heading: "Your rights",
+          copy: "You can access, update, correct or request the deletion of your data, and revoke your consent, by writing to the contact email. We reply within the timeframes established by law.",
+        },
+        {
+          heading: "Processors and tools",
+          copy: "The form is processed through the site’s infrastructure provider and messages arrive at an account managed by the controller. If we enable analytics, it will be aggregated and will not identify individuals.",
+        },
+      ],
+      contactHeading: "Contact for data matters",
+      back: "Back to home",
     },
   },
 } as const;

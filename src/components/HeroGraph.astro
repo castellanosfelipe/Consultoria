@@ -128,12 +128,12 @@ const t = getCopy(lang).graph;
       <text class="node-label mobile-before" style="--mobile-in: 750ms" x="18" y="62">{t.mobileSources}</text>
       <text class="node-label mobile-before" style="--mobile-in: 1.05s" x="18" y="92">ERP + CRM</text>
       <g class="edges mobile-before" style="--mobile-in: 1.35s">
-        <path d="M122 57 C145 57 151 72 166 77" />
+        <path d="M140 57 C155 57 156 72 166 77" />
         <path d="M105 87 C132 87 147 84 166 80" />
         <path d="M194 79 H226" />
       </g>
       <g class="source-nodes mobile-before" style="--mobile-in: 1.65s">
-        <circle cx="122" cy="57" r="5" />
+        <circle cx="140" cy="57" r="5" />
         <circle cx="105" cy="87" r="5" />
         <circle cx="226" cy="79" r="5" />
       </g>
@@ -748,9 +748,10 @@ const t = getCopy(lang).graph;
       display: block;
     }
 
-    /* Sin JavaScript el diagrama conserva un estado final útil y legible. */
+    /* Sin JavaScript (y como estado de reposo) el diagrama muestra el antes y
+       el después completos: la tarjeta nunca queda medio vacía. */
     .mobile-before {
-      opacity: 0;
+      opacity: 1;
     }
 
     .mobile-after {
@@ -805,13 +806,11 @@ const t = getCopy(lang).graph;
     }
 
     /* Secuencia móvil de ~7,5 s: cada estado permanece el tiempo suficiente
-       para leerlo y todo el movimiento se limita a opacity. */
+       para leerlo y todo el movimiento se limita a opacity. El "antes" no se
+       desvanece: el estado final es el diagrama completo antes → después. */
     .hero-graph.graph-motion-ready.is-visible .mobile-before {
-      animation:
-        graph-fade-in 620ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + var(--mobile-in, 0ms)) both,
-        graph-fade-out 680ms var(--motion-ease)
-          calc(var(--motion-delay, 0ms) + 4.45s) forwards;
+      animation: graph-fade-in 620ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--mobile-in, 0ms)) both;
     }
 
     .hero-graph.graph-motion-ready.is-visible .mobile-after {
@@ -828,13 +827,13 @@ const t = getCopy(lang).graph;
       animation: none;
     }
 
-    .meta--before,
-    .mobile-before {
+    .meta--before {
       display: none;
       opacity: 0;
     }
 
     .meta--after,
+    .mobile-before,
     .mobile-after {
       opacity: 1;
     }
