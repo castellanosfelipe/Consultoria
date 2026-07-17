@@ -10,6 +10,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "npm run check && npm run build",
+    "test:e2e": "node scripts/check-e2e.mjs",
     "lighthouse": "lhci autorun",
     "audit:prod": "npm audit --omit=dev --audit-level=high"
   },
@@ -18,7 +19,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",
+    "@axe-core/playwright": "^4.12.1",
     "@lhci/cli": "0.15.1",
+    "playwright": "^1.61.1",
     "typescript": "6.0.3"
   },
   "overrides": {

@@ -27,6 +27,12 @@ jobs:
           PUBLIC_CAL_URL: https://cal.com/castellanosfelipe/consulta
           PUBLIC_LINKEDIN_URL: https://www.linkedin.com/in/castellanosfelipe/
           PUBLIC_PLAUSIBLE_DOMAIN: consultoria-felipe-qa.netlify.app
+      - name: Instalar navegador para E2E
+        run: npx playwright install --with-deps chromium
+      - name: E2E (entrada por ancla + axe)
+        run: npm run test:e2e
+        env:
+          PUBLIC_BASE_PATH: /
       - run: npm run lighthouse
       - name: Guardar reportes Lighthouse
         if: always()

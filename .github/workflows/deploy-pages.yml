@@ -14,34 +14,67 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# El sitio de producción vive en Vercel (https://consultoria-wine.vercel.app).
+# GitHub Pages publica únicamente una redirección que preserva ruta, query y
+# hash, para no mantener dos producciones divergentes con contenido duplicado.
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - name: Generar redirección a Vercel
+        run: |
+          mkdir -p redirect
+          touch redirect/.nojekyll
+          cat > redirect/index.html <<'HTML'
+          <!doctype html>
+          <html lang="es">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <title>Felipe Peña · Nueva dirección</title>
+              <link rel="canonical" href="https://consultoria-wine.vercel.app/" />
+              <meta http-equiv="refresh" content="0; url=https://consultoria-wine.vercel.app/" />
+              <script>
+                var rest = location.pathname.replace(/^\/Consultoria\/?/, "");
+                location.replace(
+                  "https://consultoria-wine.vercel.app/" + rest + location.search + location.hash
+                );
+              </script>
+              <style>
+                body {
+                  max-width: 36rem;
+                  margin: 4rem auto;
+                  padding: 0 1.25rem;
+                  background: #f2f4f6;
+                  color: #1a222e;
+                  font-family: system-ui, sans-serif;
+                  line-height: 1.6;
+                }
+                a { color: #0b6b49; }
+              </style>
+            </head>
+            <body>
+              <p>
+                El sitio se movió a
+                <a href="https://consultoria-wine.vercel.app/">consultoria-wine.vercel.app</a>.
+                Te estamos redirigiendo.
+              </p>
+              <p lang="en">The site moved to a new address. Redirecting you now.</p>
+            </body>
+          </html>
+          HTML
+          cp redirect/index.html redirect/404.html
 
-      - name: Construir y subir artefacto Astro
-        uses: withastro/action@e84f40bd8d2caa9e768ec82ad30dd81f0b280853 # v6
+      - name: Subir artefacto de Pages
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
-          node-version: 24
-        env:
-          REQUIRE_PRODUCTION_CONFIG: "true"
-          PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io
-          PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
-          PUBLIC_CAL_URL: ${{ vars.PUBLIC_CAL_URL }}
-          PUBLIC_FORM_ENDPOINT: ${{ vars.PUBLIC_FORM_ENDPOINT }}
-          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
-          PUBLIC_LINKEDIN_URL: ${{ vars.PUBLIC_LINKEDIN_URL }}
-          PUBLIC_PLAUSIBLE_DOMAIN: ${{ vars.PUBLIC_PLAUSIBLE_DOMAIN }}
-          PUBLIC_PLAUSIBLE_SRC: ${{ vars.PUBLIC_PLAUSIBLE_SRC }}
-          PUBLIC_PORTRAIT_PATH: ${{ vars.PUBLIC_PORTRAIT_PATH }}
+          path: redirect
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

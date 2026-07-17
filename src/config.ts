@@ -34,5 +34,6 @@ export const siteConfig = {
     : withBasePath("/images/felipe-pena.avif"),
   plausibleDomain: env(import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN),
   plausibleSrc: plausibleSrc.startsWith("/") ? withBasePath(plausibleSrc) : plausibleSrc,
+  vercelAnalytics: env(import.meta.env.PUBLIC_VERCEL_ANALYTICS) === "true",
   ogImage: withBasePath("/images/og-felipe-pena.png"),
 } as const;

@@ -772,22 +772,24 @@ const t = getCopy(lang).graph;
       opacity: 1;
       animation: none;
     }
+  }
 
-    .mobile-status {
-      fill: var(--production);
-      font-size: var(--text-label);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-anchor: middle;
-    }
+  /* A nivel base: el SVG móvil también se usa como estado estático de escritorio
+     bajo reduced-motion, así que sus estilos no pueden vivir solo en la media query. */
+  .mobile-status {
+    fill: var(--production);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-anchor: middle;
+  }
 
-    .mobile-manual-status {
-      fill: var(--manual);
-      font-size: var(--text-tiny);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-anchor: end;
-    }
+  .mobile-manual-status {
+    fill: var(--manual);
+    font-size: var(--text-tiny);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-anchor: end;
   }
 
   @media (max-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
@@ -816,6 +818,30 @@ const t = getCopy(lang).graph;
     .hero-graph.graph-motion-ready.is-visible .mobile-after {
       animation: graph-fade-in 650ms var(--motion-ease)
         calc(var(--motion-delay, 0ms) + var(--mobile-after-in, 4.85s)) both;
+    }
+  }
+
+  /* En escritorio con reduced-motion, el SVG de escritorio (dos estados que se
+     superponen en el mismo lienzo) no puede mostrarse completo de forma estática.
+     El SVG móvil sí es una composición antes → después: se usa como estado fijo. */
+  @media (prefers-reduced-motion: reduce) and (min-width: 56.3125rem) {
+    .hero-graph__desktop {
+      display: none;
+    }
+
+    .hero-graph__mobile {
+      display: block;
+    }
+
+    .pipeline--static {
+      transform: none;
+      animation: none;
+    }
+
+    .arrow--static,
+    .production-nodes--static circle {
+      opacity: 1;
+      animation: none;
     }
   }
 

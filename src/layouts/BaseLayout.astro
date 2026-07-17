@@ -110,6 +110,9 @@ const schemas = [
         <meta name="plausible-src" content={siteConfig.plausibleSrc} />
       </>
     )}
+    {siteConfig.vercelAnalytics && (
+      <script is:inline defer src="/_vercel/insights/script.js" data-vercel-analytics></script>
+    )}
   </head>
   <body>
     <a class="skip-link" href="#contenido">{lang === "en" ? "Skip to content" : "Saltar al contenido"}</a>

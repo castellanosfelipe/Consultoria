@@ -9,6 +9,8 @@ declare global {
     ) => void) & {
       q?: unknown[];
     };
+    va?: (...args: unknown[]) => void;
+    vaq?: unknown[];
   }
 }
 
@@ -113,8 +115,20 @@ if (plausibleDomain && plausibleSrc) {
   else window.addEventListener("load", scheduleAnalytics, { once: true });
 }
 
+// Vercel Web Analytics: si el script está presente, los eventos también se
+// duplican ahí. El stub encola llamadas hasta que el script cargue.
+const vercelAnalytics = Boolean(
+  document.querySelector("script[data-vercel-analytics]"),
+);
+if (vercelAnalytics) {
+  window.va ||= (...args: unknown[]) => {
+    (window.vaq ||= []).push(args);
+  };
+}
+
 const track = (event: string, props?: Record<string, string>) => {
   window.plausible?.(event, props ? { props } : undefined);
+  if (vercelAnalytics) window.va?.("event", { name: event, data: props });
 };
 
 initMotion({
@@ -126,6 +140,74 @@ initMotion({
     });
   },
 });
+
+// Entrada por ancla: content-visibility estima alturas y el scroll nativo puede
+// aterrizar en la sección equivocada con los reveals aún ocultos. Se renderiza
+// el destino y todo lo anterior, se muestra sin stagger y se corrige el scroll.
+const revealHashTarget = (correctScroll: boolean) => {
+  const hash = window.location.hash;
+  if (!hash || hash.length < 2) return;
+  let target: HTMLElement | null = null;
+  try {
+    target = document.querySelector<HTMLElement>(hash);
+  } catch {
+    return;
+  }
+  if (!target) return;
+
+  const section = target.closest<HTMLElement>("[data-scroll-section]") || target;
+  document.querySelectorAll<HTMLElement>(".section").forEach((candidate) => {
+    const follows =
+      candidate === section ||
+      Boolean(candidate.compareDocumentPosition(section) & Node.DOCUMENT_POSITION_FOLLOWING);
+    if (follows) candidate.style.contentVisibility = "visible";
+  });
+
+  section.classList.add("is-visible");
+  section
+    .querySelectorAll<HTMLElement>("[data-animate]")
+    .forEach((element) => element.classList.add("is-visible"));
+  section
+    .querySelectorAll<HTMLElement>("[data-animate-item]")
+    .forEach((element) => {
+      element.style.setProperty("--motion-sequence-delay", "0ms");
+      element.classList.add("is-item-visible");
+    });
+
+  const align = () => target?.scrollIntoView({ behavior: "auto", block: "start" });
+  const misaligned = () => {
+    if (!target) return false;
+    const padding =
+      Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    return Math.abs(target.getBoundingClientRect().top - padding) > 8;
+  };
+
+  if (correctScroll) {
+    // El re-scroll del navegador al fragmento en load respeta scroll-behavior:
+    // smooth y convierte la llegada en un planeo de ~1,5 s. En la entrada
+    // externa el usuario quiere el destino, no la coreografía: instantáneo.
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    align();
+    window.requestAnimationFrame(() => window.requestAnimationFrame(align));
+    window.setTimeout(() => {
+      if (misaligned()) align();
+    }, 250);
+    window.setTimeout(() => {
+      root.style.scrollBehavior = previousBehavior;
+    }, 600);
+  } else {
+    // Navegación interna: el scroll suave nativo sigue al mando; solo se
+    // verifica el punto de llegada cuando la animación ya terminó.
+    window.setTimeout(() => {
+      if (misaligned()) align();
+    }, 800);
+  }
+};
+
+revealHashTarget(true);
+window.addEventListener("hashchange", () => revealHashTarget(false));
 
 document.addEventListener("click", (event) => {
   const target = event.target;
@@ -666,6 +748,16 @@ if (form) {
     field.addEventListener("input", () => {
       if (field.getAttribute("aria-invalid") === "true") validateField(field);
       if (formStatus) formStatus.textContent = "";
+    });
+  });
+
+  // Inicio de formulario: primer focus en cualquier campo, una vez por página.
+  let formStarted = false;
+  fields.forEach((field) => {
+    field.addEventListener("focus", () => {
+      if (formStarted) return;
+      formStarted = true;
+      track("Form Start", { form: "contacto" });
     });
   });
 
