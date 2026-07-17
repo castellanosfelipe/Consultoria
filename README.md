@@ -73,7 +73,7 @@ La demo pública sirve el build estático de Astro desde GitHub Pages. El 15 de 
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | 🎯 **Narrativa orientada al problema**    | Lleva al visitante desde síntomas reconocibles hasta una oferta y un siguiente paso concretos.     |
 | 💵 **Ruta comercial clara**               | Explica la validación de viabilidad, el diagnóstico, los plazos y la propiedad del código.          |
-| 🌎 **País y moneda persistentes**          | Permite elegir COP, MXN, PEN o USD y conserva la preferencia entre páginas e idiomas.                |
+| 🌎 **País y moneda persistentes**          | Convierte únicamente el diagnóstico con una tasa diaria y conserva la preferencia entre páginas e idiomas. |
 | 🤖 **IA e industrias**                    | Explica integraciones concretas con IA y experiencia sectorial en Colombia, México y Perú.         |
 | ✅ **Prueba sin cifras inventadas**       | Sustituye testimonios ausentes por compromisos verificables de alcance, avance y propiedad.        |
 | ⚡ **Conversión progresiva**              | Incluye un formulario mínimo y una agenda opcional que solo se crea cuando el usuario la solicita. |
@@ -136,6 +136,12 @@ npm run dev
 
 Como visitante, el flujo principal es: reconocer el problema → comparar la oferta → revisar compromisos y proceso → abrir la sección de contacto.
 
+#### Conversión del diagnóstico
+
+COP es la única fuente de verdad: el diagnóstico mantiene un rango de COP 600.000 a COP 1.000.000 y los proyectos nunca publican ni calculan un precio. Cuando el visitante elige MXN, PEN o USD, el navegador consulta de forma diferida `https://open.er-api.com/v6/latest/COP`, muestra una equivalencia aproximada y guarda la tasa durante un máximo de 24 horas. La consulta no usa una clave de API ni compite con el LCP.
+
+Si la red no responde, se usa la última tasa guardada. Si tampoco existe una tasa local, la interfaz vuelve al rango COP y lo comunica sin inventar una cifra extranjera. La fuente queda atribuida mediante un enlace visible a ExchangeRate API y el formulario registra la moneda, el país y la referencia que vio el prospecto.
+
 ### Casos de uso avanzados
 
 #### Configurar integraciones reales
@@ -180,7 +186,7 @@ Se eligió Astro porque la landing es principalmente contenido: genera HTML est�
 | ------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------- |
 | Sitio estático            | Astro 7                                       | Compone layouts, componentes y páginas; genera `dist/` sin runtime de framework.    |
 | Presentación              | CSS moderno                                   | Aplica tokens de Fase 2, Grid, `clamp()`, responsive y reduced motion.              |
-| Interacción               | TypeScript del navegador                      | Gestiona menú, sección activa, formulario, agenda diferida y eventos.               |
+| Interacción               | TypeScript del navegador                      | Gestiona menú, motion responsive, conversión diaria con caché, formulario, agenda diferida y eventos. |
 | Calidad                   | Astro Check, validadores Node y Lighthouse CI | Bloquea errores de tipos, output inválido, exceso de peso y regresiones de calidad. |
 | Entrega                   | GitHub Actions + GitHub Pages                 | Construye el artefacto Astro y lo publica bajo `/Consultoria/` sin Jekyll.          |
 | Alternativa de conversión | Netlify, ya configurado                       | Puede aplicar cabeceras y procesar Netlify Forms cuando se conecte un sitio real.   |

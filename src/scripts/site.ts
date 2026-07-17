@@ -49,6 +49,11 @@ const ui = isEnglish
       calendarReady: "Calendar ready.",
       calendarLoading: "Loading calendar…",
       invalidCalendar: "The calendar URL is not valid. Use the alternate form.",
+      rateBase: "COP is the base currency. Equivalents are approximate and use a daily rate.",
+      rateLoading: "Updating the daily exchange rate…",
+      rateUpdated: "Daily rate updated",
+      rateCached: "Using the most recent saved daily rate",
+      rateUnavailable: "The live rate is unavailable. The assessment remains quoted in COP.",
     }
   : {
       menu: "Menú",
@@ -75,6 +80,11 @@ const ui = isEnglish
       calendarReady: "Agenda lista.",
       calendarLoading: "Cargando agenda…",
       invalidCalendar: "La URL de agenda no es válida. Usa el formulario alternativo.",
+      rateBase: "COP es la moneda base. Las equivalencias son aproximadas y usan una tasa diaria.",
+      rateLoading: "Actualizando la tasa diaria…",
+      rateUpdated: "Tasa diaria actualizada",
+      rateCached: "Usamos la tasa diaria guardada más reciente",
+      rateUnavailable: "La tasa en línea no está disponible. El diagnóstico permanece cotizado en COP.",
     };
 
 const basePath = document.documentElement.dataset.basePath || "/";
@@ -140,8 +150,23 @@ document.querySelectorAll<HTMLAnchorElement>("[data-language-link]").forEach((li
 });
 
 type CurrencyCode = "COP" | "MXN" | "PEN" | "USD";
+type CurrencyValueKind = "card" | "sentence";
+
+interface CachedExchangeRates {
+  fetchedAt: number;
+  updatedAt: number;
+  rates: Record<CurrencyCode, number>;
+}
+
+interface ExchangeRateResult extends CachedExchangeRates {
+  source: "live" | "cache";
+  stale: boolean;
+}
 
 const currencyStorageKey = "consultoria-country-currency";
+const exchangeCacheKey = "consultoria-cop-exchange-rates-v1";
+const exchangeEndpoint = "https://open.er-api.com/v6/latest/COP";
+const exchangeCacheTtl = 24 * 60 * 60 * 1_000;
 const currencyCountries: Record<CurrencyCode, string> = {
   COP: "CO",
   MXN: "MX",
@@ -156,28 +181,233 @@ const currencySelectors = Array.from(
 const currencyValues = Array.from(
   document.querySelectorAll<HTMLElement>("[data-currency-value]"),
 );
+const rateStatus = document.querySelector<HTMLElement>("[data-rate-status]");
 const currencyFields = Array.from(
   document.querySelectorAll<HTMLInputElement>("[data-currency-field]"),
 );
 const countryFields = Array.from(
   document.querySelectorAll<HTMLInputElement>("[data-country-field]"),
 );
+const diagnosisReferenceFields = Array.from(
+  document.querySelectorAll<HTMLInputElement>(
+    "[data-diagnosis-reference-field]",
+  ),
+);
 
-const applyCurrency = (currency: CurrencyCode, persist = false) => {
+const locale = isEnglish ? "en-US" : "es-CO";
+const numberFormatter = new Intl.NumberFormat(locale, {
+  maximumFractionDigits: 0,
+  minimumFractionDigits: 0,
+});
+const dateFormatter = new Intl.DateTimeFormat(locale, {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+const validRates = (
+  rates: Partial<Record<CurrencyCode, unknown>> | undefined,
+): rates is Record<CurrencyCode, number> =>
+  Boolean(
+    rates &&
+      (["COP", "MXN", "PEN", "USD"] as CurrencyCode[]).every(
+        (currency) =>
+          typeof rates[currency] === "number" &&
+          Number.isFinite(rates[currency]) &&
+          Number(rates[currency]) > 0,
+      ) &&
+      rates.COP === 1,
+  );
+
+const readCachedExchangeRates = (): CachedExchangeRates | null => {
+  try {
+    const raw = localStorage.getItem(exchangeCacheKey);
+    if (!raw) return null;
+    const cached = JSON.parse(raw) as Partial<CachedExchangeRates>;
+    if (
+      !Number.isFinite(cached.fetchedAt) ||
+      !Number.isFinite(cached.updatedAt) ||
+      !validRates(cached.rates)
+    ) {
+      return null;
+    }
+    return cached as CachedExchangeRates;
+  } catch {
+    return null;
+  }
+};
+
+const writeCachedExchangeRates = (rates: CachedExchangeRates) => {
+  try {
+    localStorage.setItem(exchangeCacheKey, JSON.stringify(rates));
+  } catch {
+    // La conversión sigue disponible durante la sesión si no hay almacenamiento.
+  }
+};
+
+let exchangeRatesRequest: Promise<ExchangeRateResult | null> | null = null;
+const loadExchangeRates = () => {
+  if (exchangeRatesRequest) return exchangeRatesRequest;
+
+  const cached = readCachedExchangeRates();
+  if (cached && Date.now() - cached.fetchedAt < exchangeCacheTtl) {
+    exchangeRatesRequest = Promise.resolve({
+      ...cached,
+      source: "cache",
+      stale: false,
+    });
+    return exchangeRatesRequest;
+  }
+
+  exchangeRatesRequest = (async () => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 6_000);
+
+    try {
+      const response = await fetch(exchangeEndpoint, {
+        headers: { Accept: "application/json" },
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("exchange-rate-response");
+
+      const payload = (await response.json()) as {
+        result?: string;
+        base_code?: string;
+        time_last_update_unix?: number;
+        rates?: Partial<Record<CurrencyCode, unknown>>;
+      };
+      if (
+        payload.result !== "success" ||
+        payload.base_code !== "COP" ||
+        !validRates(payload.rates)
+      ) {
+        throw new Error("exchange-rate-payload");
+      }
+
+      const live: CachedExchangeRates = {
+        fetchedAt: Date.now(),
+        updatedAt: Number.isFinite(payload.time_last_update_unix)
+          ? Number(payload.time_last_update_unix) * 1_000
+          : Date.now(),
+        rates: payload.rates,
+      };
+      writeCachedExchangeRates(live);
+      return { ...live, source: "live", stale: false } as ExchangeRateResult;
+    } catch {
+      return cached
+        ? ({ ...cached, source: "cache", stale: true } as ExchangeRateResult)
+        : null;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  })();
+
+  return exchangeRatesRequest;
+};
+
+const currencyKindFor = (element: HTMLElement): CurrencyValueKind =>
+  element.dataset.currencyKind === "sentence" ? "sentence" : "card";
+
+const syncDiagnosisReference = () => {
+  const reference = currencyValues.find(
+    (element) => currencyKindFor(element) === "card",
+  )?.textContent;
+  if (!reference) return;
+  diagnosisReferenceFields.forEach((field) => {
+    field.value = reference.trim();
+  });
+};
+
+const renderCop = () => {
+  currencyValues.forEach((element) => {
+    const value = element.dataset.cop;
+    if (value) element.textContent = value;
+    element.removeAttribute("aria-busy");
+  });
+  if (rateStatus) rateStatus.textContent = ui.rateBase;
+  syncDiagnosisReference();
+};
+
+const renderRateLoading = (currency: CurrencyCode) => {
+  currencyValues.forEach((element) => {
+    element.setAttribute("aria-busy", "true");
+    element.textContent =
+      currencyKindFor(element) === "sentence"
+        ? isEnglish
+          ? `an equivalent amount in ${currency} that is being updated`
+          : `un valor equivalente en ${currency} que estamos actualizando`
+        : isEnglish
+          ? `Calculating the equivalent in ${currency}…`
+          : `Calculando la equivalencia en ${currency}…`;
+  });
+  if (rateStatus) rateStatus.textContent = ui.rateLoading;
+  syncDiagnosisReference();
+};
+
+const renderEquivalent = (currency: CurrencyCode, rate: number) => {
+  currencyValues.forEach((element) => {
+    const baseMin = Number(element.dataset.baseMin);
+    const baseMax = Number(element.dataset.baseMax);
+    if (!Number.isFinite(baseMin) || !Number.isFinite(baseMax)) return;
+
+    const minimum = numberFormatter.format(Math.round(baseMin * rate));
+    const maximum = numberFormatter.format(Math.round(baseMax * rate));
+    element.textContent =
+      currencyKindFor(element) === "sentence"
+        ? isEnglish
+          ? `approximately ${currency} ${minimum} to ${currency} ${maximum}`
+          : `entre ${currency} ${minimum} y ${currency} ${maximum} aproximadamente`
+        : isEnglish
+          ? `≈ ${currency} ${minimum} to ${maximum} · daily equivalent`
+          : `≈ ${currency} ${minimum} a ${maximum} · equivalencia diaria`;
+    element.removeAttribute("aria-busy");
+  });
+  syncDiagnosisReference();
+};
+
+let activeCurrency: CurrencyCode = "COP";
+const refreshEquivalent = async (currency: CurrencyCode) => {
+  if (currency === "COP" || currencyValues.length === 0) return;
+  const result = await loadExchangeRates();
+  if (activeCurrency !== currency) return;
+
+  const rate = result?.rates[currency];
+  if (!result || !Number.isFinite(rate) || Number(rate) <= 0) {
+    renderCop();
+    if (rateStatus) rateStatus.textContent = ui.rateUnavailable;
+    return;
+  }
+
+  renderEquivalent(currency, Number(rate));
+  if (rateStatus) {
+    const date = dateFormatter.format(new Date(result.updatedAt));
+    rateStatus.textContent = `${
+      result.source === "cache" ? ui.rateCached : ui.rateUpdated
+    }: ${date}.`;
+  }
+};
+
+const applyCurrency = (
+  currency: CurrencyCode,
+  persist = false,
+  refreshRate = true,
+) => {
+  activeCurrency = currency;
   document.documentElement.dataset.currency = currency;
   currencySelectors.forEach((selector) => {
     selector.value = currency;
   });
-  currencyValues.forEach((element) => {
-    const value = element.dataset[currency.toLowerCase()];
-    if (value) element.textContent = value;
-  });
+  if (currency === "COP") renderCop();
+  else renderRateLoading(currency);
   currencyFields.forEach((field) => {
     field.value = currency;
   });
   countryFields.forEach((field) => {
     field.value = currencyCountries[currency];
   });
+
+  if (currency !== "COP" && refreshRate) void refreshEquivalent(currency);
 
   if (!persist) return;
   try {
@@ -198,7 +428,17 @@ try {
 } catch {
   // COP permanece como valor seguro cuando el navegador bloquea localStorage.
 }
-applyCurrency(initialCurrency);
+applyCurrency(initialCurrency, false, false);
+
+// Una preferencia extranjera guardada se actualiza después de load para no
+// competir por red con el LCP. Un cambio explícito del selector sí es inmediato.
+if (initialCurrency !== "COP" && currencyValues.length > 0) {
+  const refreshInitialCurrency = () => {
+    window.setTimeout(() => void refreshEquivalent(initialCurrency), 0);
+  };
+  if (document.readyState === "complete") refreshInitialCurrency();
+  else window.addEventListener("load", refreshInitialCurrency, { once: true });
+}
 
 currencySelectors.forEach((selector) => {
   selector.addEventListener("change", () => {

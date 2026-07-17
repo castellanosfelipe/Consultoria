@@ -98,16 +98,13 @@ export const copy = {
         diagnosisCurrency: {
           card: {
             cop: "COP 600.000 a 1.000.000 · según el proyecto",
-            mxn: "Cotización en MXN · se confirma en la primera llamada",
-            pen: "Cotización en PEN · se confirma en la primera llamada",
-            usd: "Cotización en USD · se confirma en la primera llamada",
           },
           sentence: {
             cop: "entre COP 600.000 y COP 1.000.000 según el proyecto",
-            mxn: "el equivalente en MXN, que confirmamos en la primera llamada",
-            pen: "el equivalente en PEN, que confirmamos en la primera llamada",
-            usd: "el equivalente en USD, que confirmamos en la primera llamada",
           },
+          rateBase: "COP es la moneda base. Las equivalencias son aproximadas y usan una tasa diaria.",
+          rateSource: "Fuente de conversión:",
+          rateConfirmation: "El valor del diagnóstico se confirma antes de iniciar.",
         },
       },
       offers: [
@@ -490,16 +487,13 @@ export const copy = {
         diagnosisCurrency: {
           card: {
             cop: "COP 600,000 to 1,000,000 · based on the project",
-            mxn: "Quote in MXN · confirmed on the first call",
-            pen: "Quote in PEN · confirmed on the first call",
-            usd: "Quote in USD · confirmed on the first call",
           },
           sentence: {
             cop: "between COP 600,000 and COP 1,000,000 depending on the project",
-            mxn: "the equivalent in MXN, confirmed on the first call",
-            pen: "the equivalent in PEN, confirmed on the first call",
-            usd: "the equivalent in USD, confirmed on the first call",
           },
+          rateBase: "COP is the base currency. Equivalents are approximate and use a daily rate.",
+          rateSource: "Conversion source:",
+          rateConfirmation: "The assessment value is confirmed before work begins.",
         },
       },
       offers: [

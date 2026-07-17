@@ -584,14 +584,16 @@ svg {
   .motion-ready [data-mobile-reveal="items"] [data-animate-item] {
     opacity: 0 !important;
     transform: none !important;
-    transition: opacity 420ms var(--motion-ease) !important;
-    transition-delay: 0ms !important;
+    transition: opacity 580ms var(--motion-ease) !important;
+    transition-delay: var(--mobile-reveal-delay, 0ms) !important;
+    will-change: opacity;
   }
 
   .motion-ready
     [data-mobile-reveal="items"]
     [data-animate-item].is-item-visible {
     opacity: 1 !important;
+    will-change: auto;
   }
 }
 

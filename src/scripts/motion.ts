@@ -6,7 +6,6 @@ const motionSelector =
   "[data-animate], [data-track-view], [data-scroll-section]";
 const itemSelector = "[data-animate-item]";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const mobileMotion = window.matchMedia("(max-width: 56.25rem)");
 
 const milliseconds = (value: string | undefined, fallback: number) => {
   if (!value) return fallback;
@@ -39,6 +38,12 @@ const prepare = (element: HTMLElement) => {
       "--motion-sequence-delay",
       `${itemDelay + motionIndex * stagger}ms`,
     );
+    // En móvil agrupamos los fades en tandas cortas: el orden se percibe sin
+    // dejar esperando a los últimos elementos de listas extensas.
+    item.style.setProperty(
+      "--mobile-reveal-delay",
+      `${(motionIndex % 4) * 65}ms`,
+    );
   });
 };
 
@@ -67,17 +72,17 @@ export const initMotion = ({ onReveal }: MotionOptions = {}) => {
   const deferredElements = elements.filter(
     (element) => element.dataset.animate !== "system-graph",
   );
-  const mobileItems = mobileMotion.matches
-    ? [
-        ...new Set(
-          Array.from(
-            document.querySelectorAll<HTMLElement>(
-              '[data-mobile-reveal="items"]',
-            ),
-          ).flatMap(ownedItemsFor),
+  // Se observan siempre. Las clases solo alteran el CSS bajo el breakpoint
+  // móvil, pero así una rotación o un resize nunca deja ítems ocultos.
+  const mobileItems = [
+    ...new Set(
+      Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '[data-mobile-reveal="items"]',
         ),
-      ]
-    : [];
+      ).flatMap(ownedItemsFor),
+    ),
+  ];
 
   // El artefacto visible del hero se prepara en un scope local para evitar un
   // flash del estado final sin activar todavía los selectores de toda la página.
@@ -160,7 +165,8 @@ export const initMotion = ({ onReveal }: MotionOptions = {}) => {
           observer.unobserve(item);
         }
       },
-      { threshold: 0.18, rootMargin: "0px 0px -10%" },
+      // Un umbral bajo funciona mejor con tarjetas altas en pantallas pequeñas.
+      { threshold: 0.06, rootMargin: "0px 0px -6%" },
     );
 
     targets.forEach((item) => observer.observe(item));

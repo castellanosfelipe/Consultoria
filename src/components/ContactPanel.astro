@@ -7,7 +7,9 @@ interface Props {
 }
 
 const { lang = "es" } = Astro.props;
-const t = getCopy(lang).contact;
+const copy = getCopy(lang);
+const t = copy.contact;
+const diagnosisReference = copy.landing.services.diagnosisCurrency.card.cop;
 const hasBooking = Boolean(siteConfig.bookingUrl);
 const formAction = withBasePath(lang === "en" ? "/en/thanks/" : "/gracias/");
 const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
@@ -84,6 +86,7 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
           <input type="hidden" name="bot-field" />
           <input type="hidden" name="country" value="CO" data-country-field />
           <input type="hidden" name="currency" value="COP" data-currency-field />
+          <input type="hidden" name="diagnosis_reference" value={diagnosisReference} data-diagnosis-reference-field />
 
           <label for="nombre" data-animate-item data-contact-field data-motion-index={hasBooking ? "8" : "7"}>
             <span class="field-label">{t.name}</span>

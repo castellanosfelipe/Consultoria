@@ -49,7 +49,7 @@ Cada `data-animate-item` pertenece a su contenedor `data-animate` más cercano. 
 ## Verbos visuales por sección
 
 - **Hero — declarar:** el H1 entra por dos máscaras verticales sin animar su opacidad; el párrafo LCP nunca espera al JavaScript.
-- **Diagrama — ordenar y desplegar:** cuatro actos one-shot — fuentes, operación manual, build/normalización y deploy — en unos 9,8 segundos. El estado manual conserva cerca de 2 segundos de lectura completa y el build permanece visible antes del deploy. Ningún fragmento sale del marco y el estado final queda centrado y sostenido, sin loop.
+- **Diagrama — ordenar y desplegar:** cuatro actos one-shot — fuentes, operación manual, build/normalización y deploy — en unos 9,8 segundos en escritorio. En móvil, una secuencia de fades de unos 7,5 segundos presenta fuentes, falla manual, transición, pipeline y nodos de producción con tiempo de lectura. Ningún fragmento sale del marco y el estado final queda centrado y sostenido, sin loop.
 - **Dolores — registrar:** señales laterales, puntos de estado y separadores que completan cada fila.
 - **Comparativa — converger:** extremos laterales y columna central que se confirma con borde y lift.
 - **Oferta — encadenar:** card, conector, core, conector y salida se revelan como un pipeline.
@@ -57,7 +57,7 @@ Cada `data-animate-item` pertenece a su contenedor `data-animate` más cercano. 
 - **Proceso y capacidad — activar:** conectores, responsables, demos semanales y estado final aparecen en orden operativo.
 - **Contacto — enrutar:** introducción, pasos, cards y campos forman una única secuencia hasta el envío.
 
-El scroll también mantiene un progreso continuo en el borde inferior del nav, actualiza el enlace de sección activa en `requestAnimationFrame` y confirma cada nueva sección con una línea corta de producción. En móvil, los grupos largos se revelan ítem por ítem al entrar realmente al viewport; no se usa parallax ni se vincula la posición de elementos al scroll.
+El scroll también mantiene un progreso continuo en el borde inferior del nav, actualiza el enlace de sección activa en `requestAnimationFrame` y confirma cada nueva sección con una línea corta de producción. En móvil, los grupos largos se revelan ítem por ítem al entrar realmente al viewport; cada tanda usa hasta cuatro fades separados por 65 ms. Los ítems se observan desde la carga aunque el viewport sea de escritorio, por lo que una rotación o un resize nunca deja contenido oculto. No se usa parallax ni se vincula la posición de elementos al scroll.
 
 ## Timings
 
@@ -83,4 +83,4 @@ El párrafo principal del hero permanece visible desde el primer paint porque Ch
 - Loading, error y success del formulario conservan texto y `aria-live`, sin animación.
 - La agenda usa desplazamiento instantáneo al cargarse.
 
-En pantallas de hasta `56.25rem` se eliminan drift, convergencia, escalado y lifts. Los reveals se reducen a fades o crossfades simples y el diagrama usa una composición before/after sin desplazamiento espacial.
+En pantallas de hasta `56.25rem` se eliminan drift, convergencia, escalado y lifts. Los reveals se reducen a fades simples y el diagrama recorre una composición before/after secuencial sin desplazamiento espacial.

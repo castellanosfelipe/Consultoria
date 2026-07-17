@@ -122,40 +122,40 @@ const t = getCopy(lang).graph;
 
   <svg class="hero-graph__mobile" viewBox="0 0 360 248" aria-hidden="true">
     <rect class="frame" x="1" y="1" width="358" height="246" rx="4" />
-    <text class="meta mobile-before" x="18" y="28">{t.before}</text>
+    <text class="meta mobile-before" style="--mobile-in: 350ms" x="18" y="28">{t.before}</text>
 
-    <g class="mobile-manual mobile-before">
-      <text class="node-label" x="18" y="62">{t.mobileSources}</text>
-      <text class="node-label" x="18" y="92">ERP + CRM</text>
-      <g class="edges">
+    <g class="mobile-manual">
+      <text class="node-label mobile-before" style="--mobile-in: 750ms" x="18" y="62">{t.mobileSources}</text>
+      <text class="node-label mobile-before" style="--mobile-in: 1.05s" x="18" y="92">ERP + CRM</text>
+      <g class="edges mobile-before" style="--mobile-in: 1.35s">
         <path d="M122 57 C145 57 151 72 166 77" />
         <path d="M105 87 C132 87 147 84 166 80" />
         <path d="M194 79 H226" />
       </g>
-      <g class="source-nodes">
+      <g class="source-nodes mobile-before" style="--mobile-in: 1.65s">
         <circle cx="122" cy="57" r="5" />
         <circle cx="105" cy="87" r="5" />
         <circle cx="226" cy="79" r="5" />
       </g>
-      <g class="broken-node">
+      <g class="broken-node mobile-before" style="--mobile-in: 1.9s">
         <circle cx="180" cy="79" r="14" />
         <path d="M174 73 L186 85 M186 73 L174 85" />
       </g>
-      <text class="mobile-manual-status" x="338" y="83">{t.manual}</text>
+      <text class="mobile-manual-status mobile-before" style="--mobile-in: 2.2s" x="338" y="83">{t.manual}</text>
     </g>
 
-    <path class="mobile-transition mobile-before" d="M180 112 V137 M173 130 L180 137 L187 130" />
-    <text class="meta mobile-after" x="18" y="157">{t.after}</text>
-    <path class="pipeline pipeline--static mobile-after" d="M30 190 H312" />
-    <path class="arrow arrow--static mobile-after" d="M312 183 L328 190 L312 197 Z" />
+    <path class="mobile-transition mobile-before" style="--mobile-in: 3.45s" d="M180 112 V137 M173 130 L180 137 L187 130" />
+    <text class="meta mobile-after" style="--mobile-after-in: 4.85s" x="18" y="157">{t.after}</text>
+    <path class="pipeline pipeline--static mobile-after" style="--mobile-after-in: 5.25s" d="M30 190 H312" />
+    <path class="arrow arrow--static mobile-after" style="--mobile-after-in: 6.35s" d="M312 183 L328 190 L312 197 Z" />
     <g class="production-nodes production-nodes--static mobile-after">
-      <circle cx="46" cy="190" r="8" />
-      <circle cx="110" cy="190" r="8" />
-      <circle cx="174" cy="190" r="8" />
-      <circle cx="238" cy="190" r="8" />
-      <circle cx="302" cy="190" r="8" />
+      <circle class="mobile-after" style="--mobile-after-in: 5.55s" cx="46" cy="190" r="8" />
+      <circle class="mobile-after" style="--mobile-after-in: 5.75s" cx="110" cy="190" r="8" />
+      <circle class="mobile-after" style="--mobile-after-in: 5.95s" cx="174" cy="190" r="8" />
+      <circle class="mobile-after" style="--mobile-after-in: 6.15s" cx="238" cy="190" r="8" />
+      <circle class="mobile-after" style="--mobile-after-in: 6.35s" cx="302" cy="190" r="8" />
     </g>
-    <text class="mobile-status mobile-after" x="180" y="228">{t.status}</text>
+    <text class="mobile-status mobile-after" style="--mobile-after-in: 6.75s" x="180" y="228">{t.status}</text>
   </svg>
 
   <figcaption class="sr-only" id="graph-caption">{t.caption}</figcaption>
@@ -748,6 +748,15 @@ const t = getCopy(lang).graph;
       display: block;
     }
 
+    /* Sin JavaScript el diagrama conserva un estado final útil y legible. */
+    .mobile-before {
+      opacity: 0;
+    }
+
+    .mobile-after {
+      opacity: 1;
+    }
+
     .pipeline--static {
       transform: none;
       animation: none;
@@ -785,10 +794,7 @@ const t = getCopy(lang).graph;
       opacity: 0;
     }
 
-    .hero-graph.graph-motion-ready .mobile-before {
-      opacity: 1;
-    }
-
+    .hero-graph.graph-motion-ready .mobile-before,
     .hero-graph.graph-motion-ready .mobile-after {
       opacity: 0;
     }
@@ -798,14 +804,19 @@ const t = getCopy(lang).graph;
         var(--motion-delay, 0ms) both;
     }
 
+    /* Secuencia móvil de ~7,5 s: cada estado permanece el tiempo suficiente
+       para leerlo y todo el movimiento se limita a opacity. */
     .hero-graph.graph-motion-ready.is-visible .mobile-before {
-      animation: graph-fade-out 700ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 2.6s) forwards;
+      animation:
+        graph-fade-in 620ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + var(--mobile-in, 0ms)) both,
+        graph-fade-out 680ms var(--motion-ease)
+          calc(var(--motion-delay, 0ms) + 4.45s) forwards;
     }
 
     .hero-graph.graph-motion-ready.is-visible .mobile-after {
-      animation: graph-fade-in 750ms var(--motion-ease)
-        calc(var(--motion-delay, 0ms) + 3.2s) both;
+      animation: graph-fade-in 650ms var(--motion-ease)
+        calc(var(--motion-delay, 0ms) + var(--mobile-after-in, 4.85s)) both;
     }
   }
 

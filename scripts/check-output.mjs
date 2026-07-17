@@ -220,8 +220,9 @@ const englishThanksPath = resolve(distDirectory, "en", "thanks", "index.html");
 const notFoundPath = resolve(distDirectory, "404.html");
 const robotsPath = resolve(distDirectory, "robots.txt");
 const deployHeadersPath = resolve(distDirectory, "_headers");
+const netlifyConfigPath = resolve(projectDirectory, "netlify.toml");
 
-const [home, englishHome, thanks, englishThanks, notFound, robots, deployHeaders] = await Promise.all([
+const [home, englishHome, thanks, englishThanks, notFound, robots, deployHeaders, netlifyConfig] = await Promise.all([
   readRequired(homePath, "la página principal"),
   readRequired(englishHomePath, "la página principal en inglés"),
   readRequired(thanksPath, "la página de gracias"),
@@ -229,6 +230,7 @@ const [home, englishHome, thanks, englishThanks, notFound, robots, deployHeaders
   readRequired(notFoundPath, "la página 404"),
   readRequired(robotsPath, "robots.txt"),
   readRequired(deployHeadersPath, "dist/_headers"),
+  readRequired(netlifyConfigPath, "netlify.toml"),
 ]);
 
 const proseDashPattern = /[-\u2013\u2014\u2212]/;
@@ -262,7 +264,7 @@ check(!/\beyebrow\b/.test(home) && !/\beyebrow\b/.test(englishHome), "Las etique
 check(englishHomeText.includes("4 to 8 weeks"), "La home en inglés debe comunicar el plazo de 4 a 8 semanas.");
 for (const currency of ["MXN", "PEN", "USD"]) {
   const numericForeignPrice = new RegExp(`(?:${currency}\\s*[0-9]|[0-9][0-9.,]*\\s*${currency})`, "i");
-  check(!numericForeignPrice.test(`${spanishHomeText} ${englishHomeText}`), `La landing no debe inventar un valor numérico en ${currency}.`);
+  check(!numericForeignPrice.test(`${spanishHomeText} ${englishHomeText}`), `El HTML inicial no debe incrustar una tasa numérica obsoleta en ${currency}.`);
 }
 check(spanishHomeText.includes("COP 600.000") && spanishHomeText.includes("COP 1.000.000"), "La home debe mostrar únicamente el rango autorizado para el diagnóstico.");
 check(spanishHomeText.includes("primera llamada") && spanishHomeText.includes("viable"), "La home debe explicar que la viabilidad se determina en la primera llamada.");
@@ -329,14 +331,28 @@ for (const [label, html] of [
   }
 }
 
-const currencyValueElements = [...tags(home, "p"), ...tags(home, "span")]
-  .filter(({ attrs }) => hasAttribute(attrs, "data-currency-value"));
-check(currencyValueElements.length === 2, "La tarjeta y la FAQ del diagnóstico deben responder al selector de moneda.");
-for (const element of currencyValueElements) {
-  for (const currency of ["cop", "mxn", "pen", "usd"]) {
-    check(Boolean(element.attrs[`data-${currency}`]?.trim()), `Cada valor del diagnóstico debe definir su texto para ${currency.toUpperCase()}.`);
+for (const [label, html] of [["español", home], ["inglés", englishHome]]) {
+  const currencyValueElements = [...tags(html, "p"), ...tags(html, "span")]
+    .filter(({ attrs }) => hasAttribute(attrs, "data-currency-value"));
+  check(currencyValueElements.length === 2, `La tarjeta y la FAQ del diagnóstico en ${label} deben responder al selector de moneda.`);
+  check(currencyValueElements.filter(({ attrs }) => attrs["data-currency-kind"] === "card").length === 1, `La conversión en ${label} debe identificar una sola tarjeta.`);
+  check(currencyValueElements.filter(({ attrs }) => attrs["data-currency-kind"] === "sentence").length === 1, `La conversión en ${label} debe identificar una sola frase de FAQ.`);
+  for (const element of currencyValueElements) {
+    check(element.attrs["data-base-currency"] === "COP", `Cada conversión en ${label} debe declarar COP como base.`);
+    check(element.attrs["data-base-min"] === "600000" && element.attrs["data-base-max"] === "1000000", `Cada conversión en ${label} debe usar únicamente el rango autorizado del diagnóstico.`);
+    check(Boolean(element.attrs["data-cop"]?.trim()), `Cada conversión en ${label} debe conservar su texto COP de respaldo.`);
+    check(!["data-mxn", "data-pen", "data-usd"].some((attribute) => hasAttribute(element.attrs, attribute)), `Las tasas extranjeras de ${label} no deben quedar hardcodeadas en HTML.`);
   }
+
+  const rateAttributions = tags(html, "a").filter(({ attrs }) => hasAttribute(attrs, "data-rate-attribution"));
+  check(rateAttributions.length === 1, `La conversión en ${label} debe atribuir una sola vez la fuente de tasa.`);
+  check(rateAttributions[0]?.attrs.href === "https://www.exchangerate-api.com", `La atribución de tasa en ${label} debe enlazar a ExchangeRate API.`);
+  check(tags(html, "span").filter(({ attrs }) => hasAttribute(attrs, "data-rate-status")).length === 1, `La conversión en ${label} debe explicar el estado de la tasa.`);
 }
+
+const contentSecurityPolicy = /Content-Security-Policy\s*=\s*"([^"]+)"/i.exec(netlifyConfig)?.[1] ?? "";
+const connectSource = /(?:^|;)\s*connect-src\s+([^;]+)/i.exec(contentSecurityPolicy)?.[1] ?? "";
+check(connectSource.split(/\s+/).includes("https://open.er-api.com"), "La CSP debe permitir la consulta diferida de tasas en open.er-api.com.");
 
 const stylesheets = tags(home, "link").filter(({ attrs }) => relIncludes(attrs, "stylesheet"));
 check(stylesheets.length === 0, "La home no debe bloquear el render con una hoja CSS externa.");
@@ -474,8 +490,10 @@ if (contactForm) {
   check(visibleInputs.length === 3, "El formulario debe pedir exactamente tres campos visibles.");
   const countryField = inputs.filter((attrs) => attrs.name === "country" && hasAttribute(attrs, "data-country-field"));
   const currencyField = inputs.filter((attrs) => attrs.name === "currency" && hasAttribute(attrs, "data-currency-field"));
+  const diagnosisReferenceField = inputs.filter((attrs) => attrs.name === "diagnosis_reference" && hasAttribute(attrs, "data-diagnosis-reference-field"));
   check(countryField.length === 1 && countryField[0]?.type === "hidden" && countryField[0]?.value === "CO", "El formulario debe registrar CO como país inicial.");
   check(currencyField.length === 1 && currencyField[0]?.type === "hidden" && currencyField[0]?.value === "COP", "El formulario debe registrar COP como moneda inicial.");
+  check(diagnosisReferenceField.length === 1 && diagnosisReferenceField[0]?.type === "hidden" && (diagnosisReferenceField[0]?.value ?? "").includes("COP 600.000"), "El formulario debe registrar la referencia de diagnóstico mostrada.");
   for (const [name, expectedType] of [["nombre", "text"], ["email", "email"], ["contexto", "text"]]) {
     const matches = visibleInputs.filter((attrs) => attrs.name === name);
     check(matches.length === 1, `El formulario debe incluir una sola vez el campo ${name}.`);
@@ -503,6 +521,7 @@ if (englishContactForm) {
   const englishInputs = tags(englishContactForm.body, "input").map(({ attrs }) => attrs);
   check(englishInputs.some((attrs) => attrs.name === "country" && attrs.value === "CO" && hasAttribute(attrs, "data-country-field")), "El formulario inglés debe registrar el país seleccionado.");
   check(englishInputs.some((attrs) => attrs.name === "currency" && attrs.value === "COP" && hasAttribute(attrs, "data-currency-field")), "El formulario inglés debe registrar la moneda seleccionada.");
+  check(englishInputs.some((attrs) => attrs.name === "diagnosis_reference" && (attrs.value ?? "").includes("COP 600,000") && hasAttribute(attrs, "data-diagnosis-reference-field")), "El formulario inglés debe registrar la referencia de diagnóstico mostrada.");
 }
 
 const scriptTags = tags(home, "script");

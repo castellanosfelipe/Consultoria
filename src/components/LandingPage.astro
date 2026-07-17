@@ -130,10 +130,11 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
                 <p
                   class="offer-card__meta data"
                   data-currency-value={index === 0 ? "" : undefined}
+                  data-currency-kind={index === 0 ? "card" : undefined}
+                  data-base-currency={index === 0 ? "COP" : undefined}
+                  data-base-min={index === 0 ? "600000" : undefined}
+                  data-base-max={index === 0 ? "1000000" : undefined}
                   data-cop={index === 0 ? diagnosisCurrency.card.cop : undefined}
-                  data-mxn={index === 0 ? diagnosisCurrency.card.mxn : undefined}
-                  data-pen={index === 0 ? diagnosisCurrency.card.pen : undefined}
-                  data-usd={index === 0 ? diagnosisCurrency.card.usd : undefined}
                   aria-live={index === 0 ? "polite" : undefined}
                 >
                   {index === 0 ? diagnosisCurrency.card.cop : offer.meta}
@@ -146,6 +147,12 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
             </>
           ))}
         </div>
+        <p class="currency-reference">
+          <span data-rate-status>{diagnosisCurrency.rateBase}</span>{" "}
+          {diagnosisCurrency.rateSource}{" "}
+          <a href="https://www.exchangerate-api.com" rel="external noopener" data-rate-attribution>ExchangeRate API</a>.{" "}
+          {diagnosisCurrency.rateConfirmation}
+        </p>
       </div>
     </section>
 
@@ -329,10 +336,11 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
                       {faq.answerBefore}<span
                         class="diagnosis-price-inline"
                         data-currency-value
+                        data-currency-kind="sentence"
+                        data-base-currency="COP"
+                        data-base-min="600000"
+                        data-base-max="1000000"
                         data-cop={diagnosisCurrency.sentence.cop}
-                        data-mxn={diagnosisCurrency.sentence.mxn}
-                        data-pen={diagnosisCurrency.sentence.pen}
-                        data-usd={diagnosisCurrency.sentence.usd}
                       >{diagnosisCurrency.sentence.cop}</span>{faq.answerAfter}
                     </p>
                   ) : (
@@ -765,6 +773,20 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
     font-family: var(--font-data);
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+  }
+
+  .currency-reference {
+    max-width: 58rem;
+    margin-top: var(--space-4);
+    color: var(--graphite);
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+
+  .currency-reference a {
+    color: var(--ink);
+    text-decoration-thickness: var(--border);
+    text-underline-offset: 0.2em;
   }
 
   .offer-card__description {
