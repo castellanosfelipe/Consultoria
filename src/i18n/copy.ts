@@ -102,9 +102,7 @@ export const copy = {
           sentence: {
             cop: "entre COP 600.000 y COP 1.000.000 según el proyecto",
           },
-          rateBase: "COP es la moneda base. Las equivalencias son aproximadas y usan una tasa diaria.",
-          rateSource: "Fuente de conversión:",
-          rateConfirmation: "El valor del diagnóstico se confirma antes de iniciar.",
+          rateNote: "Equivalencias aproximadas ·",
         },
       },
       offers: [
@@ -491,9 +489,7 @@ export const copy = {
           sentence: {
             cop: "between COP 600,000 and COP 1,000,000 depending on the project",
           },
-          rateBase: "COP is the base currency. Equivalents are approximate and use a daily rate.",
-          rateSource: "Conversion source:",
-          rateConfirmation: "The assessment value is confirmed before work begins.",
+          rateNote: "Approximate equivalents ·",
         },
       },
       offers: [

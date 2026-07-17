@@ -1,4 +1,5 @@
 import { initMotion } from "./motion";
+import { initScrollThread } from "./scroll-thread";
 
 declare global {
   interface Window {
@@ -49,11 +50,6 @@ const ui = isEnglish
       calendarReady: "Calendar ready.",
       calendarLoading: "Loading calendar…",
       invalidCalendar: "The calendar URL is not valid. Use the alternate form.",
-      rateBase: "COP is the base currency. Equivalents are approximate and use a daily rate.",
-      rateLoading: "Updating the daily exchange rate…",
-      rateUpdated: "Daily rate updated",
-      rateCached: "Using the most recent saved daily rate",
-      rateUnavailable: "The live rate is unavailable. The assessment remains quoted in COP.",
     }
   : {
       menu: "Menú",
@@ -80,11 +76,6 @@ const ui = isEnglish
       calendarReady: "Agenda lista.",
       calendarLoading: "Cargando agenda…",
       invalidCalendar: "La URL de agenda no es válida. Usa el formulario alternativo.",
-      rateBase: "COP es la moneda base. Las equivalencias son aproximadas y usan una tasa diaria.",
-      rateLoading: "Actualizando la tasa diaria…",
-      rateUpdated: "Tasa diaria actualizada",
-      rateCached: "Usamos la tasa diaria guardada más reciente",
-      rateUnavailable: "La tasa en línea no está disponible. El diagnóstico permanece cotizado en COP.",
     };
 
 const basePath = document.documentElement.dataset.basePath || "/";
@@ -158,11 +149,6 @@ interface CachedExchangeRates {
   rates: Record<CurrencyCode, number>;
 }
 
-interface ExchangeRateResult extends CachedExchangeRates {
-  source: "live" | "cache";
-  stale: boolean;
-}
-
 const currencyStorageKey = "consultoria-country-currency";
 const exchangeCacheKey = "consultoria-cop-exchange-rates-v1";
 const exchangeEndpoint = "https://open.er-api.com/v6/latest/COP";
@@ -181,7 +167,6 @@ const currencySelectors = Array.from(
 const currencyValues = Array.from(
   document.querySelectorAll<HTMLElement>("[data-currency-value]"),
 );
-const rateStatus = document.querySelector<HTMLElement>("[data-rate-status]");
 const currencyFields = Array.from(
   document.querySelectorAll<HTMLInputElement>("[data-currency-field]"),
 );
@@ -199,13 +184,6 @@ const numberFormatter = new Intl.NumberFormat(locale, {
   maximumFractionDigits: 0,
   minimumFractionDigits: 0,
 });
-const dateFormatter = new Intl.DateTimeFormat(locale, {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
 const validRates = (
   rates: Partial<Record<CurrencyCode, unknown>> | undefined,
 ): rates is Record<CurrencyCode, number> =>
@@ -246,17 +224,13 @@ const writeCachedExchangeRates = (rates: CachedExchangeRates) => {
   }
 };
 
-let exchangeRatesRequest: Promise<ExchangeRateResult | null> | null = null;
+let exchangeRatesRequest: Promise<CachedExchangeRates | null> | null = null;
 const loadExchangeRates = () => {
   if (exchangeRatesRequest) return exchangeRatesRequest;
 
   const cached = readCachedExchangeRates();
   if (cached && Date.now() - cached.fetchedAt < exchangeCacheTtl) {
-    exchangeRatesRequest = Promise.resolve({
-      ...cached,
-      source: "cache",
-      stale: false,
-    });
+    exchangeRatesRequest = Promise.resolve(cached);
     return exchangeRatesRequest;
   }
 
@@ -293,11 +267,9 @@ const loadExchangeRates = () => {
         rates: payload.rates,
       };
       writeCachedExchangeRates(live);
-      return { ...live, source: "live", stale: false } as ExchangeRateResult;
+      return live;
     } catch {
-      return cached
-        ? ({ ...cached, source: "cache", stale: true } as ExchangeRateResult)
-        : null;
+      return cached;
     } finally {
       window.clearTimeout(timeout);
     }
@@ -325,7 +297,6 @@ const renderCop = () => {
     if (value) element.textContent = value;
     element.removeAttribute("aria-busy");
   });
-  if (rateStatus) rateStatus.textContent = ui.rateBase;
   syncDiagnosisReference();
 };
 
@@ -341,7 +312,6 @@ const renderRateLoading = (currency: CurrencyCode) => {
           ? `Calculating the equivalent in ${currency}…`
           : `Calculando la equivalencia en ${currency}…`;
   });
-  if (rateStatus) rateStatus.textContent = ui.rateLoading;
   syncDiagnosisReference();
 };
 
@@ -375,17 +345,10 @@ const refreshEquivalent = async (currency: CurrencyCode) => {
   const rate = result?.rates[currency];
   if (!result || !Number.isFinite(rate) || Number(rate) <= 0) {
     renderCop();
-    if (rateStatus) rateStatus.textContent = ui.rateUnavailable;
     return;
   }
 
   renderEquivalent(currency, Number(rate));
-  if (rateStatus) {
-    const date = dateFormatter.format(new Date(result.updatedAt));
-    rateStatus.textContent = `${
-      result.source === "cache" ? ui.rateCached : ui.rateUpdated
-    }: ${date}.`;
-  }
 };
 
 const applyCurrency = (
@@ -456,6 +419,7 @@ const menuToggle =
 const mobileMenu = document.querySelector<HTMLElement>("[data-mobile-menu]");
 const menuLabel = menuToggle?.querySelector<HTMLElement>("[data-menu-label]");
 const menuReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const scrollThread = initScrollThread();
 
 let headerFrame = 0;
 const updateScrolledHeader = () => {
@@ -467,6 +431,7 @@ const updateScrolledHeader = () => {
   );
   const progress = Math.min(Math.max(window.scrollY / scrollRange, 0), 1);
   scrollHeader?.style.setProperty("--page-scroll-progress", String(progress));
+  scrollThread.update(progress, window.scrollY);
 };
 const scheduleScrolledHeader = () => {
   if (headerFrame) return;

@@ -1,12 +1,12 @@
 # Motion language
 
-La motion cuenta un cambio de estado: fragmentos manuales que se ordenan hasta convertirse en un sistema en producción. No usa rebotes, springs, parallax ni fondos animados. La actualización toma como referencia la claridad cinética, las líneas autodibujadas y la narrativa progresiva de los [ejemplos de landing animadas de SVGator](https://www.svgator.com/blog/animated-landing-pages-examples/), reinterpretados como lenguaje de ingeniería y no como decoración.
+La motion cuenta un cambio de estado: fragmentos manuales que se ordenan hasta convertirse en un sistema en producción. No usa rebotes, springs, parallax ni fondos animados. La actualización toma como referencia la claridad cinética, las líneas autodibujadas y la narrativa progresiva de los [ejemplos de landing animadas de SVGator](https://www.svgator.com/blog/animated-landing-pages-examples/) y la gramática de ruta, estela y objeto guía de la [página Scroll de GSAP](https://gsap.com/scroll/), reinterpretadas como lenguaje de ingeniería y no como decoración.
 
 ## Decisión técnica
 
 La página mantiene un solo bundle de navegador. `src/scripts/site.ts` importa la utilidad reutilizable `src/scripts/motion.ts`; Astro compone ambos desde el único `<script>` de `BaseLayout.astro`.
 
-No se incorporó GSAP. El diagrama requiere una secuencia que se ejecuta una sola vez al entrar al viewport, no scrub, pinning, reversa ni cálculos dinámicos. `IntersectionObserver` activa una timeline CSS determinista con menor peso.
+No se incorporó GSAP. El sitio estaba a menos de 24 KiB de su presupuesto inicial y GSAP con ScrollTrigger y MotionPath lo habría superado. El hilo continuo usa `getPointAtLength()`, una tangente para orientar el paquete y un `requestAnimationFrame` amortiguado; el resto conserva `IntersectionObserver` y timelines CSS. No hay pinning, scroll artificial ni cambios sobre el desplazamiento nativo.
 
 ## API declarativa
 
@@ -39,6 +39,8 @@ No se incorporó GSAP. El diagrama requiere una secuencia que se ejecuta una sol
 | `.graph-motion-ready` | Scope local del diagrama; evita flashes y desacopla su reloj del resto de la página.    |
 | `.faq-ready`        | Activa el estado del acordeón antes del primer paint, separado de los reveals de scroll. |
 | `.is-visible`       | Estado final one-shot; el observer deja de observar inmediatamente.                      |
+| `data-scroll-thread` | Ruta global decorativa que muestra el progreso manual → producción.                      |
+| `data-scroll-guidance` | Conducto local de Proceso; la esfera y el gradiente siguen el progreso de esa escena.   |
 
 Sin JavaScript no se aplica el estado oculto: el contenido SSR permanece visible.
 
@@ -56,8 +58,10 @@ Cada `data-animate-item` pertenece a su contenedor `data-animate` más cercano. 
 - **Compromisos — aplicar diff:** estado anterior, tachado, inserción nueva y confirmación de commit.
 - **Proceso y capacidad — activar:** conectores, responsables, demos semanales y estado final aparecen en orden operativo.
 - **Contacto — enrutar:** introducción, pasos, cards y campos forman una única secuencia hasta el envío.
+- **Hilo global — guiar:** un paquete de despliegue recorre tres trazos laterales. La estela recorrida cambia a producción y la ruta pendiente conserva la señal manual.
+- **Proceso — transferir:** una esfera avanza por un conducto que cambia gradualmente de manual a producción, sin copiar recursos ni geometrías de la referencia.
 
-El scroll también mantiene un progreso continuo en el borde inferior del nav, actualiza el enlace de sección activa en `requestAnimationFrame` y confirma cada nueva sección con una línea corta de producción. En móvil, los grupos largos se revelan ítem por ítem al entrar realmente al viewport; cada tanda usa hasta cuatro fades separados por 65 ms. Los ítems se observan desde la carga aunque el viewport sea de escritorio, por lo que una rotación o un resize nunca deja contenido oculto. No se usa parallax ni se vincula la posición de elementos al scroll.
+El scroll también mantiene un progreso continuo en el borde inferior del nav, actualiza el enlace de sección activa y alimenta el hilo dentro del mismo `requestAnimationFrame`. Los reveals continúan siendo one-shot; solo el indicador de progreso avanza y retrocede con el scroll. En móvil, los grupos largos se revelan ítem por ítem y el hilo se reduce a un rail lateral que se completa, sin paquete flotante ni esfera. Los ítems se observan desde la carga aunque el viewport sea de escritorio, por lo que una rotación o un resize nunca deja contenido oculto.
 
 ## Timings
 
@@ -79,8 +83,9 @@ El párrafo principal del hero permanece visible desde el primer paint porque Ch
 - El diff muestra el estado anterior ya tachado y el nuevo visible.
 - El conector del proceso, las barras de capacidad y los hitos semanales aparecen completos.
 - El nav cambia de estado sin tween; los underlines responden de forma inmediata.
+- El hilo y el conducto aparecen completos; el paquete y la esfera quedan ocultos y no se registra un loop de seguimiento.
 - El FAQ conserva teclado y semántica, pero abre y cierra sin transición.
 - Loading, error y success del formulario conservan texto y `aria-live`, sin animación.
 - La agenda usa desplazamiento instantáneo al cargarse.
 
-En pantallas de hasta `56.25rem` se eliminan drift, convergencia, escalado y lifts. Los reveals se reducen a fades simples y el diagrama recorre una composición before/after secuencial sin desplazamiento espacial.
+En pantallas de hasta `56.25rem` se eliminan drift, convergencia, escalado, lifts y objetos que recorren rutas. Los reveals se reducen a fades simples, el diagrama recorre una composición before/after sin desplazamiento espacial y el hilo conserva únicamente su progreso lateral.

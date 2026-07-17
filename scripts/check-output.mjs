@@ -267,6 +267,7 @@ for (const currency of ["MXN", "PEN", "USD"]) {
   check(!numericForeignPrice.test(`${spanishHomeText} ${englishHomeText}`), `El HTML inicial no debe incrustar una tasa numérica obsoleta en ${currency}.`);
 }
 check(spanishHomeText.includes("COP 600.000") && spanishHomeText.includes("COP 1.000.000"), "La home debe mostrar únicamente el rango autorizado para el diagnóstico.");
+check(!spanishHomeText.includes("Usamos la tasa diaria guardada más reciente"), "La home no debe mostrar el estado extenso de caché de moneda.");
 check(spanishHomeText.includes("primera llamada") && spanishHomeText.includes("viable"), "La home debe explicar que la viabilidad se determina en la primera llamada.");
 check(!/\bS(?:9|10|11|12)\b/.test(spanishHomeText), "La línea de tiempo española no debe superar la semana 8.");
 check(!/\bW(?:9|10|11|12)\b/.test(englishHomeText), "La línea de tiempo inglesa no debe superar la semana 8.");
@@ -347,8 +348,16 @@ for (const [label, html] of [["español", home], ["inglés", englishHome]]) {
   const rateAttributions = tags(html, "a").filter(({ attrs }) => hasAttribute(attrs, "data-rate-attribution"));
   check(rateAttributions.length === 1, `La conversión en ${label} debe atribuir una sola vez la fuente de tasa.`);
   check(rateAttributions[0]?.attrs.href === "https://www.exchangerate-api.com", `La atribución de tasa en ${label} debe enlazar a ExchangeRate API.`);
-  check(tags(html, "span").filter(({ attrs }) => hasAttribute(attrs, "data-rate-status")).length === 1, `La conversión en ${label} debe explicar el estado de la tasa.`);
+  check(tags(html, "span").filter(({ attrs }) => hasAttribute(attrs, "data-rate-status")).length === 0, `La conversión en ${label} no debe mostrar un estado extenso de tasa.`);
+
+  const scrollThreads = tags(html, "div").filter(({ attrs }) => hasAttribute(attrs, "data-scroll-thread"));
+  const scrollGuidance = tags(html, "div").filter(({ attrs }) => hasAttribute(attrs, "data-scroll-guidance"));
+  check(scrollThreads.length === 1, `La home en ${label} debe incluir un solo hilo conductor global.`);
+  check(scrollThreads[0] && hasAttribute(scrollThreads[0].attrs, "aria-hidden"), `El hilo conductor de ${label} debe ser decorativo para lectores de pantalla.`);
+  check(scrollGuidance.length === 1, `La home en ${label} debe incluir un solo tramo de transferencia en Proceso.`);
 }
+
+check(/\.offer-arrow[^{}]*\{[^{}]*--arrow-rotation:90deg[^{}]*justify-self:center/i.test(home), "Las flechas móviles de la oferta deben quedar centradas y verticales.");
 
 const contentSecurityPolicy = /Content-Security-Policy\s*=\s*"([^"]+)"/i.exec(netlifyConfig)?.[1] ?? "";
 const connectSource = /(?:^|;)\s*connect-src\s+([^;]+)/i.exec(contentSecurityPolicy)?.[1] ?? "";

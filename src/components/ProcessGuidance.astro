@@ -1,0 +1,138 @@
+<div class="process-guidance" data-scroll-guidance aria-hidden="true">
+  <svg viewBox="0 0 720 190" focusable="false" role="presentation">
+    <defs>
+      <linearGradient id="process-guidance-gradient" x1="0" y1="0" x2="1" y2="0">
+        <stop class="process-guidance__stop process-guidance__stop--manual" offset="0" />
+        <stop class="process-guidance__stop process-guidance__stop--production" offset="1" />
+      </linearGradient>
+      <clipPath id="process-guidance-progress" clipPathUnits="userSpaceOnUse">
+        <rect class="process-guidance__clip" data-scroll-guidance-clip x="0" y="0" width="720" height="190" />
+      </clipPath>
+    </defs>
+
+    <path
+      class="process-guidance__tube"
+      data-scroll-guidance-path
+      d="M24 110 C132 26 248 28 320 94 C398 168 520 160 696 62"
+    />
+    <g clip-path="url(#process-guidance-progress)">
+      <path
+        class="process-guidance__tube process-guidance__tube--active"
+        d="M24 110 C132 26 248 28 320 94 C398 168 520 160 696 62"
+      />
+      <path
+        class="process-guidance__highlight"
+        d="M24 104 C132 20 248 22 320 88 C398 162 520 154 696 56"
+      />
+    </g>
+
+    <g class="process-guidance__ball" data-scroll-guidance-ball transform="translate(24 110)">
+      <circle class="process-guidance__ball-shell" r="16" />
+      <circle class="process-guidance__ball-core" r="5" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .process-guidance {
+    position: relative;
+    width: 100%;
+    margin: calc(-1 * var(--space-3)) 0 var(--space-7);
+    overflow: hidden;
+    border-inline: var(--border) solid var(--line);
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--paper-raised) 62%, transparent),
+      transparent
+    );
+  }
+
+  .process-guidance svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .process-guidance__tube,
+  .process-guidance__highlight {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .process-guidance__tube {
+    stroke: color-mix(in srgb, var(--line) 72%, var(--graphite));
+    stroke-width: clamp(1.8rem, 4vw, 2.75rem);
+  }
+
+  .process-guidance__tube--active {
+    stroke: url(#process-guidance-gradient);
+    stroke-width: clamp(1.5rem, 3.5vw, 2.35rem);
+  }
+
+  .process-guidance__highlight {
+    stroke: color-mix(in srgb, var(--paper-raised) 72%, transparent);
+    stroke-width: var(--border-strong);
+  }
+
+  .process-guidance__stop--manual {
+    stop-color: var(--manual);
+  }
+
+  .process-guidance__stop--production {
+    stop-color: var(--production);
+  }
+
+  .process-guidance__clip {
+    transform: scaleX(0);
+    transform-box: fill-box;
+    transform-origin: left center;
+  }
+
+  .process-guidance__ball {
+    opacity: 0;
+  }
+
+  .process-guidance.is-ready:not(.is-static) .process-guidance__ball {
+    opacity: 1;
+  }
+
+  .process-guidance.is-moving .process-guidance__ball {
+    will-change: transform;
+  }
+
+  .process-guidance__ball-shell {
+    fill: var(--paper-raised);
+    stroke: var(--production);
+    stroke-width: var(--border-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .process-guidance__ball-core {
+    fill: var(--production);
+  }
+
+  .process-guidance.is-static .process-guidance__clip {
+    transform: scaleX(1);
+  }
+
+  .process-guidance.is-static .process-guidance__ball {
+    display: none;
+  }
+
+  @media (max-width: 56.25rem) {
+    .process-guidance {
+      margin-top: 0;
+    }
+
+    .process-guidance__clip {
+      transform: scaleX(1);
+    }
+
+    .process-guidance__ball {
+      display: none;
+    }
+  }
+</style>

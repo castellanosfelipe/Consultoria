@@ -3,6 +3,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteHeader from "./SiteHeader.astro";
 import HeroGraph from "./HeroGraph.astro";
 import ProcessArtifact from "./ProcessArtifact.astro";
+import ProcessGuidance from "./ProcessGuidance.astro";
+import ScrollThread from "./ScrollThread.astro";
 import ContactPanel from "./ContactPanel.astro";
 import LineIcon from "./LineIcon.astro";
 import { siteConfig } from "../config";
@@ -34,6 +36,7 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
   pageHomePath={lang === "en" ? "/en/" : "/"}
 >
   <SiteHeader lang={lang} />
+  <ScrollThread />
 
   <main id="contenido">
     <section class="hero" aria-labelledby="hero-title">
@@ -148,10 +151,8 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
           ))}
         </div>
         <p class="currency-reference">
-          <span data-rate-status>{diagnosisCurrency.rateBase}</span>{" "}
-          {diagnosisCurrency.rateSource}{" "}
-          <a href="https://www.exchangerate-api.com" rel="external noopener" data-rate-attribution>ExchangeRate API</a>.{" "}
-          {diagnosisCurrency.rateConfirmation}
+          {diagnosisCurrency.rateNote}{" "}
+          <a href="https://www.exchangerate-api.com" rel="external noopener" data-rate-attribution>ExchangeRate API</a>
         </p>
       </div>
     </section>
@@ -263,6 +264,7 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
           ))}
         </ol>
 
+        <ProcessGuidance />
         <ProcessArtifact lang={lang} />
       </div>
     </section>
@@ -1641,7 +1643,7 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
 
     :global(.motion-ready) [data-animate="offer-flow"] [data-offer-arrow] {
       opacity: 1;
-      transform: scaleX(1);
+      transform: rotate(var(--arrow-rotation, 0deg)) scaleX(1);
       transition:
         opacity var(--motion-fast) var(--motion-ease),
         transform var(--motion-fast) var(--motion-ease);
@@ -1657,7 +1659,7 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
 
     :global(.motion-ready) [data-animate="offer-flow"]:not(.is-visible) [data-offer-arrow] {
       opacity: 0;
-      transform: scaleX(0);
+      transform: rotate(var(--arrow-rotation, 0deg)) scaleX(0);
     }
 
     :global(.motion-ready) [data-animate="offer-flow"] .offer-card__core {
@@ -1941,7 +1943,10 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
     }
 
     .offer-arrow {
-      transform: rotate(90deg);
+      --arrow-rotation: 90deg;
+      justify-self: center;
+      transform: rotate(var(--arrow-rotation));
+      transform-origin: center;
     }
 
     .proof-artifact__head {
