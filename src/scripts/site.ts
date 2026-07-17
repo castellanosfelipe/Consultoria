@@ -139,6 +139,74 @@ document.querySelectorAll<HTMLAnchorElement>("[data-language-link]").forEach((li
   });
 });
 
+type CurrencyCode = "COP" | "MXN" | "PEN" | "USD";
+
+const currencyStorageKey = "consultoria-country-currency";
+const currencyCountries: Record<CurrencyCode, string> = {
+  COP: "CO",
+  MXN: "MX",
+  PEN: "PE",
+  USD: "US",
+};
+const isCurrencyCode = (value: string | null): value is CurrencyCode =>
+  value !== null && Object.prototype.hasOwnProperty.call(currencyCountries, value);
+const currencySelectors = Array.from(
+  document.querySelectorAll<HTMLSelectElement>("[data-currency-select]"),
+);
+const currencyValues = Array.from(
+  document.querySelectorAll<HTMLElement>("[data-currency-value]"),
+);
+const currencyFields = Array.from(
+  document.querySelectorAll<HTMLInputElement>("[data-currency-field]"),
+);
+const countryFields = Array.from(
+  document.querySelectorAll<HTMLInputElement>("[data-country-field]"),
+);
+
+const applyCurrency = (currency: CurrencyCode, persist = false) => {
+  document.documentElement.dataset.currency = currency;
+  currencySelectors.forEach((selector) => {
+    selector.value = currency;
+  });
+  currencyValues.forEach((element) => {
+    const value = element.dataset[currency.toLowerCase()];
+    if (value) element.textContent = value;
+  });
+  currencyFields.forEach((field) => {
+    field.value = currency;
+  });
+  countryFields.forEach((field) => {
+    field.value = currencyCountries[currency];
+  });
+
+  if (!persist) return;
+  try {
+    localStorage.setItem(currencyStorageKey, currency);
+  } catch {
+    // El selector sigue funcionando durante la sesión si el almacenamiento está bloqueado.
+  }
+  track("Currency Changed", {
+    country: currencyCountries[currency],
+    currency,
+  });
+};
+
+let initialCurrency: CurrencyCode = "COP";
+try {
+  const storedCurrency = localStorage.getItem(currencyStorageKey);
+  if (isCurrencyCode(storedCurrency)) initialCurrency = storedCurrency;
+} catch {
+  // COP permanece como valor seguro cuando el navegador bloquea localStorage.
+}
+applyCurrency(initialCurrency);
+
+currencySelectors.forEach((selector) => {
+  selector.addEventListener("change", () => {
+    const currency = isCurrencyCode(selector.value) ? selector.value : "COP";
+    applyCurrency(currency, true);
+  });
+});
+
 const navigation = document.querySelector<HTMLElement>(".site-nav");
 const scrollHeader = document.querySelector<HTMLElement>(
   "[data-scroll-header]",

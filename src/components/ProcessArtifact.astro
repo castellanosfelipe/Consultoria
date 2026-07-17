@@ -7,7 +7,7 @@ interface Props {
 
 const { lang = "es" } = Astro.props;
 const t = getCopy(lang).processArtifact;
-const weeks = Array.from({ length: 12 }, (_, index) => index + 1);
+const weeks = Array.from({ length: 8 }, (_, index) => index + 1);
 const weekPrefix = lang === "en" ? "W" : "S";
 ---
 
@@ -44,10 +44,6 @@ const weekPrefix = lang === "en" ? "W" : "S";
     <span class="timeline__demo timeline__demo--4"></span>
     <span class="timeline__demo timeline__demo--5"></span>
     <span class="timeline__demo timeline__demo--6"></span>
-    <span class="timeline__demo timeline__demo--7"></span>
-    <span class="timeline__demo timeline__demo--8"></span>
-    <span class="timeline__demo timeline__demo--9"></span>
-    <span class="timeline__demo timeline__demo--10"></span>
   </div>
 
   <div class="mobile-lanes" aria-hidden="true">
@@ -107,7 +103,7 @@ const weekPrefix = lang === "en" ? "W" : "S";
 
   .timeline {
     display: grid;
-    grid-template-columns: 7.5rem repeat(12, minmax(0, 1fr));
+    grid-template-columns: 7.5rem repeat(8, minmax(0, 1fr));
     align-items: center;
     gap: var(--space-2) var(--border);
   }
@@ -181,7 +177,7 @@ const weekPrefix = lang === "en" ? "W" : "S";
   }
 
   .timeline__phase--build {
-    grid-column: 4 / 14;
+    grid-column: 4 / 10;
     color: var(--ink);
   }
 
@@ -215,7 +211,7 @@ const weekPrefix = lang === "en" ? "W" : "S";
   }
 
   .timeline__bar--owner {
-    grid-column: 2 / 14;
+    grid-column: 2 / 10;
   }
 
   .timeline__bar--owner .timeline__bar-fill,
@@ -224,7 +220,7 @@ const weekPrefix = lang === "en" ? "W" : "S";
   }
 
   .timeline__bar--core {
-    grid-column: 4 / 14;
+    grid-column: 4 / 10;
     color: var(--graphite);
   }
 
@@ -235,7 +231,7 @@ const weekPrefix = lang === "en" ? "W" : "S";
 
   .timeline__bar--flex {
     min-height: var(--space-5);
-    grid-column: 7 / 11;
+    grid-column: 6 / 9;
     display: grid;
     place-items: center;
     border: var(--border) dashed var(--line-strong);
@@ -267,10 +263,6 @@ const weekPrefix = lang === "en" ? "W" : "S";
   .timeline__demo--4 { --demo-delay: 1345ms; grid-column: 7; }
   .timeline__demo--5 { --demo-delay: 1400ms; grid-column: 8; }
   .timeline__demo--6 { --demo-delay: 1455ms; grid-column: 9; }
-  .timeline__demo--7 { --demo-delay: 1510ms; grid-column: 10; }
-  .timeline__demo--8 { --demo-delay: 1565ms; grid-column: 11; }
-  .timeline__demo--9 { --demo-delay: 1620ms; grid-column: 12; }
-  .timeline__demo--10 { --demo-delay: 1675ms; grid-column: 13; }
 
   /*
    * Una sola entrada narra plan -> capacidad -> demos -> estado estable.

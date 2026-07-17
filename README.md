@@ -29,7 +29,7 @@
 
 ## 🎯 ¿Qué es este proyecto?
 
-Es la landing comercial de Felipe Peña para empresas cuya operación creció más rápido que sus sistemas. Presenta una oferta de software interno y automatización de datos con alcance, precios de entrada, forma de trabajo y compromisos visibles antes de pedir una conversación.
+Es la landing comercial de Felipe Peña para empresas cuya operación creció más rápido que sus sistemas. Presenta una oferta de software interno y automatización de datos con alcance, forma de trabajo y compromisos visibles antes de pedir una conversación.
 
 ### El problema que resuelve
 
@@ -45,7 +45,7 @@ La página transforma ese problema en un recorrido concreto: identifica síntoma
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Líderes de operaciones B2B         | Reconocen rápidamente si sus procesos manuales encajan con la oferta.                                    |
 | Responsables de tecnología y datos | Entienden propiedad, arquitectura, ritmo de demos y entrega sin pasar primero por una llamada comercial. |
-| Stakeholders de negocio            | Ven rango de inversión, plazo y límites antes de dedicar tiempo a una conversación.                      |
+| Stakeholders de negocio            | Entienden el costo del diagnóstico, el plazo y cómo se define el valor del proyecto antes de construir.  |
 
 ## 🎬 Demo en vivo
 
@@ -72,7 +72,8 @@ La demo pública sirve el build estático de Astro desde GitHub Pages. El 15 de 
 | Feature                                   | Descripción                                                                                        |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | 🎯 **Narrativa orientada al problema**    | Lleva al visitante desde síntomas reconocibles hasta una oferta y un siguiente paso concretos.     |
-| 💵 **Oferta visible**                     | Publica etapas, precios de entrada, plazos y propiedad del código desde el primer recorrido.       |
+| 💵 **Ruta comercial clara**               | Explica la validación de viabilidad, el diagnóstico, los plazos y la propiedad del código.          |
+| 🌎 **País y moneda persistentes**          | Permite elegir COP, MXN, PEN o USD y conserva la preferencia entre páginas e idiomas.                |
 | 🤖 **IA e industrias**                    | Explica integraciones concretas con IA y experiencia sectorial en Colombia, México y Perú.         |
 | ✅ **Prueba sin cifras inventadas**       | Sustituye testimonios ausentes por compromisos verificables de alcance, avance y propiedad.        |
 | ⚡ **Conversión progresiva**              | Incluye un formulario mínimo y una agenda opcional que solo se crea cuando el usuario la solicita. |

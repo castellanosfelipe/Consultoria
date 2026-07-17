@@ -46,7 +46,6 @@ const schemas = [
     description: resolvedDescription,
     url: homeUrl,
     image: shareImage,
-    priceRange: lang === "en" ? "USD 1,900 to 50,000" : "USD 1.900 a 50.000",
     areaServed: [
       { "@type": "Country", name: "Colombia" },
       { "@type": "Country", name: lang === "en" ? "Mexico" : "México" },
@@ -69,7 +68,7 @@ const schemas = [
 ---
 
 <!doctype html>
-<html lang={t.htmlLang} data-base-path={siteConfig.basePath} data-home-path={withBasePath(resolvedHomePath)}>
+<html lang={t.htmlLang} data-base-path={siteConfig.basePath} data-home-path={withBasePath(resolvedHomePath)} data-currency="COP">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -4,6 +4,7 @@ import SiteHeader from "./SiteHeader.astro";
 import HeroGraph from "./HeroGraph.astro";
 import ProcessArtifact from "./ProcessArtifact.astro";
 import ContactPanel from "./ContactPanel.astro";
+import LineIcon from "./LineIcon.astro";
 import { siteConfig } from "../config";
 import { getCopy, type Language } from "../i18n/copy";
 
@@ -20,6 +21,9 @@ const {
   phases,
 } = t.landing;
 const hasBooking = Boolean(siteConfig.bookingUrl);
+const aiIcons = ["chat", "support", "knowledge", "automation"];
+const industryIcons = ["food", "lab", "health", "factory", "transport", "finance", "construction", "government"];
+const diagnosisCurrency = t.landing.services.diagnosisCurrency;
 ---
 
 <BaseLayout
@@ -123,7 +127,17 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
             <>
               <article class:list={["offer-card", offer.core && "offer-card--core"]} data-animate-item data-emphasis={offer.core ? "core-offer" : undefined}>
                 {offer.core && <span class="offer-card__core label">{t.landing.services.principal}</span>}
-                <p class="offer-card__price data">{offer.price}</p>
+                <p
+                  class="offer-card__meta data"
+                  data-currency-value={index === 0 ? "" : undefined}
+                  data-cop={index === 0 ? diagnosisCurrency.card.cop : undefined}
+                  data-mxn={index === 0 ? diagnosisCurrency.card.mxn : undefined}
+                  data-pen={index === 0 ? diagnosisCurrency.card.pen : undefined}
+                  data-usd={index === 0 ? diagnosisCurrency.card.usd : undefined}
+                  aria-live={index === 0 ? "polite" : undefined}
+                >
+                  {index === 0 ? diagnosisCurrency.card.cop : offer.meta}
+                </p>
                 <h3>{offer.title}</h3>
                 <p class="offer-card__description">{offer.description}</p>
                 <p class="offer-card__owner label">{t.landing.services.ownerLabel} {offer.owner}</p>
@@ -145,7 +159,10 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
         <div class="ai-grid" data-animate="fade-up" data-stagger="80" data-mobile-reveal="items">
           {t.landing.ai.items.map((item, index) => (
             <article class="ai-card" data-animate-item>
-              <span class="ai-card__index data" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <div class="ai-card__top">
+                <span class="ai-card__icon"><LineIcon name={aiIcons[index]} /></span>
+                <span class="ai-card__index data" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              </div>
               <h3>{item.title}</h3>
               <p>{item.copy}</p>
             </article>
@@ -164,7 +181,7 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
         <div class="industries-layout">
           <ul class="industry-grid" data-animate="fade-up" data-stagger="60" data-mobile-reveal="items">
             {t.landing.industries.items.map((item, index) => (
-              <li data-animate-item><span class="data" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{item}</li>
+              <li data-animate-item><span class="industry-icon"><LineIcon name={industryIcons[index]} /></span>{item}</li>
             ))}
           </ul>
           <aside class="country-panel" data-animate="fade-up" data-delay="160" aria-label={t.landing.industries.countriesLabel}>
@@ -306,7 +323,22 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
                 aria-hidden="false"
                 data-faq-panel
               >
-                <div><p>{faq.answer}</p></div>
+                <div>
+                  {"currencyPrice" in faq ? (
+                    <p>
+                      {faq.answerBefore}<span
+                        class="diagnosis-price-inline"
+                        data-currency-value
+                        data-cop={diagnosisCurrency.sentence.cop}
+                        data-mxn={diagnosisCurrency.sentence.mxn}
+                        data-pen={diagnosisCurrency.sentence.pen}
+                        data-usd={diagnosisCurrency.sentence.usd}
+                      >{diagnosisCurrency.sentence.cop}</span>{faq.answerAfter}
+                    </p>
+                  ) : (
+                    <p>{faq.answer}</p>
+                  )}
+                </div>
               </dd>
             </div>
           ))}
@@ -718,8 +750,8 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     padding: var(--space-1) var(--space-3);
   }
 
-  .offer-card__price {
-    min-height: var(--space-7);
+  .offer-card__meta {
+    min-height: calc(var(--space-7) + var(--space-4));
     padding-bottom: var(--space-4);
     margin-bottom: var(--space-5);
     border-bottom: var(--border) solid var(--line);
@@ -727,6 +759,12 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     font-weight: 600;
     line-height: 1.4;
     text-transform: uppercase;
+  }
+
+  .diagnosis-price-inline {
+    font-family: var(--font-data);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
   }
 
   .offer-card__description {
@@ -770,6 +808,47 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     flex-direction: column;
     padding: var(--space-5);
     background: var(--paper-raised);
+  }
+
+  .ai-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .ai-card__icon,
+  .industry-icon {
+    --icon-size: var(--space-5);
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    overflow: hidden;
+    border: var(--border) solid color-mix(in srgb, var(--production) 55%, var(--line));
+    border-radius: var(--radius);
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--production) 12%, transparent), transparent 58%),
+      var(--paper-raised);
+    color: var(--production);
+  }
+
+  .ai-card__icon {
+    width: var(--space-7);
+    height: var(--space-7);
+  }
+
+  .ai-card__icon::after,
+  .industry-icon::after {
+    position: absolute;
+    right: calc(-1 * var(--space-2));
+    bottom: calc(-1 * var(--space-2));
+    width: var(--space-5);
+    height: var(--space-5);
+    border: var(--border) solid currentColor;
+    content: "";
+    opacity: 0.16;
+    transform: rotate(45deg);
   }
 
   .ai-card__index {
@@ -828,6 +907,28 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
 
   .industry-grid span {
     color: var(--production);
+  }
+
+  .industry-icon {
+    --icon-size: var(--space-4);
+    width: calc(var(--space-6) + var(--space-2));
+    height: calc(var(--space-6) + var(--space-2));
+  }
+
+  @media (min-width: 56.3125rem) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) [data-animate="fade-up"] .ai-card__icon,
+    :global(.motion-ready) [data-animate="fade-up"] .industry-icon {
+      transition:
+        opacity var(--motion-fast) var(--motion-ease),
+        transform var(--motion-duration) var(--motion-ease);
+      transition-delay: calc(var(--motion-sequence-delay, 0ms) + 140ms);
+    }
+
+    :global(.motion-ready) [data-animate="fade-up"]:not(.is-visible) .ai-card__icon,
+    :global(.motion-ready) [data-animate="fade-up"]:not(.is-visible) .industry-icon {
+      opacity: 0;
+      transform: scale(0.82) rotate(-4deg);
+    }
   }
 
   .country-panel {
@@ -1772,6 +1873,10 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .ai-card {
+      min-height: 15rem;
+    }
+
     .positioning-axis {
       grid-template-columns: 1fr;
       justify-items: stretch;
@@ -2019,6 +2124,10 @@ const hasBooking = Boolean(siteConfig.bookingUrl);
     .ai-grid,
     .industry-grid {
       grid-template-columns: 1fr;
+    }
+
+    .ai-card {
+      min-height: 0;
     }
 
     .industry-grid li,

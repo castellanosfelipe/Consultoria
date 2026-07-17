@@ -260,6 +260,15 @@ check(!spanishHomeText.includes("¿Trabajan con cualquier empresa?"), "La pregun
 check(!/\b(?:PYTHON|TYPESCRIPT|KAFKA|AIRFLOW|PYSPARK|FASTAPI)\b/.test(spanishHomeText), "La home no debe mostrar lenguajes o tecnologías en el pie.");
 check(!/\beyebrow\b/.test(home) && !/\beyebrow\b/.test(englishHome), "Las etiquetas previas a los títulos deben estar eliminadas.");
 check(englishHomeText.includes("4 to 8 weeks"), "La home en inglés debe comunicar el plazo de 4 a 8 semanas.");
+for (const currency of ["MXN", "PEN", "USD"]) {
+  const numericForeignPrice = new RegExp(`(?:${currency}\\s*[0-9]|[0-9][0-9.,]*\\s*${currency})`, "i");
+  check(!numericForeignPrice.test(`${spanishHomeText} ${englishHomeText}`), `La landing no debe inventar un valor numérico en ${currency}.`);
+}
+check(spanishHomeText.includes("COP 600.000") && spanishHomeText.includes("COP 1.000.000"), "La home debe mostrar únicamente el rango autorizado para el diagnóstico.");
+check(spanishHomeText.includes("primera llamada") && spanishHomeText.includes("viable"), "La home debe explicar que la viabilidad se determina en la primera llamada.");
+check(!/\bS(?:9|10|11|12)\b/.test(spanishHomeText), "La línea de tiempo española no debe superar la semana 8.");
+check(!/\bW(?:9|10|11|12)\b/.test(englishHomeText), "La línea de tiempo inglesa no debe superar la semana 8.");
+check(tags(home, "span").filter(({ attrs }) => hasAttribute(attrs, "data-line-icon")).length === 12, "Las secciones de IA e industrias deben incluir doce iconos SVG.");
 
 const homeCanonicalTags = tags(home, "link").filter(({ attrs }) => relIncludes(attrs, "canonical"));
 check(homeCanonicalTags.length === 1, "La home debe contener exactamente un canonical.");
@@ -298,6 +307,35 @@ for (const [label, html, expectedCurrent] of [
     languageLinks.filter(({ attrs }) => attrs["aria-current"] === "page" && attrs.href === expectedCurrent).length === 2,
     `El selector en ${label} debe marcar el idioma actual en ambas variantes.`,
   );
+}
+
+for (const [label, html] of [
+  ["la home en español", home],
+  ["la home en inglés", englishHome],
+  ["la confirmación en español", thanks],
+  ["la confirmación en inglés", englishThanks],
+  ["la página 404", notFound],
+]) {
+  check(tags(html, "html")[0]?.attrs["data-currency"] === "COP", `${label} debe declarar COP como moneda inicial.`);
+  const currencySelectors = tags(html, "select").filter(({ attrs }) => hasAttribute(attrs, "data-currency-select"));
+  check(currencySelectors.length === 1, `${label} debe incluir un solo selector global de país y moneda.`);
+  check(Boolean(currencySelectors[0]?.attrs["aria-label"]?.trim()), `El selector de moneda de ${label} debe tener nombre accesible.`);
+
+  const currencyOptions = tags(html, "option").filter(({ attrs }) => ["COP", "MXN", "PEN", "USD"].includes(attrs.value));
+  check(currencyOptions.length === 4, `El selector de ${label} debe ofrecer COP, MXN, PEN y USD.`);
+  check(currencyOptions.filter(({ attrs }) => hasAttribute(attrs, "selected") && attrs.value === "COP").length === 1, `COP debe ser la moneda inicial de ${label}.`);
+  for (const [currency, country] of [["COP", "CO"], ["MXN", "MX"], ["PEN", "PE"], ["USD", "US"]]) {
+    check(currencyOptions.some(({ attrs }) => attrs.value === currency && attrs["data-country"] === country), `${label} debe asociar ${country} con ${currency}.`);
+  }
+}
+
+const currencyValueElements = [...tags(home, "p"), ...tags(home, "span")]
+  .filter(({ attrs }) => hasAttribute(attrs, "data-currency-value"));
+check(currencyValueElements.length === 2, "La tarjeta y la FAQ del diagnóstico deben responder al selector de moneda.");
+for (const element of currencyValueElements) {
+  for (const currency of ["cop", "mxn", "pen", "usd"]) {
+    check(Boolean(element.attrs[`data-${currency}`]?.trim()), `Cada valor del diagnóstico debe definir su texto para ${currency.toUpperCase()}.`);
+  }
 }
 
 const stylesheets = tags(home, "link").filter(({ attrs }) => relIncludes(attrs, "stylesheet"));
@@ -358,6 +396,7 @@ for (const [label, value] of [
   if (origin) sameOrigin(url, origin, label);
 }
 check(service?.founder?.["@id"] === person?.["@id"], "ProfessionalService.founder debe enlazar con Person.@id.");
+check(!Object.prototype.hasOwnProperty.call(service ?? {}, "priceRange"), "ProfessionalService no debe publicar un rango de precio para los proyectos.");
 
 for (const [label, html, expectedPath] of [
   ["/gracias/", thanks, withPublicBasePath("/gracias/")],
@@ -433,6 +472,10 @@ if (contactForm) {
     inputs: tags(match[2], "input").map(({ attrs }) => attrs),
   }));
   check(visibleInputs.length === 3, "El formulario debe pedir exactamente tres campos visibles.");
+  const countryField = inputs.filter((attrs) => attrs.name === "country" && hasAttribute(attrs, "data-country-field"));
+  const currencyField = inputs.filter((attrs) => attrs.name === "currency" && hasAttribute(attrs, "data-currency-field"));
+  check(countryField.length === 1 && countryField[0]?.type === "hidden" && countryField[0]?.value === "CO", "El formulario debe registrar CO como país inicial.");
+  check(currencyField.length === 1 && currencyField[0]?.type === "hidden" && currencyField[0]?.value === "COP", "El formulario debe registrar COP como moneda inicial.");
   for (const [name, expectedType] of [["nombre", "text"], ["email", "email"], ["contexto", "text"]]) {
     const matches = visibleInputs.filter((attrs) => attrs.name === name);
     check(matches.length === 1, `El formulario debe incluir una sola vez el campo ${name}.`);
@@ -457,6 +500,9 @@ if (englishContactForm) {
   if (origin) sameOrigin(action, origin, "Action del formulario inglés");
   check(action?.pathname === withPublicBasePath("/en/thanks/"), `El formulario inglés debe terminar en ${withPublicBasePath("/en/thanks/")}.`);
   check(englishContactForm.attrs["data-submit-url"] === withPublicBasePath("/en/"), "El formulario inglés debe enviar a la ruta inglesa.");
+  const englishInputs = tags(englishContactForm.body, "input").map(({ attrs }) => attrs);
+  check(englishInputs.some((attrs) => attrs.name === "country" && attrs.value === "CO" && hasAttribute(attrs, "data-country-field")), "El formulario inglés debe registrar el país seleccionado.");
+  check(englishInputs.some((attrs) => attrs.name === "currency" && attrs.value === "COP" && hasAttribute(attrs, "data-currency-field")), "El formulario inglés debe registrar la moneda seleccionada.");
 }
 
 const scriptTags = tags(home, "script");

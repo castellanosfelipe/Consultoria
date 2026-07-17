@@ -33,6 +33,11 @@ export const copy = {
       language: "Idioma",
       switchToSpanish: "Ver la página en español",
       switchToEnglish: "Ver la página en inglés",
+      currency: "País y moneda",
+      currencyColombia: "CO · COP",
+      currencyMexico: "MX · MXN",
+      currencyPeru: "PE · PEN",
+      currencyInternational: "US · USD",
     },
     landing: {
       hero: {
@@ -44,14 +49,14 @@ export const copy = {
         bookingCta: "Reservar llamada de encaje",
         formCta: "Cuéntanos tu proceso",
         bookingMicrocopy:
-          "30 minutos sin costo con Felipe, no con un comercial. En 48 horas recibes nuestra lectura por escrito y un rango de inversión.",
+          "30 minutos sin costo con Felipe y el equipo. En esa llamada determinamos si el proyecto es viable y si conviene avanzar al diagnóstico.",
         formMicrocopy:
-          "Tres campos, sin boletín. En 48 horas recibes nuestra lectura y un rango, o una respuesta honesta.",
+          "Tres campos, sin boletín. Si el contexto encaja, coordinamos la primera llamada para revisar la viabilidad.",
         factsLabel: "Condiciones principales",
         timeline: "Plazo",
         timelineValue: "4 a 8 semanas",
-        model: "Modelo",
-        modelValue: "precio cerrado",
+        model: "Viabilidad",
+        modelValue: "primera llamada",
         ownership: "Propiedad",
         ownershipValue: "código tuyo",
         visualLabel: "De datos dispersos a una operación conectada",
@@ -87,29 +92,43 @@ export const copy = {
       services: {
         title: "De entender la operación a ponerla en producción.",
         lead:
-          "Tres etapas conectadas. Puedes salir con el diagnóstico o continuar con un alcance y un precio que ya entiendes.",
+          "Tres etapas conectadas. La primera llamada valida la viabilidad y el diagnóstico define el alcance, el plazo y el valor del proyecto.",
         principal: "Principal",
         ownerLabel: "Quién:",
+        diagnosisCurrency: {
+          card: {
+            cop: "COP 600.000 a 1.000.000 · según el proyecto",
+            mxn: "Cotización en MXN · se confirma en la primera llamada",
+            pen: "Cotización en PEN · se confirma en la primera llamada",
+            usd: "Cotización en USD · se confirma en la primera llamada",
+          },
+          sentence: {
+            cop: "entre COP 600.000 y COP 1.000.000 según el proyecto",
+            mxn: "el equivalente en MXN, que confirmamos en la primera llamada",
+            pen: "el equivalente en PEN, que confirmamos en la primera llamada",
+            usd: "el equivalente en USD, que confirmamos en la primera llamada",
+          },
+        },
       },
       offers: [
         {
-          price: "USD 1.900 · 2 semanas",
+          meta: "COP 600.000 a 1.000.000 · según el proyecto",
           title: "Diagnóstico técnico de operación",
           description:
-            "Mapa de procesos y sistemas, arquitectura propuesta y plan con precio cerrado. El documento es tuyo aunque construyas con otro.",
-          owner: "Felipe lidera · se abona al proyecto",
+            "Mapa de procesos y sistemas, arquitectura propuesta y definición de alcance, plazo y valor. El documento es tuyo aunque construyas con otro equipo.",
+          owner: "Felipe lidera · el equipo documenta",
           core: false,
         },
         {
-          price: "Desde USD 15.000 · 4 a 8 semanas",
+          meta: "Valor definido en el diagnóstico · 4 a 8 semanas",
           title: "Sistema en producción",
           description:
-            "Software funcionando, código y documentación de tu propiedad, transferencia técnica y cuatro semanas de soporte. Precio cerrado tras diagnóstico.",
+            "Software funcionando, código y documentación de tu propiedad, transferencia técnica y cuatro semanas de soporte. Alcance y valor definidos en el diagnóstico.",
           owner: "Felipe dirige producto · el núcleo construye",
           core: true,
         },
         {
-          price: "Desde USD 2.500 al mes",
+          meta: "Valor según alcance y prioridades",
           title: "Evolución continua",
           description:
             "Mejoras, integraciones, soporte prioritario y hoja de ruta trimestral. Solo para sistemas que construimos.",
@@ -175,7 +194,7 @@ export const copy = {
           label: "Alcance",
           copy: "El diagnóstico convierte una operación difusa en una propuesta con límites, responsables y decisiones explícitas.",
           before: "estimación abierta",
-          after: "precio + plazo cerrado",
+          after: "alcance + plazo definidos",
           stack: "MAPA · ARQUITECTURA · PROPUESTA",
         },
         {
@@ -203,7 +222,7 @@ export const copy = {
           number: "01",
           title: "Diagnóstico",
           timing: "2 semanas",
-          copy: "Entrevistas, mapa de sistemas y plan con precio cerrado.",
+          copy: "Entrevistas, mapa de sistemas y definición de alcance, plazo y valor.",
         },
         {
           number: "02",
@@ -246,8 +265,10 @@ export const copy = {
         title: "Preguntas directas.",
         items: [
           {
-            question: "¿Cuánto cuesta?",
-            answer: "El diagnóstico cuesta USD 1.900. Los proyectos suelen estar entre USD 15.000 y 50.000, con precio cerrado después del diagnóstico. Si el presupuesto está por debajo, lo aclaramos en la primera llamada.",
+            question: "¿Cómo se define la inversión?",
+            answerBefore: "En la primera llamada determinamos si el proyecto es viable. Si hay encaje, el diagnóstico cuesta ",
+            answerAfter: ". Sus hallazgos definen el alcance, el plazo y el valor del proyecto antes de construir.",
+            currencyPrice: true,
           },
           {
             question: "¿Quién hace realmente el trabajo?",
@@ -308,7 +329,7 @@ export const copy = {
     },
     processArtifact: {
       capacity: "Capacidad por semana",
-      status: "estado: muestra cada viernes",
+      status: "plazo: 4 a 8 semanas · muestra cada viernes",
       work: "TRABAJO",
       owner: "DIRECCIÓN",
       diagnosis: "DIAGNÓSTICO",
@@ -337,7 +358,7 @@ export const copy = {
     },
     contact: {
       title: "¿Cuántas horas costó esta semana la brecha entre tu operación y tus sistemas?",
-      lead: "En 30 minutos revisamos el proceso que más fricción genera. En 48 horas recibes nuestra lectura por escrito, un rango o una respuesta clara sobre el encaje.",
+      lead: "En la primera llamada revisamos el proceso que más fricción genera y determinamos la viabilidad. Si hay encaje, el diagnóstico define el alcance y el valor del proyecto.",
       whatNext: "Qué pasa después",
       chooseRoute: "Eliges ruta",
       chooseBooking: "Agenda o escribe. Dos minutos.",
@@ -346,8 +367,8 @@ export const copy = {
       detailsCopy: "Nombre, correo y contexto.",
       call: "La llamada",
       callCopy: "30 minutos sobre tu operación con Felipe y el equipo.",
-      response: "En 48 horas",
-      responseCopy: "Lectura + rango, o una respuesta honesta.",
+      response: "En la llamada",
+      responseCopy: "Diagnóstico recomendado o una respuesta honesta.",
       bookingRoute: "Ruta A · agenda",
       bookingTitle: "Reserva una llamada de encaje",
       bookingCopy: "El calendario se carga solo cuando lo pides. No compite con el rendimiento inicial.",
@@ -413,6 +434,11 @@ export const copy = {
       language: "Language",
       switchToSpanish: "View this page in Spanish",
       switchToEnglish: "View this page in English",
+      currency: "Country and currency",
+      currencyColombia: "CO · COP",
+      currencyMexico: "MX · MXN",
+      currencyPeru: "PE · PEN",
+      currencyInternational: "US · USD",
     },
     landing: {
       hero: {
@@ -422,13 +448,13 @@ export const copy = {
         lead: "Your operation grew faster than your systems. Our team designs, manages and builds the software and automations that bring it up to speed. Live in 4 to 8 weeks, with Felipe leading an accountable team from start to finish.",
         bookingCta: "Book a fit call",
         formCta: "Share your process",
-        bookingMicrocopy: "30 minutes at no cost with Felipe, not a salesperson. Within 48 hours, you get our written assessment and a budget range.",
-        formMicrocopy: "Three fields. No newsletter. Within 48 hours, you get our written assessment and a budget range, or an honest answer.",
+        bookingMicrocopy: "30 minutes at no cost with Felipe and the team. On that call, we determine whether the project is viable and whether an assessment is the right next step.",
+        formMicrocopy: "Three fields. No newsletter. If the context fits, we coordinate the first call to review viability.",
         factsLabel: "Main terms",
         timeline: "Timeline",
         timelineValue: "4 to 8 weeks",
-        model: "Model",
-        modelValue: "fixed price",
+        model: "Viability",
+        modelValue: "first call",
         ownership: "Ownership",
         ownershipValue: "your code",
         visualLabel: "From scattered data to a connected operation",
@@ -458,27 +484,41 @@ export const copy = {
       },
       services: {
         title: "From understanding the operation to running it in production.",
-        lead: "Three connected stages. You can stop after the assessment or continue with a scope and price you already understand.",
+        lead: "Three connected stages. The first call validates viability, and the assessment defines the project scope, timeline and value.",
         principal: "Core",
         ownerLabel: "Who:",
+        diagnosisCurrency: {
+          card: {
+            cop: "COP 600,000 to 1,000,000 · based on the project",
+            mxn: "Quote in MXN · confirmed on the first call",
+            pen: "Quote in PEN · confirmed on the first call",
+            usd: "Quote in USD · confirmed on the first call",
+          },
+          sentence: {
+            cop: "between COP 600,000 and COP 1,000,000 depending on the project",
+            mxn: "the equivalent in MXN, confirmed on the first call",
+            pen: "the equivalent in PEN, confirmed on the first call",
+            usd: "the equivalent in USD, confirmed on the first call",
+          },
+        },
       },
       offers: [
         {
-          price: "USD 1,900 · 2 weeks",
+          meta: "COP 600,000 to 1,000,000 · based on the project",
           title: "Technical operations assessment",
-          description: "A map of your processes and systems, a proposed architecture and a fixed price plan. The document is yours even if you build with someone else.",
-          owner: "Felipe leads · credited toward the project",
+          description: "A map of your processes and systems, a proposed architecture and a defined scope, timeline and value. The document is yours even if another team builds it.",
+          owner: "Felipe leads · the team documents",
           core: false,
         },
         {
-          price: "Starting at USD 15,000 · 4 to 8 weeks",
+          meta: "Value defined in the assessment · 4 to 8 weeks",
           title: "System in production",
-          description: "Working software, code and documentation you own, technical handoff and four weeks of support. The price is fixed after the assessment.",
+          description: "Working software, code and documentation you own, technical handoff and four weeks of support. Scope and value are defined in the assessment.",
           owner: "Felipe directs product · the core team builds",
           core: true,
         },
         {
-          price: "Starting at USD 2,500 per month",
+          meta: "Value based on scope and priorities",
           title: "Continuous improvement",
           description: "Improvements, integrations, priority support and a quarterly roadmap. Available only for systems we built.",
           owner: "The team delivers · Felipe prioritizes",
@@ -540,7 +580,7 @@ export const copy = {
           label: "Scope",
           copy: "The assessment turns a vague operation into a proposal with clear boundaries, owners and decisions.",
           before: "open estimate",
-          after: "fixed price + timeline",
+          after: "defined scope + timeline",
           stack: "MAP · ARCHITECTURE · PROPOSAL",
         },
         {
@@ -567,7 +607,7 @@ export const copy = {
           number: "01",
           title: "Diagnosis",
           timing: "2 weeks",
-          copy: "Interviews, systems map and a fixed price plan.",
+          copy: "Interviews, systems map and a defined scope, timeline and value.",
         },
         {
           number: "02",
@@ -608,8 +648,10 @@ export const copy = {
         title: "Direct questions.",
         items: [
           {
-            question: "How much does it cost?",
-            answer: "The assessment costs USD 1,900. Projects usually range from USD 15,000 to USD 50,000, with a fixed price after the assessment. If the budget is lower, we clarify that on the first call.",
+            question: "How is the investment defined?",
+            answerBefore: "On the first call, we determine whether the project is viable. If there is a fit, the assessment costs ",
+            answerAfter: ". Its findings define the project scope, timeline and value before the build begins.",
+            currencyPrice: true,
           },
           {
             question: "Who actually does the work?",
@@ -670,7 +712,7 @@ export const copy = {
     },
     processArtifact: {
       capacity: "Capacity by week",
-      status: "status: demo every Friday",
+      status: "timeline: 4 to 8 weeks · demo every Friday",
       work: "WORK",
       owner: "LEADERSHIP",
       diagnosis: "DIAGNOSIS",
@@ -699,7 +741,7 @@ export const copy = {
     },
     contact: {
       title: "How many hours did the gap between your operation and your systems cost this week?",
-      lead: "In 30 minutes, we review the process causing the most friction. Within 48 hours, you receive our written assessment, a budget range, or a clear answer about fit.",
+      lead: "On the first call, we review the process causing the most friction and determine viability. If there is a fit, the assessment defines the project scope and value.",
       whatNext: "What happens next",
       chooseRoute: "Choose a route",
       chooseBooking: "Book or write. Two minutes.",
@@ -708,8 +750,8 @@ export const copy = {
       detailsCopy: "Name, email and context.",
       call: "The call",
       callCopy: "30 minutes about your operation with Felipe and the team.",
-      response: "Within 48 hours",
-      responseCopy: "An assessment and range, or an honest answer.",
+      response: "On the call",
+      responseCopy: "A recommended assessment or an honest answer.",
       bookingRoute: "Route A · calendar",
       bookingTitle: "Book a fit call",
       bookingCopy: "The calendar loads only when requested. It does not affect initial page performance.",

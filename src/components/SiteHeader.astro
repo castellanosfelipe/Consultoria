@@ -12,6 +12,12 @@ const homeHref = withBasePath(lang === "en" ? "/en/" : "/");
 const spanishHref = withBasePath("/");
 const englishHref = withBasePath("/en/");
 const sectionHref = (id: string) => `${homeHref}#${id}`;
+const currencyOptions = [
+  { value: "COP", country: "CO", label: t.header.currencyColombia },
+  { value: "MXN", country: "MX", label: t.header.currencyMexico },
+  { value: "PEN", country: "PE", label: t.header.currencyPeru },
+  { value: "USD", country: "US", label: t.header.currencyInternational },
+] as const;
 ---
 
 <header class="site-header" data-scroll-header>
@@ -47,7 +53,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
           data-menu-toggle
         >
           <span data-menu-label>{t.header.menu}</span>
-          <span class="icon-arrow icon-arrow--down" aria-hidden="true"></span>
+          <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span><span></span></span>
         </button>
         <div class="language-switch" role="group" aria-label={t.header.language}>
           <a href={spanishHref} lang="es" hreflang="es-CO" aria-label={t.header.switchToSpanish} aria-current={lang === "es" ? "page" : undefined} data-language-link>ES</a>
@@ -55,6 +61,22 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
           <a href={englishHref} lang="en" hreflang="en" aria-label={t.header.switchToEnglish} aria-current={lang === "en" ? "page" : undefined} data-language-link>EN</a>
         </div>
       </div>
+
+      <label class="currency-switch">
+        <span class="sr-only">{t.header.currency}</span>
+        <select data-currency-select aria-label={t.header.currency}>
+          {currencyOptions.map((option) => (
+            <option
+              value={option.value}
+              data-country={option.country}
+              selected={option.value === "COP"}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <span class="currency-switch__arrow" aria-hidden="true"></span>
+      </label>
 
       <div class="site-nav__mobile" id="navegacion-movil" data-mobile-menu data-nav-links hidden inert aria-hidden="true">
         <a href={sectionHref("servicios")}>{t.header.services}</a>
@@ -231,6 +253,47 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     display: none;
   }
 
+  .currency-switch {
+    position: relative;
+    min-height: var(--target);
+    display: inline-flex;
+    align-items: center;
+    margin-left: var(--space-2);
+    padding-left: var(--space-3);
+    border-left: var(--border) solid var(--line);
+  }
+
+  .currency-switch select {
+    width: 6.2rem;
+    min-height: var(--target);
+    appearance: none;
+    padding: 0 var(--space-5) 0 var(--space-2);
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    color: var(--ink);
+    font-family: var(--font-data);
+    font-size: var(--text-nano);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+
+  .currency-switch select:hover {
+    border-color: var(--ink-muted);
+  }
+
+  .currency-switch__arrow {
+    position: absolute;
+    right: var(--space-3);
+    width: var(--space-2);
+    height: var(--space-2);
+    border-right: var(--border-strong) solid var(--production);
+    border-bottom: var(--border-strong) solid var(--production);
+    pointer-events: none;
+    transform: translateY(calc(-1 * var(--space-1))) rotate(45deg);
+  }
+
   .site-nav .language-switch a[aria-current="page"] {
     color: var(--production);
     font-weight: 600;
@@ -293,7 +356,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
   }
 
   .nav-cta .icon-arrow,
-  .menu-toggle .icon-arrow {
+  .menu-toggle__icon span {
     transition:
       opacity 300ms var(--motion-ease),
       transform 300ms var(--motion-ease);
@@ -319,8 +382,47 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     cursor: pointer;
   }
 
-  .menu-toggle[aria-expanded="true"] .icon-arrow {
-    transform: rotate(225deg);
+  .menu-toggle__icon {
+    position: relative;
+    width: var(--space-4);
+    height: var(--space-4);
+    flex: 0 0 auto;
+  }
+
+  .menu-toggle__icon span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: var(--border-strong);
+    background: currentColor;
+    transform-origin: center;
+  }
+
+  .menu-toggle__icon span:first-child {
+    top: calc(var(--space-1) / 2);
+  }
+
+  .menu-toggle__icon span:nth-child(2) {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .menu-toggle__icon span:last-child {
+    bottom: calc(var(--space-1) / 2);
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-toggle__icon span:first-child {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-toggle__icon span:last-child {
+    bottom: 50%;
+    transform: translateY(50%) rotate(-45deg);
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-toggle__icon span:nth-child(2) {
+    opacity: 0;
   }
 
   /* Boot corto: primero identidad, después enlaces. No espera al script. */
@@ -328,7 +430,8 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     .brand-mark,
     .brand-copy,
     .site-nav__desktop > a,
-    .site-nav__desktop > .language-switch {
+    .site-nav__desktop > .language-switch,
+    .site-nav > .currency-switch {
       animation: nav-boot 420ms var(--motion-ease) both;
     }
 
@@ -356,8 +459,12 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
       animation-delay: 310ms;
     }
 
+    .site-nav > .currency-switch {
+      animation-delay: 360ms;
+    }
+
     .brand-status {
-      animation: nav-status-online 320ms var(--motion-ease) 360ms both;
+      animation: nav-status-online 320ms var(--motion-ease) 410ms both;
     }
   }
 
@@ -403,6 +510,16 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
       gap: var(--space-2);
     }
 
+    .currency-switch {
+      margin-left: var(--space-2);
+      padding-left: var(--space-2);
+    }
+
+    .currency-switch select {
+      width: 5.75rem;
+      padding-inline: var(--space-2) var(--space-5);
+    }
+
     .site-nav__mobile-controls .language-switch {
       padding-left: var(--space-2);
     }
@@ -446,11 +563,6 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
       padding-inline: var(--space-3);
     }
 
-    .menu-toggle[aria-expanded="true"] .icon-arrow {
-      opacity: 0.42;
-      transform: rotate(var(--arrow-rotation));
-    }
-
     .site-header::after {
       opacity: 0;
       transform: none;
@@ -480,12 +592,54 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
   }
 
   @media (max-width: 23.4375rem) {
-    .site-nav__mobile-controls {
+    .header-inner {
       gap: var(--space-2);
     }
 
+    .site-nav__mobile-controls {
+      gap: var(--space-1);
+    }
+
+    .site-nav__mobile-controls .language-switch {
+      gap: 0;
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .language-switch a {
+      min-width: var(--space-6);
+      padding-inline: 0;
+    }
+
     .menu-toggle {
-      padding-inline: var(--space-2);
+      min-width: var(--target);
+      justify-content: center;
+      padding-inline: 0;
+    }
+
+    .menu-toggle [data-menu-label] {
+      position: absolute;
+      width: var(--border);
+      height: var(--border);
+      padding: 0;
+      margin: calc(-1 * var(--border));
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .currency-switch {
+      margin-left: 0;
+      padding-left: var(--space-1);
+    }
+
+    .currency-switch select {
+      width: calc(var(--space-8) + var(--space-3));
+      padding-inline: var(--space-1) var(--space-4);
+    }
+
+    .currency-switch__arrow {
+      right: var(--space-2);
     }
   }
 
@@ -495,6 +649,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     .brand-status,
     .site-nav__desktop > a,
     .site-nav__desktop > .language-switch,
+    .site-nav > .currency-switch,
     .site-nav__mobile-controls {
       opacity: 1;
       transform: none;
@@ -504,7 +659,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
     .site-header::after,
     .site-nav a::after,
     .nav-cta .icon-arrow,
-    .menu-toggle .icon-arrow,
+    .menu-toggle__icon span,
     .site-nav__mobile {
       transition: none;
     }

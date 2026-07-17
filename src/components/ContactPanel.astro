@@ -82,6 +82,8 @@ const formSubmitUrl = withBasePath(lang === "en" ? "/en/" : "/");
         >
           <input type="hidden" name="form-name" value="contacto" />
           <input type="hidden" name="bot-field" />
+          <input type="hidden" name="country" value="CO" data-country-field />
+          <input type="hidden" name="currency" value="COP" data-currency-field />
 
           <label for="nombre" data-animate-item data-contact-field data-motion-index={hasBooking ? "8" : "7"}>
             <span class="field-label">{t.name}</span>
