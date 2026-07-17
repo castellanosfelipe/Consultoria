@@ -1,43 +1,58 @@
+---
+const routePath = "M176 24 C92 82 82 154 154 228 C198 274 180 362 112 420 C46 476 48 568 122 632 C192 690 184 790 112 842 C72 876 76 940 154 976";
+const waypoints = [
+  { x: 154, y: 228, progress: 0.22 },
+  { x: 112, y: 420, progress: 0.42 },
+  { x: 122, y: 632, progress: 0.63 },
+  { x: 112, y: 842, progress: 0.84 },
+];
+---
+
 <div class="scroll-thread" data-scroll-thread aria-hidden="true" hidden>
   <svg
     class="scroll-thread__svg"
-    viewBox="0 0 180 1000"
+    viewBox="0 0 220 1000"
     preserveAspectRatio="none"
     focusable="false"
     role="presentation"
   >
     <defs>
-      <clipPath id="scroll-thread-progress" clipPathUnits="userSpaceOnUse">
-        <rect class="scroll-thread__clip" data-scroll-thread-clip x="0" y="-60" width="180" height="1120" />
-      </clipPath>
+      <linearGradient id="scroll-thread-state" gradientUnits="userSpaceOnUse" x1="0" y1="24" x2="0" y2="976">
+        <stop offset="0" class="scroll-thread__gradient-start" />
+        <stop offset="0.58" class="scroll-thread__gradient-mid" />
+        <stop offset="1" class="scroll-thread__gradient-end" />
+      </linearGradient>
     </defs>
 
-    <path
-      class="scroll-thread__track"
-      data-scroll-thread-path
-      pathLength="1"
-      d="M142 -40 C28 70 168 154 82 250 C170 338 24 414 108 506 C176 610 32 704 122 792 C174 858 30 936 76 1040"
-    />
-    <g clip-path="url(#scroll-thread-progress)">
-      <path
-        class="scroll-thread__trail scroll-thread__trail--left"
-        d="M142 -40 C28 70 168 154 82 250 C170 338 24 414 108 506 C176 610 32 704 122 792 C174 858 30 936 76 1040"
-      />
-      <path
-        class="scroll-thread__trail"
-        d="M142 -40 C28 70 168 154 82 250 C170 338 24 414 108 506 C176 610 32 704 122 792 C174 858 30 936 76 1040"
-      />
-      <path
-        class="scroll-thread__trail scroll-thread__trail--right"
-        d="M142 -40 C28 70 168 154 82 250 C170 338 24 414 108 506 C176 610 32 704 122 792 C174 858 30 936 76 1040"
-      />
+    <path class="scroll-thread__route-halo" pathLength="1" d={routePath} />
+    <path class="scroll-thread__track" data-scroll-thread-path pathLength="1" d={routePath} />
+    <path class="scroll-thread__trail-halo" data-scroll-thread-progress pathLength="1" d={routePath} />
+    <path class="scroll-thread__trail" data-scroll-thread-progress pathLength="1" d={routePath} />
+
+    <g class="scroll-thread__waypoints">
+      <circle class="scroll-thread__endpoint scroll-thread__endpoint--start" cx="176" cy="24" r="4" />
+      {waypoints.map((waypoint) => (
+        <g
+          class="scroll-thread__waypoint"
+          data-scroll-thread-waypoint
+          data-progress={waypoint.progress}
+          transform={`translate(${waypoint.x} ${waypoint.y})`}
+        >
+          <circle class="scroll-thread__waypoint-ring" r="6" />
+          <circle class="scroll-thread__waypoint-core" r="2" />
+        </g>
+      ))}
+      <circle class="scroll-thread__endpoint scroll-thread__endpoint--finish" cx="154" cy="976" r="5" />
     </g>
   </svg>
 
-  <span class="scroll-thread__packet" data-scroll-thread-packet>
-    <i class="scroll-thread__packet-shadow"></i>
-    <i class="scroll-thread__packet-core"></i>
-    <i class="scroll-thread__packet-signal"></i>
+  <span class="scroll-thread__plane" data-scroll-thread-plane>
+    <svg viewBox="0 0 40 28" focusable="false" role="presentation">
+      <path class="scroll-thread__plane-shadow" d="M2 4 38 14 2 24 10 14Z" transform="translate(1 1.5)" />
+      <path class="scroll-thread__plane-body" d="M2 4 38 14 2 24 10 14Z" />
+      <path class="scroll-thread__plane-wing" d="M10 14 38 14 5 21Z" />
+      <path class="scroll-thread__plane-fold" d="M10 14H38" />
+    </svg>
   </span>
 </div>
 
@@ -46,9 +61,9 @@
     position: fixed;
     z-index: 3;
     top: calc(var(--header-height) + var(--space-3));
-    right: max(var(--space-2), calc((100vw - var(--container)) / 2 - 7rem));
+    right: max(var(--space-2), calc((100vw - var(--container)) / 2 - 6rem));
     bottom: var(--space-3);
-    width: clamp(5rem, 8vw, 8rem);
+    width: clamp(4.5rem, 6.5vw, 6.75rem);
     overflow: visible;
     opacity: 0;
     pointer-events: none;
@@ -56,7 +71,7 @@
   }
 
   .scroll-thread.is-ready {
-    opacity: 0.78;
+    opacity: 1;
   }
 
   .scroll-thread__svg {
@@ -66,7 +81,9 @@
     overflow: visible;
   }
 
+  .scroll-thread__route-halo,
   .scroll-thread__track,
+  .scroll-thread__trail-halo,
   .scroll-thread__trail {
     fill: none;
     stroke-linecap: round;
@@ -74,88 +91,152 @@
     vector-effect: non-scaling-stroke;
   }
 
+  .scroll-thread__route-halo {
+    stroke: color-mix(in srgb, var(--line) 74%, transparent);
+    stroke-width: calc(var(--space-1) + var(--border));
+    opacity: 0.24;
+  }
+
   .scroll-thread__track {
-    stroke: color-mix(in srgb, var(--manual) 26%, var(--line));
-    stroke-dasharray: 0.018 0.016;
+    stroke: color-mix(in srgb, var(--manual) 32%, var(--line));
+    stroke-dasharray: 0.006 0.014;
     stroke-width: var(--border-strong);
+    opacity: 0.72;
+  }
+
+  .scroll-thread__trail-halo,
+  .scroll-thread__trail {
+    stroke-dasharray: 0 1;
+  }
+
+  .scroll-thread__trail-halo {
+    stroke: color-mix(in srgb, var(--production) 24%, transparent);
+    stroke-width: calc(var(--space-1) + var(--border-strong));
+    opacity: 0.42;
   }
 
   .scroll-thread__trail {
-    stroke: var(--production);
+    stroke: url(#scroll-thread-state);
     stroke-width: var(--border-strong);
   }
 
-  .scroll-thread__trail--left,
-  .scroll-thread__trail--right {
+  .scroll-thread__gradient-start {
+    stop-color: var(--manual);
+  }
+
+  .scroll-thread__gradient-mid,
+  .scroll-thread__gradient-end {
+    stop-color: var(--production);
+  }
+
+  .scroll-thread__waypoint {
     opacity: 0.3;
+    transition: opacity var(--motion-fast) var(--motion-ease);
   }
 
-  .scroll-thread__trail--left {
-    transform: translateX(calc(-1 * var(--space-1)));
+  .scroll-thread__waypoint.is-passed {
+    opacity: 1;
   }
 
-  .scroll-thread__trail--right {
-    transform: translateX(var(--space-1));
+  .scroll-thread__waypoint-ring {
+    fill: var(--paper);
+    stroke: color-mix(in srgb, var(--graphite) 44%, var(--line));
+    stroke-width: var(--border);
+    vector-effect: non-scaling-stroke;
   }
 
-  .scroll-thread__clip {
-    transform: scaleY(0);
-    transform-box: fill-box;
-    transform-origin: top center;
+  .scroll-thread__waypoint-core {
+    fill: var(--line);
   }
 
-  .scroll-thread__packet {
+  .scroll-thread__waypoint.is-passed .scroll-thread__waypoint-ring {
+    stroke: var(--production);
+  }
+
+  .scroll-thread__waypoint.is-passed .scroll-thread__waypoint-core {
+    fill: var(--production);
+  }
+
+  .scroll-thread__endpoint {
+    fill: var(--paper-raised);
+    stroke-width: var(--border-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .scroll-thread__endpoint--start {
+    stroke: var(--manual);
+  }
+
+  .scroll-thread__endpoint--finish {
+    stroke: var(--production);
+  }
+
+  .scroll-thread__plane {
     position: absolute;
     top: 0;
     left: 0;
     width: var(--space-7);
-    height: var(--space-5);
+    height: auto;
     display: block;
     opacity: 0;
     transform: translate3d(-200%, -200%, 0);
     transform-origin: 50% 50%;
   }
 
-  .scroll-thread.is-ready:not(.is-static) .scroll-thread__packet {
+  .scroll-thread__plane svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  .scroll-thread.is-ready:not(.is-static) .scroll-thread__plane {
     opacity: 1;
   }
 
-  .scroll-thread.is-moving .scroll-thread__packet {
+  .scroll-thread.is-moving .scroll-thread__plane {
     will-change: transform;
   }
 
-  .scroll-thread__packet i {
-    position: absolute;
-    inset: 0;
-    display: block;
-    clip-path: polygon(0 12%, 100% 50%, 0 88%, 28% 50%);
+  .scroll-thread__plane-shadow {
+    fill: var(--ink);
+    opacity: 0.16;
   }
 
-  .scroll-thread__packet-shadow {
-    background: var(--ink);
-    opacity: 0.24;
-    transform: translateY(var(--space-1));
+  .scroll-thread__plane-body {
+    fill: var(--paper-raised);
+    stroke: var(--production);
+    stroke-width: 1.25;
+    vector-effect: non-scaling-stroke;
   }
 
-  .scroll-thread__packet-core {
-    background: var(--production);
-    transform: scale(0.82);
+  .scroll-thread__plane-wing {
+    fill: color-mix(in srgb, var(--production) 30%, var(--paper-raised));
+    stroke: var(--production);
+    stroke-width: 0.8;
+    vector-effect: non-scaling-stroke;
   }
 
-  .scroll-thread__packet-signal {
-    background: var(--paper-raised);
-    clip-path: polygon(5% 42%, 72% 50%, 5% 58%, 30% 50%);
+  .scroll-thread__plane-fold {
+    fill: none;
+    stroke: color-mix(in srgb, var(--production) 68%, var(--ink));
+    stroke-width: 0.8;
+    vector-effect: non-scaling-stroke;
   }
 
   .scroll-thread.is-static {
     opacity: 0.34;
   }
 
-  .scroll-thread.is-static .scroll-thread__clip {
-    transform: scaleY(1);
+  .scroll-thread.is-static [data-scroll-thread-progress] {
+    stroke-dasharray: 1 0;
   }
 
-  .scroll-thread.is-static .scroll-thread__packet {
+  .scroll-thread.is-static .scroll-thread__waypoint {
+    opacity: 1;
+  }
+
+  .scroll-thread.is-static .scroll-thread__plane {
     display: none;
   }
 
@@ -171,15 +252,20 @@
       opacity: 0.38;
     }
 
-    .scroll-thread__packet,
-    .scroll-thread__trail--left,
-    .scroll-thread__trail--right {
+    .scroll-thread__plane,
+    .scroll-thread__waypoints,
+    .scroll-thread__route-halo,
+    .scroll-thread__trail-halo {
       display: none;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .scroll-thread {
+      transition: none;
+    }
+
+    .scroll-thread__waypoint {
       transition: none;
     }
   }

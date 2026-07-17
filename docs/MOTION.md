@@ -6,7 +6,7 @@ La motion cuenta un cambio de estado: fragmentos manuales que se ordenan hasta c
 
 La página mantiene un solo bundle de navegador. `src/scripts/site.ts` importa la utilidad reutilizable `src/scripts/motion.ts`; Astro compone ambos desde el único `<script>` de `BaseLayout.astro`.
 
-No se incorporó GSAP. El sitio estaba a menos de 24 KiB de su presupuesto inicial y GSAP con ScrollTrigger y MotionPath lo habría superado. El hilo continuo usa `getPointAtLength()`, una tangente para orientar el paquete y un `requestAnimationFrame` amortiguado; el resto conserva `IntersectionObserver` y timelines CSS. No hay pinning, scroll artificial ni cambios sobre el desplazamiento nativo.
+No se incorporó GSAP. El sitio estaba a menos de 24 KiB de su presupuesto inicial y GSAP con ScrollTrigger y MotionPath lo habría superado. El hilo continuo usa `getPointAtLength()`, una tangente para orientar el avión y un `requestAnimationFrame` amortiguado; el resto conserva `IntersectionObserver` y timelines CSS. No hay pinning, scroll artificial ni cambios sobre el desplazamiento nativo.
 
 ## API declarativa
 
@@ -40,7 +40,6 @@ No se incorporó GSAP. El sitio estaba a menos de 24 KiB de su presupuesto inici
 | `.faq-ready`        | Activa el estado del acordeón antes del primer paint, separado de los reveals de scroll. |
 | `.is-visible`       | Estado final one-shot; el observer deja de observar inmediatamente.                      |
 | `data-scroll-thread` | Ruta global decorativa que muestra el progreso manual → producción.                      |
-| `data-scroll-guidance` | Conducto local de Proceso; la esfera y el gradiente siguen el progreso de esa escena.   |
 
 Sin JavaScript no se aplica el estado oculto: el contenido SSR permanece visible.
 
@@ -58,10 +57,9 @@ Cada `data-animate-item` pertenece a su contenedor `data-animate` más cercano. 
 - **Compromisos — aplicar diff:** estado anterior, tachado, inserción nueva y confirmación de commit.
 - **Proceso y capacidad — activar:** conectores, responsables, demos semanales y estado final aparecen en orden operativo.
 - **Contacto — enrutar:** introducción, pasos, cards y campos forman una única secuencia hasta el envío.
-- **Hilo global — guiar:** un paquete de despliegue recorre tres trazos laterales. La estela recorrida cambia a producción y la ruta pendiente conserva la señal manual.
-- **Proceso — transferir:** una esfera avanza por un conducto que cambia gradualmente de manual a producción, sin copiar recursos ni geometrías de la referencia.
+- **Hilo global — guiar:** un avión de despliegue recorre una pista lateral punteada. La estela precisa cambia de manual a producción y los hitos confirman el avance.
 
-El scroll también mantiene un progreso continuo en el borde inferior del nav, actualiza el enlace de sección activa y alimenta el hilo dentro del mismo `requestAnimationFrame`. Los reveals continúan siendo one-shot; solo el indicador de progreso avanza y retrocede con el scroll. En móvil, los grupos largos se revelan ítem por ítem y el hilo se reduce a un rail lateral que se completa, sin paquete flotante ni esfera. Los ítems se observan desde la carga aunque el viewport sea de escritorio, por lo que una rotación o un resize nunca deja contenido oculto.
+El scroll también mantiene un progreso continuo en el borde inferior del nav, actualiza el enlace de sección activa y alimenta el hilo dentro del mismo `requestAnimationFrame`. Los reveals continúan siendo one-shot; solo el indicador de progreso avanza y retrocede con el scroll. En móvil, los grupos largos se revelan ítem por ítem y el hilo se reduce a un rail lateral que se completa, sin el avión flotante. Los ítems se observan desde la carga aunque el viewport sea de escritorio, por lo que una rotación o un resize nunca deja contenido oculto.
 
 ## Timings
 
@@ -83,7 +81,7 @@ El párrafo principal del hero permanece visible desde el primer paint porque Ch
 - El diff muestra el estado anterior ya tachado y el nuevo visible.
 - El conector del proceso, las barras de capacidad y los hitos semanales aparecen completos.
 - El nav cambia de estado sin tween; los underlines responden de forma inmediata.
-- El hilo y el conducto aparecen completos; el paquete y la esfera quedan ocultos y no se registra un loop de seguimiento.
+- El hilo aparece completo; el avión queda oculto y no se registra un loop de seguimiento.
 - El FAQ conserva teclado y semántica, pero abre y cierra sin transición.
 - Loading, error y success del formulario conservan texto y `aria-live`, sin animación.
 - La agenda usa desplazamiento instantáneo al cargarse.

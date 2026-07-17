@@ -354,7 +354,8 @@ for (const [label, html] of [["español", home], ["inglés", englishHome]]) {
   const scrollGuidance = tags(html, "div").filter(({ attrs }) => hasAttribute(attrs, "data-scroll-guidance"));
   check(scrollThreads.length === 1, `La home en ${label} debe incluir un solo hilo conductor global.`);
   check(scrollThreads[0] && hasAttribute(scrollThreads[0].attrs, "aria-hidden"), `El hilo conductor de ${label} debe ser decorativo para lectores de pantalla.`);
-  check(scrollGuidance.length === 1, `La home en ${label} debe incluir un solo tramo de transferencia en Proceso.`);
+  check(scrollGuidance.length === 0, `La home en ${label} no debe incluir el conducto decorativo retirado de Proceso.`);
+  check(tags(html, "span").filter(({ attrs }) => hasAttribute(attrs, "data-scroll-thread-plane")).length === 1, `El hilo conductor de ${label} debe incluir un solo avión de despliegue.`);
 }
 
 check(/\.offer-arrow[^{}]*\{[^{}]*--arrow-rotation:90deg[^{}]*justify-self:center/i.test(home), "Las flechas móviles de la oferta deben quedar centradas y verticales.");

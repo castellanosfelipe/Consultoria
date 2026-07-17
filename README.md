@@ -74,7 +74,7 @@ La demo pública sirve el build estático de Astro desde GitHub Pages. El 15 de 
 | 🎯 **Narrativa orientada al problema**    | Lleva al visitante desde síntomas reconocibles hasta una oferta y un siguiente paso concretos.     |
 | 💵 **Ruta comercial clara**               | Explica la validación de viabilidad, el diagnóstico, los plazos y la propiedad del código.          |
 | 🌎 **País y moneda persistentes**          | Convierte únicamente el diagnóstico con una tasa diaria y conserva la preferencia entre páginas e idiomas. |
-| 🧭 **Hilo conductor de progreso**          | Un paquete de despliegue y un conducto de transferencia conectan las secciones con el scroll.              |
+| 🧭 **Hilo conductor de progreso**          | Un avión de despliegue recorre una ruta de estado manual a producción conforme avanza el scroll.           |
 | 🤖 **IA e industrias**                    | Explica integraciones concretas con IA y experiencia sectorial en Colombia, México y Perú.         |
 | ✅ **Prueba sin cifras inventadas**       | Sustituye testimonios ausentes por compromisos verificables de alcance, avance y propiedad.        |
 | ⚡ **Conversión progresiva**              | Incluye un formulario mínimo y una agenda opcional que solo se crea cuando el usuario la solicita. |

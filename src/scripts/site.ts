@@ -431,7 +431,7 @@ const updateScrolledHeader = () => {
   );
   const progress = Math.min(Math.max(window.scrollY / scrollRange, 0), 1);
   scrollHeader?.style.setProperty("--page-scroll-progress", String(progress));
-  scrollThread.update(progress, window.scrollY);
+  scrollThread.update(progress);
 };
 const scheduleScrolledHeader = () => {
   if (headerFrame) return;
