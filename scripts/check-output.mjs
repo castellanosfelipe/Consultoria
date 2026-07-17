@@ -244,7 +244,10 @@ for (const [label, html] of [
   ["la confirmación en inglés", englishThanks],
   ["la página 404", notFound],
 ]) {
-  check(!proseDashPattern.test(visibleText(html)), `La redacción visible de ${label} no debe contener guiones.`);
+  // Un correo puede contener guiones (bfpc-96@…): es un dato, no redacción,
+  // así que se excluye antes de aplicar la regla de estilo.
+  const prose = visibleText(html).replace(/[\w.+-]+@[\w.-]+\.\w+/g, " ");
+  check(!proseDashPattern.test(prose), `La redacción visible de ${label} no debe contener guiones.`);
 }
 
 check(h1Count(home) === 1, "La home debe contener exactamente un h1 no vacío.");
