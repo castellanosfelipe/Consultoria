@@ -1077,7 +1077,12 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
     font-weight: 650;
   }
 
-  .country-panel .country-flag {
+  /* El SVG de la bandera lo renderiza el componente CountryFlag, así que lleva
+     otro scope de Astro. Sin :global() la regla no lo alcanza y la bandera
+     colapsa a 0. :global apunta al SVG; el ancestro .country-panel mantiene la
+     regla acotada a este panel. */
+  .country-panel :global(.country-flag) {
+    display: block;
     flex: none;
     width: 1.6em;
     height: auto;
