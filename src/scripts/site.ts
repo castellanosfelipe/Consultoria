@@ -35,6 +35,7 @@ const ui = isEnglish
       requiredContext: "Summarize the context in one line.",
       shortName: "Use at least 2 characters.",
       invalidEmail: "Enter a valid email, for example name@company.com.",
+      invalidPhone: "Enter a valid phone number (7 to 11 digits).",
       shortContext: "Add a little more context. Use at least 12 characters.",
       reviewFields: "Review the highlighted fields.",
       sending: "Sending…",
@@ -64,6 +65,7 @@ const ui = isEnglish
       requiredContext: "Resume el contexto en una línea.",
       shortName: "Usa al menos 2 caracteres.",
       invalidEmail: "Usa un correo válido, por ejemplo nombre@empresa.com.",
+      invalidPhone: "Escribe un teléfono válido (entre 7 y 11 dígitos).",
       shortContext: "Añade un poco más de contexto. Usa al menos 12 caracteres.",
       reviewFields: "Revisa los campos marcados.",
       sending: "Enviando…",
@@ -247,6 +249,14 @@ const currencyCountries: Record<CurrencyCode, string> = {
   PEN: "PE",
   USD: "US",
 };
+// Indicativo telefónico por defecto según la moneda. USD no tiene país propio
+// en el selector, así que reutiliza Colombia como base editable.
+const currencyDialCodes: Record<CurrencyCode, string> = {
+  COP: "+57",
+  MXN: "+52",
+  PEN: "+51",
+  USD: "+57",
+};
 const isCurrencyCode = (value: string | null): value is CurrencyCode =>
   value !== null && Object.prototype.hasOwnProperty.call(currencyCountries, value);
 const currencySelectors = Array.from(
@@ -261,6 +271,12 @@ const currencyFields = Array.from(
 const countryFields = Array.from(
   document.querySelectorAll<HTMLInputElement>("[data-country-field]"),
 );
+const dialSelects = Array.from(
+  document.querySelectorAll<HTMLSelectElement>("[data-dial-select]"),
+);
+// El indicativo sigue a la moneda hasta que la persona lo elige a mano; a
+// partir de ahí respetamos su elección aunque cambie de moneda.
+let dialTouched = false;
 const diagnosisReferenceFields = Array.from(
   document.querySelectorAll<HTMLInputElement>(
     "[data-diagnosis-reference-field]",
@@ -458,6 +474,12 @@ const applyCurrency = (
   countryFields.forEach((field) => {
     field.value = currencyCountries[currency];
   });
+  if (!dialTouched) {
+    const dial = currencyDialCodes[currency];
+    dialSelects.forEach((select) => {
+      select.value = dial;
+    });
+  }
 
   if (currency !== "COP" && refreshRate) void refreshEquivalent(currency);
 
@@ -496,6 +518,17 @@ currencySelectors.forEach((selector) => {
   selector.addEventListener("change", () => {
     const currency = isCurrencyCode(selector.value) ? selector.value : "COP";
     applyCurrency(currency, true);
+  });
+});
+
+dialSelects.forEach((select) => {
+  select.addEventListener("change", () => {
+    dialTouched = true;
+    // Todos los selectores comparten el mismo indicativo elegido a mano.
+    dialSelects.forEach((other) => {
+      other.value = select.value;
+    });
+    track("Dial Code Changed", { dial: select.value });
   });
 });
 
@@ -723,12 +756,18 @@ if (form) {
     if (!value) {
       if (field.name === "nombre") return ui.requiredName;
       if (field.name === "email") return ui.requiredEmail;
-      return ui.requiredContext;
+      if (field.name === "contexto") return ui.requiredContext;
+      // El teléfono es opcional: vacío es válido.
+      return "";
     }
     if (field.name === "nombre" && value.length < 2)
       return ui.shortName;
     if (field.name === "email" && field.validity.typeMismatch)
       return ui.invalidEmail;
+    if (field.name === "telefono") {
+      const digits = value.replace(/\D/g, "");
+      if (digits.length < 7 || digits.length > 11) return ui.invalidPhone;
+    }
     if (field.name === "contexto" && value.length < 12)
       return ui.shortContext;
     return "";
@@ -777,12 +816,16 @@ if (form) {
     const value = (name: string) =>
       form.querySelector<HTMLInputElement>(`[name='${name}']`)?.value.trim() || "";
     const subject = `${ui.mailtoSubject} · ${value("nombre")}`;
+    const telefono = value("telefono");
     const body = [
       `${value("nombre")}`,
       `${value("email")}`,
+      telefono ? `${value("indicativo")} ${telefono}`.trim() : null,
       "",
       `${value("contexto")}`,
-    ].join("\n");
+    ]
+      .filter((line) => line !== null)
+      .join("\n");
     return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 

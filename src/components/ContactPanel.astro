@@ -10,6 +10,11 @@ const { lang = "es" } = Astro.props;
 const copy = getCopy(lang);
 const t = copy.contact;
 const diagnosisReference = copy.landing.services.diagnosisCurrency.card.cop;
+const dialOptions = [
+  { value: "+57", country: "CO", label: "CO +57" },
+  { value: "+52", country: "MX", label: "MX +52" },
+  { value: "+51", country: "PE", label: "PE +51" },
+];
 const hasBooking = Boolean(siteConfig.bookingUrl);
 const formAction = withBasePath(lang === "en" ? "/en/thanks/" : "/gracias/");
 const formSubmitUrl =
@@ -103,7 +108,42 @@ const privacyHref = withBasePath(lang === "en" ? "/en/privacy/" : "/privacidad/"
             <span class="field-error" id="email-error" data-error-for="email" aria-live="polite"></span>
           </label>
 
-          <label class="contact-form__wide" for="contexto" data-animate-item data-contact-field data-motion-index={hasBooking ? "10" : "9"}>
+          <label class="contact-form__wide" for="telefono" data-animate-item data-contact-field data-motion-index={hasBooking ? "10" : "9"}>
+            <span class="field-label">{t.phone} <span class="field-optional">({t.phoneOptional})</span></span>
+            <span class="field-control field-control--phone">
+              <select
+                id="indicativo"
+                name="indicativo"
+                class="phone-dial"
+                autocomplete="tel-country-code"
+                aria-label={t.dialCode}
+                data-dial-select
+              >
+                {dialOptions.map((option) => (
+                  <option
+                    value={option.value}
+                    data-country={option.country}
+                    selected={option.value === "+57"}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <input
+                id="telefono"
+                name="telefono"
+                type="tel"
+                autocomplete="tel-national"
+                inputmode="tel"
+                maxlength="24"
+                aria-describedby="telefono-error"
+                placeholder={t.phonePlaceholder}
+              />
+            </span>
+            <span class="field-error" id="telefono-error" data-error-for="telefono" aria-live="polite"></span>
+          </label>
+
+          <label class="contact-form__wide" for="contexto" data-animate-item data-contact-field data-motion-index={hasBooking ? "11" : "10"}>
             <span class="field-label">{t.context}</span>
             <span class="field-control">
               <input
@@ -120,7 +160,7 @@ const privacyHref = withBasePath(lang === "en" ? "/en/privacy/" : "/privacidad/"
             <span class="field-error" id="contexto-error" data-error-for="contexto" aria-live="polite"></span>
           </label>
 
-          <div class="contact-form__actions contact-form__wide" data-animate-item data-contact-field data-motion-index={hasBooking ? "11" : "10"}>
+          <div class="contact-form__actions contact-form__wide" data-animate-item data-contact-field data-motion-index={hasBooking ? "12" : "11"}>
             <button class="button" type="submit" data-form-submit>{t.submit} <span class="icon-arrow" aria-hidden="true"></span></button>
             <div>
               <p>{t.responseTime} {t.privacy} <a href={privacyHref}>{t.privacyLink}</a></p>
@@ -454,6 +494,42 @@ const privacyHref = withBasePath(lang === "en" ? "/en/privacy/" : "/privacidad/"
 
   .contact-form input:hover {
     border-color: var(--ink);
+  }
+
+  .field-optional {
+    color: var(--graphite);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  .field-control--phone {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .field-control--phone .phone-dial {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: var(--target);
+    border: var(--border) solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    color: var(--ink);
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-data);
+    font-size: var(--text-small);
+    cursor: pointer;
+  }
+
+  .field-control--phone .phone-dial:hover {
+    border-color: var(--ink);
+  }
+
+  .field-control--phone input {
+    flex: 1 1 auto;
+    width: auto;
   }
 
   .contact-form input[aria-invalid="true"] {

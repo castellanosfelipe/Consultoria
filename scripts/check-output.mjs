@@ -503,7 +503,8 @@ if (contactForm) {
     attrs: attributes(match[1]),
     inputs: tags(match[2], "input").map(({ attrs }) => attrs),
   }));
-  check(visibleInputs.length === 3, "El formulario debe pedir exactamente tres campos visibles.");
+  const requiredVisibleInputs = visibleInputs.filter((attrs) => hasAttribute(attrs, "required"));
+  check(requiredVisibleInputs.length === 3, "El formulario debe pedir exactamente tres campos obligatorios visibles.");
   const countryField = inputs.filter((attrs) => attrs.name === "country" && hasAttribute(attrs, "data-country-field"));
   const currencyField = inputs.filter((attrs) => attrs.name === "currency" && hasAttribute(attrs, "data-currency-field"));
   const diagnosisReferenceField = inputs.filter((attrs) => attrs.name === "diagnosis_reference" && hasAttribute(attrs, "data-diagnosis-reference-field"));
@@ -523,6 +524,21 @@ if (contactForm) {
     );
     check(hasLabel, `${name} debe tener un label asociado.`);
   }
+  const phoneInputs = visibleInputs.filter((attrs) => attrs.name === "telefono");
+  check(phoneInputs.length === 1, "El formulario debe incluir una sola vez el campo teléfono.");
+  const phoneInput = phoneInputs[0];
+  if (phoneInput) {
+    check((phoneInput.type ?? "text").toLowerCase() === "tel", "telefono debe usar type=tel.");
+    check(!hasAttribute(phoneInput, "required"), "telefono debe ser opcional.");
+    check(Number.parseInt(phoneInput.maxlength, 10) > 0, "telefono debe limitar su longitud.");
+    const hasPhoneLabel = labelMatches.some((label) =>
+      (Boolean(phoneInput.id) && label.attrs.for === phoneInput.id) || label.inputs.some((nestedInput) => nestedInput.name === "telefono"),
+    );
+    check(hasPhoneLabel, "telefono debe tener un label asociado.");
+  }
+  const dialSelects = tags(contactForm.body, "select").map(({ attrs }) => attrs).filter((attrs) => hasAttribute(attrs, "data-dial-select"));
+  check(dialSelects.length === 1, "El formulario debe incluir un selector de indicativo.");
+  check(Boolean(dialSelects[0]?.["aria-label"]?.trim()), "El selector de indicativo debe tener nombre accesible.");
 }
 
 const englishFormMatches = [...englishHome.matchAll(/<form\b([^>]*)>([\s\S]*?)<\/form>/gi)].map((match) => ({ attrs: attributes(match[1]), body: match[2] }));

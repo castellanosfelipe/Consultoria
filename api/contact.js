@@ -37,6 +37,8 @@ export default async function handler(req, res) {
   const nombre = clean(data.nombre, 80);
   const email = clean(data.email, 120);
   const contexto = clean(data.contexto, 280);
+  const telefono = clean(data.telefono, 24);
+  const indicativo = clean(data.indicativo, 6);
   const pais = clean(data.country, 8);
   const moneda = clean(data.currency, 8);
 
@@ -60,6 +62,7 @@ export default async function handler(req, res) {
   const lines = [
     `Nombre: ${nombre}`,
     `Correo: ${email}`,
+    telefono ? `Teléfono: ${indicativo ? `${indicativo} ` : ""}${telefono}` : null,
     pais || moneda ? `País/moneda: ${pais || "?"} · ${moneda || "?"}` : null,
     "",
     "Contexto:",
