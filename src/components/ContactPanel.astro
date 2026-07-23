@@ -14,6 +14,7 @@ const dialOptions = [
   { value: "+57", country: "CO", label: "CO +57" },
   { value: "+52", country: "MX", label: "MX +52" },
   { value: "+51", country: "PE", label: "PE +51" },
+  { value: "+1", country: "US", label: "US +1" },
 ];
 const hasBooking = Boolean(siteConfig.bookingUrl);
 const formAction = withBasePath(lang === "en" ? "/en/thanks/" : "/gracias/");
@@ -109,7 +110,7 @@ const privacyHref = withBasePath(lang === "en" ? "/en/privacy/" : "/privacidad/"
           </label>
 
           <label class="contact-form__wide" for="telefono" data-animate-item data-contact-field data-motion-index={hasBooking ? "10" : "9"}>
-            <span class="field-label">{t.phone} <span class="field-optional">({t.phoneOptional})</span></span>
+            <span class="field-label">{t.phone}</span>
             <span class="field-control field-control--phone">
               <select
                 id="indicativo"
@@ -496,17 +497,17 @@ const privacyHref = withBasePath(lang === "en" ? "/en/privacy/" : "/privacidad/"
     border-color: var(--ink);
   }
 
-  .field-optional {
-    color: var(--graphite);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    text-transform: none;
-  }
-
   .field-control--phone {
     display: flex;
     align-items: stretch;
     gap: var(--space-3);
+  }
+
+  /* El indicativo y el número son dos controles independientes: se suprime la
+     barra de foco compartida para que no aparezca una línea uniéndolos. Cada
+     control conserva su propio borde y contorno de foco. */
+  .field-control--phone::after {
+    content: none;
   }
 
   .field-control--phone .phone-dial {

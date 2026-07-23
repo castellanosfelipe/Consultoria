@@ -294,13 +294,21 @@ const currencyCountries: Record<CurrencyCode, string> = {
   PEN: "PE",
   USD: "US",
 };
-// Indicativo telefónico por defecto según la moneda. USD no tiene país propio
-// en el selector, así que reutiliza Colombia como base editable.
+// Indicativo telefónico por defecto según la moneda seleccionada.
 const currencyDialCodes: Record<CurrencyCode, string> = {
   COP: "+57",
   MXN: "+52",
   PEN: "+51",
-  USD: "+57",
+  USD: "+1",
+};
+// Ejemplo de número por indicativo. Cada uno incluye el código de área/ciudad
+// donde aplica, para que la persona sepa dónde va: EE. UU. y México usan área
+// de 2-3 dígitos, Colombia un móvil de 10 y Perú un móvil de 9.
+const dialExamples: Record<string, string> = {
+  "+57": "300 123 4567",
+  "+52": "55 1234 5678",
+  "+51": "912 345 678",
+  "+1": "(305) 123 4567",
 };
 const isCurrencyCode = (value: string | null): value is CurrencyCode =>
   value !== null && Object.prototype.hasOwnProperty.call(currencyCountries, value);
@@ -319,6 +327,14 @@ const countryFields = Array.from(
 const dialSelects = Array.from(
   document.querySelectorAll<HTMLSelectElement>("[data-dial-select]"),
 );
+const phoneInput = document.querySelector<HTMLInputElement>(
+  "input[name='telefono']",
+);
+// El ejemplo del campo se ajusta al país del indicativo elegido.
+const syncPhonePlaceholder = (dial: string) => {
+  const example = dialExamples[dial];
+  if (phoneInput && example) phoneInput.placeholder = example;
+};
 // El indicativo sigue a la moneda hasta que la persona lo elige a mano; a
 // partir de ahí respetamos su elección aunque cambie de moneda.
 let dialTouched = false;
@@ -524,6 +540,7 @@ const applyCurrency = (
     dialSelects.forEach((select) => {
       select.value = dial;
     });
+    syncPhonePlaceholder(dial);
   }
 
   if (currency !== "COP" && refreshRate) void refreshEquivalent(currency);
@@ -573,6 +590,7 @@ dialSelects.forEach((select) => {
     dialSelects.forEach((other) => {
       other.value = select.value;
     });
+    syncPhonePlaceholder(select.value);
     track("Dial Code Changed", { dial: select.value });
   });
 });
