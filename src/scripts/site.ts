@@ -760,6 +760,10 @@ const setFaqItem = (item: HTMLElement, open: boolean) => {
   item.classList.toggle("is-open", open);
   button?.setAttribute("aria-expanded", String(open));
   panel?.setAttribute("aria-hidden", String(!open));
+  // Un panel plegado no debe dejar elementos enfocables (p. ej. el enlace del
+  // nombre "Felipe" en la respuesta): inert lo saca del foco y del árbol de
+  // accesibilidad mientras está oculto, y lo restablece al abrirlo.
+  panel?.toggleAttribute("inert", !open);
 };
 
 if (faq && faqItems.length > 0) {
