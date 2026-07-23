@@ -177,12 +177,13 @@ const revealHashTarget = (correctScroll: boolean) => {
     });
 
   const align = () => target?.scrollIntoView({ behavior: "auto", block: "start" });
-  const misaligned = () => {
-    if (!target) return false;
+  const driftPx = () => {
+    if (!target) return 0;
     const padding =
       Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-    return Math.abs(target.getBoundingClientRect().top - padding) > 8;
+    return Math.abs(target.getBoundingClientRect().top - padding);
   };
+  const misaligned = () => driftPx() > 8;
 
   if (correctScroll) {
     // El re-scroll del navegador al fragmento en load respeta scroll-behavior:
@@ -192,13 +193,28 @@ const revealHashTarget = (correctScroll: boolean) => {
     const previousBehavior = root.style.scrollBehavior;
     root.style.scrollBehavior = "auto";
     align();
-    window.requestAnimationFrame(() => window.requestAnimationFrame(align));
-    window.setTimeout(() => {
-      if (misaligned()) align();
-    }, 250);
-    window.setTimeout(() => {
-      root.style.scrollBehavior = previousBehavior;
-    }, 600);
+    // El contenido superior puede reflowar tras el primer aterrizaje (carga de
+    // fuentes, content-visibility, métricas de fuente por plataforma). En vez de
+    // una sola corrección se mantiene el destino fijado durante la ventana de
+    // estabilización: cada fotograma corrige cualquier deriva mayor a 2 px, de
+    // modo que la llegada es exacta sin importar cuándo asiente el layout.
+    const settleDeadline = performance.now() + 700;
+    const keepPinned = () => {
+      if (driftPx() > 2) align();
+      if (performance.now() < settleDeadline) {
+        window.requestAnimationFrame(keepPinned);
+      } else {
+        root.style.scrollBehavior = previousBehavior;
+      }
+    };
+    window.requestAnimationFrame(keepPinned);
+    // El swap de las fuentes web reflowa el texto de arriba y desplaza el
+    // destino; una corrección extra cuando terminan de cargar lo reancla.
+    if (document.fonts?.ready) {
+      void document.fonts.ready.then(() => {
+        if (driftPx() > 2) align();
+      });
+    }
   } else {
     // Navegación interna: el scroll suave nativo sigue al mando; solo se
     // verifica el punto de llegada cuando la animación ya terminó.
