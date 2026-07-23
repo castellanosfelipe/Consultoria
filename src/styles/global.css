@@ -193,6 +193,24 @@ a {
   text-underline-offset: 0.22em;
 }
 
+/* Cada mención del nombre "Felipe" enlaza a su sección de perfil (#quien).
+   Subrayado discreto que se refuerza al pasar el cursor, sin romper la lectura. */
+.felipe-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-decoration-thickness: var(--border);
+  text-underline-offset: 0.18em;
+  transition:
+    color 160ms ease,
+    text-decoration-color 160ms ease;
+}
+
+.felipe-link:hover {
+  color: var(--production);
+  text-decoration-color: var(--production);
+}
+
 button,
 input,
 textarea {

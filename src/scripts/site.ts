@@ -211,6 +211,51 @@ const revealHashTarget = (correctScroll: boolean) => {
 revealHashTarget(true);
 window.addEventListener("hashchange", () => revealHashTarget(false));
 
+// Cada mención del nombre "Felipe" enlaza a su sección de perfil (#quien),
+// excepto dentro de esa misma sección, de otros enlaces o de controles. La
+// marca del encabezado y los atributos (alt, meta, title) quedan intactos.
+const linkifyFelipeName = () => {
+  const brandHref =
+    document.querySelector<HTMLAnchorElement>("a.brand")?.getAttribute("href") ||
+    homePath;
+  const profileHref = `${brandHref}#quien`;
+  // Se omite dentro de la propia sección (#quien), de otros enlaces y de
+  // controles o scripts (p. ej. el JSON-LD que también nombra a Felipe).
+  const skipSelector = "a, button, label, select, textarea, script, style, #quien";
+
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const pending: Text[] = [];
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const textNode = node as Text;
+    if (
+      textNode.nodeValue?.includes("Felipe") &&
+      !textNode.parentElement?.closest(skipSelector)
+    ) {
+      pending.push(textNode);
+    }
+  }
+
+  pending.forEach((textNode) => {
+    const text = textNode.nodeValue || "";
+    const fragment = document.createDocumentFragment();
+    const pattern = /Felipe/g;
+    let cursor = 0;
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(text))) {
+      if (match.index > cursor) fragment.append(text.slice(cursor, match.index));
+      const link = document.createElement("a");
+      link.href = profileHref;
+      link.className = "felipe-link";
+      link.textContent = match[0];
+      fragment.append(link);
+      cursor = match.index + match[0].length;
+    }
+    if (cursor < text.length) fragment.append(text.slice(cursor));
+    textNode.replaceWith(fragment);
+  });
+};
+linkifyFelipeName();
+
 document.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
