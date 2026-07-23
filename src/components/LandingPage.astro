@@ -6,6 +6,7 @@ import ProcessArtifact from "./ProcessArtifact.astro";
 import ScrollThread from "./ScrollThread.astro";
 import ContactPanel from "./ContactPanel.astro";
 import LineIcon from "./LineIcon.astro";
+import CountryFlag from "./CountryFlag.astro";
 import { siteConfig, withBasePath } from "../config";
 import { getCopy, type Language } from "../i18n/copy";
 
@@ -24,6 +25,7 @@ const {
 const hasBooking = Boolean(siteConfig.bookingUrl);
 const aiIcons = ["chat", "support", "knowledge", "automation"];
 const industryIcons = ["food", "lab", "health", "factory", "transport", "finance", "construction", "government"];
+const countryFlagCodes = ["CO", "MX", "PE"] as const;
 const diagnosisCurrency = t.landing.services.diagnosisCurrency;
 ---
 
@@ -194,7 +196,9 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
           <aside class="country-panel" data-animate="fade-up" data-delay="160" aria-label={t.landing.industries.countriesLabel}>
             <p>{t.landing.industries.countriesCopy}</p>
             <ul>
-              {t.landing.industries.countries.map((country) => <li>{country}</li>)}
+              {t.landing.industries.countries.map((country, index) => (
+                <li><CountryFlag code={countryFlagCodes[index]} />{country}</li>
+              ))}
             </ul>
           </aside>
         </div>
@@ -1063,11 +1067,22 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
   }
 
   .country-panel li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
     padding-top: var(--space-3);
     border-top: var(--border) solid var(--line);
     font-family: var(--font-display);
     font-size: var(--text-h3);
     font-weight: 650;
+  }
+
+  .country-panel .country-flag {
+    flex: none;
+    width: 1.6em;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-radius: 2px;
   }
 
   .proof {
