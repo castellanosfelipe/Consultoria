@@ -39,6 +39,25 @@ const shareImage = new URL(ogImage, `${siteOrigin}/`).toString();
 const portraitImage = new URL(siteConfig.portraitPath, `${siteOrigin}/`).toString();
 const sameAs = siteConfig.linkedInUrl ? [siteConfig.linkedInUrl] : undefined;
 
+const serviceOffers = t.landing.offers.map((offer, index) => ({
+  "@type": "Offer",
+  itemOffered: {
+    "@type": "Service",
+    name: offer.title,
+    description: offer.description,
+  },
+  ...(index === 0
+    ? {
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          priceCurrency: "COP",
+          minPrice: 600000,
+          maxPrice: 1000000,
+        },
+      }
+    : {}),
+}));
+
 const schemas: Record<string, unknown>[] = [
   {
     "@context": "https://schema.org",
@@ -48,12 +67,27 @@ const schemas: Record<string, unknown>[] = [
     description: resolvedDescription,
     url: homeUrl,
     image: shareImage,
+    email: siteConfig.email,
     areaServed: [
       { "@type": "Country", name: "Colombia" },
       { "@type": "Country", name: lang === "en" ? "Mexico" : "México" },
       { "@type": "Country", name: lang === "en" ? "Peru" : "Perú" },
     ],
     founder: { "@id": `${homeUrl}#felipe` },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: t.landing.services.title,
+      itemListElement: serviceOffers,
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${siteOrigin}/#website`,
+    url: `${siteOrigin}/`,
+    name: siteConfig.name,
+    inLanguage: lang === "en" ? "en" : "es-CO",
+    publisher: { "@id": `${homeUrl}#service` },
   },
   {
     "@context": "https://schema.org",

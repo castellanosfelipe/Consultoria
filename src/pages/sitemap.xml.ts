@@ -8,12 +8,14 @@ export const GET: APIRoute = ({ site }) => {
   const englishHome = new URL("en/", home);
   const privacy = new URL("privacidad/", home);
   const englishPrivacy = new URL("en/privacy/", home);
+  const lastmod = new Date().toISOString().slice(0, 10);
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>${home}</loc>
     <xhtml:link rel="alternate" hreflang="es-CO" href="${home}" />
     <xhtml:link rel="alternate" hreflang="en" href="${englishHome}" />
+    <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -21,6 +23,7 @@ export const GET: APIRoute = ({ site }) => {
     <loc>${englishHome}</loc>
     <xhtml:link rel="alternate" hreflang="es-CO" href="${home}" />
     <xhtml:link rel="alternate" hreflang="en" href="${englishHome}" />
+    <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -28,6 +31,7 @@ export const GET: APIRoute = ({ site }) => {
     <loc>${privacy}</loc>
     <xhtml:link rel="alternate" hreflang="es-CO" href="${privacy}" />
     <xhtml:link rel="alternate" hreflang="en" href="${englishPrivacy}" />
+    <lastmod>${lastmod}</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -35,6 +39,7 @@ export const GET: APIRoute = ({ site }) => {
     <loc>${englishPrivacy}</loc>
     <xhtml:link rel="alternate" hreflang="es-CO" href="${privacy}" />
     <xhtml:link rel="alternate" hreflang="en" href="${englishPrivacy}" />
+    <lastmod>${lastmod}</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
