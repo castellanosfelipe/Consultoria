@@ -1,0 +1,30 @@
+# Felipe Peña — Software de operaciones
+
+> Consultoría B2B que diseña y construye software interno, automatización de
+> datos e integraciones con IA para poner al día operaciones que crecieron más
+> rápido que sus sistemas. Entrega en producción entre 4 y 8 semanas. Con sede
+> en Bogotá (Colombia) y proyectos en Colombia, México y Perú.
+
+## Qué ofrece
+- Diagnóstico técnico de operación: mapa de procesos, arquitectura propuesta y
+  propuesta con alcance, plazo y valor. Costo COP 600.000 a 1.000.000; el
+  documento es del cliente aunque construya con otro equipo.
+- Construcción de software interno y automatización de datos.
+- Integraciones con IA aplicadas a la operación.
+- Propiedad del código, repositorios y accesos a nombre del cliente desde el
+  día uno. Felipe Peña lidera diseño, decisiones y gestión; un núcleo de
+  ingeniería construye y demuestra avance cada semana.
+
+## Enlaces principales
+- [Inicio](https://consultoria.felipepena.co/): landing completa (ES).
+- [Servicios](https://consultoria.felipepena.co/#servicios): diagnóstico y etapas.
+- [Compromisos / prueba](https://consultoria.felipepena.co/#prueba): garantías verificables.
+- [Proceso](https://consultoria.felipepena.co/#proceso): del diagnóstico a producción.
+- [Preguntas frecuentes](https://consultoria.felipepena.co/#preguntas): inversión, propiedad, equipo.
+- [Contacto](https://consultoria.felipepena.co/#contacto): formulario de contacto.
+- [English version](https://consultoria.felipepena.co/en/): full landing in English.
+- [Privacidad](https://consultoria.felipepena.co/privacidad/): política de datos.
+
+## Contacto
+- Correo: hola@felipepena.co
+- Cobertura: Colombia, México, Perú (monedas COP, MXN, PEN, USD).

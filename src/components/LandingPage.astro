@@ -27,6 +27,14 @@ const aiIcons = ["chat", "support", "knowledge", "automation"];
 const industryIcons = ["food", "lab", "health", "factory", "transport", "finance", "construction", "government"];
 const countryFlagCodes = ["CO", "MX", "PE"] as const;
 const diagnosisCurrency = t.landing.services.diagnosisCurrency;
+const faqItems = t.landing.faq.items.map((item) =>
+  "currencyPrice" in item
+    ? {
+        question: item.question,
+        answer: `${item.answerBefore}${diagnosisCurrency.sentence.cop}${item.answerAfter}`,
+      }
+    : { question: item.question, answer: item.answer },
+);
 ---
 
 <BaseLayout
@@ -35,6 +43,7 @@ const diagnosisCurrency = t.landing.services.diagnosisCurrency;
   description={t.seo.description}
   canonicalPath={lang === "en" ? "/en/" : "/"}
   pageHomePath={lang === "en" ? "/en/" : "/"}
+  faqItems={faqItems}
 >
   <SiteHeader lang={lang} />
   <ScrollThread />

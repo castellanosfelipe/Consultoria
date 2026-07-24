@@ -705,7 +705,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-const mobileBreakpoint = window.matchMedia("(max-width: 43.75rem)");
+const mobileBreakpoint = window.matchMedia("(max-width: 53rem)");
 mobileBreakpoint.addEventListener("change", () => closeMenu());
 
 const sectionLinks = Array.from(
